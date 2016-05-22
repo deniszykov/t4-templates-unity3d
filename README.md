@@ -12,11 +12,11 @@ T4 template example:
 
 ## Use cases
 * Repeating source code generation
-* Project resources catalogization
-* Resource loading/reading code generation
-* Code generation by DSL
+* [Project resources catalogization](Assets/Editor/GameDevWare.TextTranform/Examples/FileList_Example.tt)
+* [Resource loading/reading code generation]((Assets/Editor/GameDevWare.TextTranform/Examples/ResourceAsyncLoad_Example.tt)
+* [Code generation by DSL](Assets/Editor/GameDevWare.TextTranform/Examples/DSL_Example.tt)
 * Code generation for ORM (BLToolkit for example)
-* Embedding environment information into project's build
+* [Embedding environment information into project's build](Assets/Editor/GameDevWare.TextTranform/Examples/EnvironmentInfo_Example.tt)
 	
 ## How to use
 Create or copy file with **.tt** extension. Select this file in Project window (Window -> Project), then in Inspector window (Window -> Inspector) setup T4 template's parameters. Click "Generate" button.
@@ -31,7 +31,7 @@ Inspector window for T4 template contains following parameters:
 *	**Auto-Gen Delay (Ms)** - delay before triggered auto-generation starts
 *	**Assets to Watch** - list of assets and folders which trigger auto-generation
 
-## Detais
+## Details
 T4 template can use *hostspecific=true* [property](https://msdn.microsoft.com/en-us/library/bb126478.aspx#Anchor_4) to access *Host.ResolvePath* method, which maps path relatively to template's location.
 
 By default *UnityEngine.dll* and *UnityEditor.dll* assemblies are referenced in all templates. 
