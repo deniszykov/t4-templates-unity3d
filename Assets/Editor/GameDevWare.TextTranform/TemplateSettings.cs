@@ -1,0 +1,115 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Assets.Editor.GameDevWare.TextTranform.Json;
+using Assets.Editor.GameDevWare.TextTranform.Utils;
+using UnityEditor;
+using UnityEngine;
+using Object = UnityEngine.Object;
+
+namespace Assets.Editor.GameDevWare.TextTranform
+{
+	internal sealed class TemplateSettings
+	{
+		public enum OutputTypes
+		{
+			Generator,
+			Content
+		}
+		[Flags]
+		public enum Triggers
+		{
+			CodeCompilation = 0x1 << 0,
+			AssetChanges = 0x2 << 0,
+		}
+
+		public int Trigger;
+		public int TriggerDelay;
+		public int OutputType;
+		public string OutputPath;
+		public string[] WatchedAssets;
+
+		public static TemplateSettings CreateDefault(string templatePath)
+		{
+			if (templatePath == null) throw new ArgumentNullException("templatePath");
+
+			var settings = new TemplateSettings();
+			settings.Trigger = (int)0;
+			settings.TriggerDelay = (int)500;
+			settings.OutputType = (int)OutputTypes.Content;
+			settings.WatchedAssets = new string[0];
+			return settings;
+		}
+		public static TemplateSettings Load(UnityEngine.Object templateAsset)
+		{
+			if (templateAsset == null) throw new NullReferenceException("templateAsset");
+
+			var gameDataPath = AssetDatabase.GetAssetPath(templateAsset);
+			return Load(gameDataPath);
+		}
+		public static TemplateSettings Load(string templatePath)
+		{
+			if (templatePath == null) throw new NullReferenceException("templatePath");
+
+			var templateSettings = default(TemplateSettings);
+			try
+			{
+				var gameDataSettingsJson = AssetImporter.GetAtPath(templatePath).userData;
+				if (string.IsNullOrEmpty(gameDataSettingsJson) == false)
+					templateSettings = JsonObject.Parse(gameDataSettingsJson).As<TemplateSettings>();
+
+				if (templateSettings != null)
+				{
+					templateSettings.OutputPath = FileUtils.MakeProjectRelative(templateSettings.OutputPath);
+					if (templateSettings.WatchedAssets.Any(string.IsNullOrEmpty))
+						templateSettings.WatchedAssets = templateSettings.WatchedAssets.Where(s => !string.IsNullOrEmpty(s)).ToArray();
+				}
+			}
+			catch (Exception e) { Debug.LogError("Failed to load template's settings: " + e); }
+
+			if (templateSettings == null)
+				templateSettings = CreateDefault(templatePath);
+
+			return templateSettings;
+		}
+
+		public void Save(string templatePath)
+		{
+			if (templatePath == null) throw new ArgumentNullException("templatePath");
+
+			try
+			{
+				if (this.WatchedAssets == null) this.WatchedAssets = new string[0];
+
+				var gameDataObj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(templatePath);
+				var importer = AssetImporter.GetAtPath(templatePath);
+				importer.userData = JsonObject.From(this).Stringify();
+				EditorUtility.SetDirty(gameDataObj);
+				importer.SaveAndReimport();
+			}
+			catch (Exception e) { Debug.LogError("Failed to save template's settings: " + e); }
+		}
+
+		public static List<string> ListTemplatesInProject()
+		{
+			var allTemplates = (from id in AssetDatabase.FindAssets("t:DefaultAsset").Union(AssetDatabase.FindAssets("t:TextAsset"))
+								let path = FileUtils.MakeProjectRelative(AssetDatabase.GUIDToAssetPath(id))
+								where path != null && IsTemplateAsset(path)
+								select path).ToList();
+			return allTemplates;
+		}
+
+		public static bool IsTemplateAsset(Object asset)
+		{
+			if (asset == null) throw new ArgumentNullException("asset");
+
+			return IsTemplateAsset(AssetDatabase.GetAssetPath(asset));
+		}
+		public static bool IsTemplateAsset(string path)
+		{
+			if (path == null) throw new ArgumentNullException("path");
+
+			return path.EndsWith(".tt", StringComparison.OrdinalIgnoreCase);
+		}
+	}
+}
