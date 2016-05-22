@@ -1,4 +1,20 @@
-﻿using System;
+﻿/*
+	Copyright (c) 2016 Denis Zykov, GameDevWare.com
+
+	This a part of "T4 Templates" Unity Asset - https://www.assetstore.unity3d.com/#!/content/63294
+	
+	THIS SOFTWARE IS DISTRIBUTED "AS-IS" WITHOUT ANY WARRANTIES, CONDITIONS AND 
+	REPRESENTATIONS WHETHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE 
+	IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY, MERCHANTABLE QUALITY, 
+	FITNESS FOR A PARTICULAR PURPOSE, DURABILITY, NON-INFRINGEMENT, PERFORMANCE 
+	AND THOSE ARISING BY STATUTE OR FROM CUSTOM OR USAGE OF TRADE OR COURSE OF DEALING.
+	
+	This source code is distributed via Unity Asset Store, 
+	to use it in your project you should accept Terms of Service and EULA 
+	https://unity3d.com/ru/legal/as_terms
+*/
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -17,8 +33,8 @@ namespace Assets.Editor.GameDevWare.TextTranform
 
 		public UnityTemplateGenerator()
 		{
-			this.Refs.Add(typeof(UnityEngine.Debug).Assembly.Location);
-			this.Refs.Add(typeof(UnityEditor.EditorApplication).Assembly.Location);
+			this.Refs.Add(typeof(Application).Assembly.Location);
+			this.Refs.Add(typeof(EditorApplication).Assembly.Location);
 
 			var currentAssemblyLocation = Path.GetDirectoryName(typeof(UnityTemplateGenerator).Assembly.Location);
 			this.ReferencePaths.Add(currentAssemblyLocation);
@@ -60,12 +76,12 @@ namespace Assets.Editor.GameDevWare.TextTranform
 
 			timer.Change(delay, TimeSpan.FromTicks(-1));
 		}
-		public static void RunForTemplate(string templatePath)
+		public static bool RunForTemplate(string templatePath)
 		{
 			if (templatePath == null) throw new ArgumentNullException("templatePath");
 
 			templatePath = FileUtils.MakeProjectRelative(templatePath);
-			 
+
 			var settings = TemplateSettings.Load(templatePath);
 			var generator = new UnityTemplateGenerator();
 			var templateName = Path.GetFileNameWithoutExtension(templatePath);
@@ -87,7 +103,7 @@ namespace Assets.Editor.GameDevWare.TextTranform
 				Debug.LogWarning(string.Format("Failed to pre-process template '{0}'.", templatePath));
 				foreach (var error in generator.Errors)
 					Debug.LogWarning(error);
-				return;
+				return false;
 			}
 			if (Menu.VerboseLogs)
 				Debug.Log(string.Format("Pre-process T4 template '{0}' is complete successfully. Language: '{1}', References: '{2}', Output file: '{3}'.", templatePath, language, string.Join(", ", references ?? new string[0]), generatorOutputFile));
@@ -99,7 +115,7 @@ namespace Assets.Editor.GameDevWare.TextTranform
 				Debug.LogWarning(string.Format("Failed to process template '{0}'.", templatePath));
 				foreach (var error in generator.Errors)
 					Debug.LogWarning(error);
-				return;
+				return false;
 			}
 			if (Menu.VerboseLogs)
 				Debug.Log(string.Format("Process T4 template '{0}' is complete successfully. Output file: '{1}'.", templatePath, outputFile));
@@ -115,7 +131,7 @@ namespace Assets.Editor.GameDevWare.TextTranform
 					break;
 				default:
 					Debug.LogWarning("Invalid 'OutputType' is specified in template's settings.");
-					return;
+					return false;
 			}
 			var targetFile = settings.OutputPath;
 			if (targetFile == null)
@@ -127,7 +143,7 @@ namespace Assets.Editor.GameDevWare.TextTranform
 			{
 				if (Menu.VerboseLogs)
 					Debug.Log(string.Format("Generated file is same as existing at location '{0}'.", targetFile));
-				return;
+				return true;
 			}
 
 			var targetDir = Path.GetDirectoryName(targetFile);
@@ -137,6 +153,8 @@ namespace Assets.Editor.GameDevWare.TextTranform
 			File.Copy(sourceFile, targetFile, overwrite: true);
 			File.Delete(outputFile);
 			File.Delete(generatorOutputFile);
+
+			return true;
 		}
 	}
 }

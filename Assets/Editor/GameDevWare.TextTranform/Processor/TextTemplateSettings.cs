@@ -1,5 +1,5 @@
 // 
-// TemplateSettings.cs
+// TextTemplateSettings.cs
 //  
 // Author:
 //       Michael Hutchinson <mhutchinson@novell.com>
@@ -30,9 +30,9 @@ using System.Text;
 
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
-	public class TemplateSettings
+	public class TextTemplateSettings
 	{
-		public TemplateSettings()
+		public TextTemplateSettings()
 		{
 			Imports = new HashSet<string>();
 			Assemblies = new HashSet<string>();

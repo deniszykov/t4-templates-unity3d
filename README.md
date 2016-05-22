@@ -1,5 +1,5 @@
 ﻿# Introduction
-This Unity editor extension provides [T4 text templates](https://msdn.microsoft.com/en-US/library/bb126445.aspx) processor. 
+This Unity [editor extension](https://www.assetstore.unity3d.com/#!/content/63294) provides [T4 text templates](https://msdn.microsoft.com/en-US/library/bb126445.aspx) processor. 
 T4 template is a mixture of text blocks and control logic that can generate a text file. The control logic is written as fragments of program code in C#.
 The generated file can be text of any kind, such as resource file, source code or web page.
 
@@ -32,16 +32,16 @@ Inspector window for T4 template contains following parameters:
 *	**Assets to Watch** - list of assets and folders which trigger auto-generation
 
 ## Detais
-T4 template can use *hostspecific=true* property to access *Host.ResolvePath* method, which maps path relatively to template's location.
+T4 template can use *hostspecific=true* [property](https://msdn.microsoft.com/en-us/library/bb126478.aspx#Anchor_4) to access *Host.ResolvePath* method, which maps path relatively to template's location.
 
 By default *UnityEngine.dll* and *UnityEditor.dll* assemblies are referenced in all templates. 
-You can [reference](https://msdn.microsoft.com/en-us/library/bb126478.aspx#Anchor_3) project's assemblies *Assembly-CSharp* and *Assembly-CSharp-firstpass* by adding **assembly** directive:
+You can reference project's assemblies *Assembly-CSharp* and *Assembly-CSharp-firstpass* by adding **assembly** [directive]((https://msdn.microsoft.com/en-us/library/bb126478.aspx#Anchor_3)):
 ```xml
 <#@ assembly name="Assembly-CSharp" #>
 <#@ assembly name="Assembly-CSharp-firstpass" #>
 ```
 
-[MSBuild Macroses](https://msdn.microsoft.com/en-US/library/c02as0cs.aspx) are not available.
+[MSBuild Macros](https://msdn.microsoft.com/en-US/library/c02as0cs.aspx) are not available.
 
 You can run template generation from your code with **UnityTemplateGenerator.RunForTemplate(templatePath)** call.
 
@@ -51,4 +51,4 @@ Please send any questions at support@gamedevware.com
 ## License
 If you embed this package, you MUST provide a [link](https://www.assetstore.unity3d.com/#!/content/63294) and warning about embedded package in the description of your package.
 
-[Asset Store Terms of Service and EULA](License.md)
+[Asset Store Terms of Service and EULA](LICENSE.md)

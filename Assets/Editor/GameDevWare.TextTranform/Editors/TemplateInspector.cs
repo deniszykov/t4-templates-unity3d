@@ -1,7 +1,13 @@
 ﻿/*
 	Copyright (c) 2016 Denis Zykov, GameDevWare.com
 
-	This a part of "T4 Transform" Unity Asset - https://www.assetstore.unity3d.com/en/#!/content/56706
+	This a part of "T4 Templates" Unity Asset - https://www.assetstore.unity3d.com/#!/content/63294
+	
+	THIS SOFTWARE IS DISTRIBUTED "AS-IS" WITHOUT ANY WARRANTIES, CONDITIONS AND 
+	REPRESENTATIONS WHETHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE 
+	IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY, MERCHANTABLE QUALITY, 
+	FITNESS FOR A PARTICULAR PURPOSE, DURABILITY, NON-INFRINGEMENT, PERFORMANCE 
+	AND THOSE ARISING BY STATUTE OR FROM CUSTOM OR USAGE OF TRADE OR COURSE OF DEALING.
 	
 	This source code is distributed via Unity Asset Store, 
 	to use it in your project you should accept Terms of Service and EULA 
@@ -9,6 +15,7 @@
 */
 
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,10 +32,22 @@ namespace Assets.Editor.GameDevWare.TextTranform.Editors
 		private Object lastAsset;
 		private Object newAssetToWatch;
 		private TemplateSettings templateSettings;
+		private string lastGenerationResult;
 
 		static TemplateInspector()
 		{
+#if UNITY_5
 			Selection.selectionChanged += OnSelectionChanged;
+#else
+			var selection = default(Object);
+			EditorApplication.update += () =>
+			{
+				if (selection == Selection.activeObject)
+					return;
+				selection = Selection.activeObject;
+				OnSelectionChanged();
+			};
+#endif
 		}
 
 		public static void OnSelectionChanged()
@@ -38,16 +57,29 @@ namespace Assets.Editor.GameDevWare.TextTranform.Editors
 
 			try
 			{
-				var templateAsset = Selection.activeObject.GetType();
-				var inspectorWindowType = typeof(PopupWindow).Assembly.GetType("UnityEditor.InspectorWindow");
+				var editorAssembly = typeof(EditorApplication).Assembly;
+				var assetType = Selection.activeObject.GetType();
+				var inspectorWindowType = editorAssembly.GetType("UnityEditor.InspectorWindow");
 				var inspectorWindow = EditorWindow.GetWindow(inspectorWindowType);
 				var activeEditorTracker = inspectorWindow.GetFieldValue("m_Tracker");
-				var customEditorAttributesType = typeof(PopupWindow).Assembly.GetType("UnityEditor.CustomEditorAttributes");
+				var customEditorAttributesType = editorAssembly.GetType("UnityEditor.CustomEditorAttributes");
 				var customEditorsList = (System.Collections.IList)customEditorAttributesType.GetFieldValue("kSCustomEditors");
-				foreach (var customEditor in customEditorsList)
+				var customEditor = customEditorsList.Cast<object>().FirstOrDefault(e => (Type)e.GetFieldValue("m_InspectedType") == assetType);
+				if (customEditor == null)
 				{
-					if ((Type)customEditor.GetFieldValue("m_InspectedType") != templateAsset) continue;
-
+					// create and add new editor entry
+					customEditor = Activator.CreateInstance(editorAssembly.GetType("UnityEditor.CustomEditorAttributes+MonoEditorType"));
+					customEditor.SetFieldValue("m_InspectedType", assetType);
+					customEditor.SetFieldValue("m_InspectorType", typeof(TemplateInspector));
+					var editorIndex = customEditorsList.Add(customEditor);
+					// force rebuild editor list
+					activeEditorTracker.Invoke("ForceRebuild");
+					inspectorWindow.Invoke("Repaint");
+					// remove editor entry
+					customEditorsList.RemoveAt(editorIndex);
+				}
+				else
+				{
 					var originalInspectorType = (Type)customEditor.GetFieldValue("m_InspectorType");
 					// override inspector
 					customEditor.SetFieldValue("m_InspectorType", typeof(TemplateInspector));
@@ -57,7 +89,6 @@ namespace Assets.Editor.GameDevWare.TextTranform.Editors
 					// restore original inspector
 					customEditor.SetFieldValue("m_InspectorType", originalInspectorType);
 				}
-
 			}
 			catch (Exception e)
 			{
@@ -83,13 +114,13 @@ namespace Assets.Editor.GameDevWare.TextTranform.Editors
 			GUI.enabled = true;
 			GUILayout.Label(Path.GetFileName(assetPath), EditorStyles.boldLabel);
 			this.templateSettings.OutputType = (int)(TemplateSettings.OutputTypes)EditorGUILayout.EnumPopup("Output Type", (TemplateSettings.OutputTypes)this.templateSettings.OutputType);
-			var codeAsset = !string.IsNullOrEmpty(this.templateSettings.OutputPath) && File.Exists(this.templateSettings.OutputPath) ? AssetDatabase.LoadAssetAtPath<Object>(this.templateSettings.OutputPath) : null;
+			var codeAsset = !string.IsNullOrEmpty(this.templateSettings.OutputPath) && File.Exists(this.templateSettings.OutputPath) ? AssetDatabase.LoadAssetAtPath(this.templateSettings.OutputPath, typeof(Object)) : null;
 			if (codeAsset != null)
 				this.templateSettings.OutputPath = AssetDatabase.GetAssetPath(EditorGUILayout.ObjectField("Output Path", codeAsset, typeof(Object), false));
 			else
 				this.templateSettings.OutputPath = EditorGUILayout.TextField("Output Path", this.templateSettings.OutputPath);
 			this.templateSettings.Trigger = (int)(TemplateSettings.Triggers)EditorGUILayout.EnumMaskField("Auto-Gen Triggers", (TemplateSettings.Triggers)templateSettings.Trigger);
-			this.templateSettings.TriggerDelay = (int)EditorGUILayout.IntField("Auto-Gen Delay (Ms)", templateSettings.TriggerDelay);			
+			this.templateSettings.TriggerDelay = (int)EditorGUILayout.IntField("Auto-Gen Delay (Ms)", templateSettings.TriggerDelay);
 
 			if ((this.templateSettings.Trigger & (int)TemplateSettings.Triggers.AssetChanges) != 0)
 			{
@@ -121,9 +152,12 @@ namespace Assets.Editor.GameDevWare.TextTranform.Editors
 			EditorGUILayout.Space();
 			GUILayout.Label("Actions", EditorStyles.boldLabel);
 			EditorGUILayout.BeginHorizontal();
-			if (GUILayout.Button("Generate"))
+			if (GUILayout.Button("Generate " + this.lastGenerationResult))
 			{
-				UnityTemplateGenerator.RunForTemplate(assetPath);
+				if (UnityTemplateGenerator.RunForTemplate(assetPath) == false)
+					this.lastGenerationResult = "(Failure)";
+				else
+					this.lastGenerationResult = "(Success)";
 			}
 			EditorGUILayout.EndHorizontal();
 

@@ -166,7 +166,7 @@ namespace Assets.Editor.GameDevWare.TextTranform.Processor
 			return new CompiledTemplate(host, results, templateClassFullName, settings.Culture, references.ToArray());
 		}
 
-		static CompilerResults GenerateCode(IEnumerable<string> references, TemplateSettings settings, CodeCompileUnit ccu)
+		static CompilerResults GenerateCode(IEnumerable<string> references, TextTemplateSettings settings, CodeCompileUnit ccu)
 		{
 			var pars = new CompilerParameters
 			{
@@ -185,7 +185,7 @@ namespace Assets.Editor.GameDevWare.TextTranform.Processor
 			return settings.Provider.CompileAssemblyFromDom(pars, ccu);
 		}
 
-		static HashSet<string> ProcessReferences(ITextTemplatingEngineHost host, ParsedTemplate pt, TemplateSettings settings)
+		static HashSet<string> ProcessReferences(ITextTemplatingEngineHost host, ParsedTemplate pt, TextTemplateSettings settings)
 		{
 			var resolved = new HashSet<string>();
 
@@ -208,9 +208,9 @@ namespace Assets.Editor.GameDevWare.TextTranform.Processor
 			return resolved;
 		}
 
-		public static TemplateSettings GetSettings(ITextTemplatingEngineHost host, ParsedTemplate pt)
+		public static TextTemplateSettings GetSettings(ITextTemplatingEngineHost host, ParsedTemplate pt)
 		{
-			var settings = new TemplateSettings();
+			var settings = new TextTemplateSettings();
 
 			var relativeLinePragmas = host.GetHostOption("UseRelativeLinePragmas") as bool? ?? false;
 
@@ -431,7 +431,7 @@ namespace Assets.Editor.GameDevWare.TextTranform.Processor
 			return builder.ToString();
 		}
 
-		static void AddDirective(TemplateSettings settings, ITextTemplatingEngineHost host, string processorName, Directive directive)
+		static void AddDirective(TextTemplateSettings settings, ITextTemplatingEngineHost host, string processorName, Directive directive)
 		{
 			IDirectiveProcessor processor;
 			if (!settings.DirectiveProcessors.TryGetValue(processorName, out processor))
@@ -479,7 +479,7 @@ namespace Assets.Editor.GameDevWare.TextTranform.Processor
 			return false;
 		}
 
-		static void ProcessDirectives(string content, ParsedTemplate pt, TemplateSettings settings)
+		static void ProcessDirectives(string content, ParsedTemplate pt, TextTemplateSettings settings)
 		{
 			foreach (var processor in settings.DirectiveProcessors.Values)
 			{
@@ -505,7 +505,7 @@ namespace Assets.Editor.GameDevWare.TextTranform.Processor
 			}
 		}
 
-		public static CodeCompileUnit GenerateCompileUnit(ITextTemplatingEngineHost host, string content, ParsedTemplate pt, TemplateSettings settings)
+		public static CodeCompileUnit GenerateCompileUnit(ITextTemplatingEngineHost host, string content, ParsedTemplate pt, TextTemplateSettings settings)
 		{
 			ProcessDirectives(content, pt, settings);
 
@@ -696,7 +696,7 @@ namespace Assets.Editor.GameDevWare.TextTranform.Processor
 			type.Members.Add(hostProp);
 		}
 
-		static void GenerateInitializationMethod(CodeTypeDeclaration type, TemplateSettings settings)
+		static void GenerateInitializationMethod(CodeTypeDeclaration type, TextTemplateSettings settings)
 		{
 			//initialization method
 			var initializeMeth = new CodeMemberMethod
@@ -779,7 +779,7 @@ namespace Assets.Editor.GameDevWare.TextTranform.Processor
 			type.Members.Add(initializeMeth);
 		}
 
-		static void GenerateProcessingHelpers(CodeTypeDeclaration type, TemplateSettings settings)
+		static void GenerateProcessingHelpers(CodeTypeDeclaration type, TextTemplateSettings settings)
 		{
 			var thisRef = new CodeThisReferenceExpression();
 			var sbTypeRef = TypeRef<StringBuilder>();
@@ -997,7 +997,7 @@ namespace Assets.Editor.GameDevWare.TextTranform.Processor
 			type.Members.Add(writeLineArgsMeth);
 		}
 
-		static void AddToStringHelper(CodeTypeDeclaration type, TemplateSettings settings)
+		static void AddToStringHelper(CodeTypeDeclaration type, TextTemplateSettings settings)
 		{
 			var helperCls = new CodeTypeDeclaration("ToStringInstanceHelper")
 			{
