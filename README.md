@@ -1,4 +1,4 @@
-﻿# Introduction
+# Introduction
 This Unity [editor extension](https://www.assetstore.unity3d.com/#!/content/63294) provides [T4 text templates](https://msdn.microsoft.com/en-US/library/bb126445.aspx) processor. 
 T4 template is a mixture of text blocks and control logic that can generate a text file. The control logic is written as fragments of program code in C#.
 The generated file can be text of any kind, such as resource file, source code or web page.
