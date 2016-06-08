@@ -1,674 +1,289 @@
-                    GNU GENERAL PUBLIC LICENSE
-                       Version 3, 29 June 2007
-
- Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
- Everyone is permitted to copy and distribute verbatim copies
- of this license document, but changing it is not allowed.
-
-                            Preamble
-
-  The GNU General Public License is a free, copyleft license for
-software and other kinds of works.
-
-  The licenses for most software and other practical works are designed
-to take away your freedom to share and change the works.  By contrast,
-the GNU General Public License is intended to guarantee your freedom to
-share and change all versions of a program--to make sure it remains free
-software for all its users.  We, the Free Software Foundation, use the
-GNU General Public License for most of our software; it applies also to
-any other work released this way by its authors.  You can apply it to
-your programs, too.
-
-  When we speak of free software, we are referring to freedom, not
-price.  Our General Public Licenses are designed to make sure that you
-have the freedom to distribute copies of free software (and charge for
-them if you wish), that you receive source code or can get it if you
-want it, that you can change the software or use pieces of it in new
-free programs, and that you know you can do these things.
-
-  To protect your rights, we need to prevent others from denying you
-these rights or asking you to surrender the rights.  Therefore, you have
-certain responsibilities if you distribute copies of the software, or if
-you modify it: responsibilities to respect the freedom of others.
-
-  For example, if you distribute copies of such a program, whether
-gratis or for a fee, you must pass on to the recipients the same
-freedoms that you received.  You must make sure that they, too, receive
-or can get the source code.  And you must show them these terms so they
-know their rights.
-
-  Developers that use the GNU GPL protect your rights with two steps:
-(1) assert copyright on the software, and (2) offer you this License
-giving you legal permission to copy, distribute and/or modify it.
-
-  For the developers' and authors' protection, the GPL clearly explains
-that there is no warranty for this free software.  For both users' and
-authors' sake, the GPL requires that modified versions be marked as
-changed, so that their problems will not be attributed erroneously to
-authors of previous versions.
-
-  Some devices are designed to deny users access to install or run
-modified versions of the software inside them, although the manufacturer
-can do so.  This is fundamentally incompatible with the aim of
-protecting users' freedom to change the software.  The systematic
-pattern of such abuse occurs in the area of products for individuals to
-use, which is precisely where it is most unacceptable.  Therefore, we
-have designed this version of the GPL to prohibit the practice for those
-products.  If such problems arise substantially in other domains, we
-stand ready to extend this provision to those domains in future versions
-of the GPL, as needed to protect the freedom of users.
-
-  Finally, every program is threatened constantly by software patents.
-States should not allow patents to restrict development and use of
-software on general-purpose computers, but in those that do, we wish to
-avoid the special danger that patents applied to a free program could
-make it effectively proprietary.  To prevent this, the GPL assures that
-patents cannot be used to render the program non-free.
-
-  The precise terms and conditions for copying, distribution and
-modification follow.
-
-                       TERMS AND CONDITIONS
-
-  0. Definitions.
-
-  "This License" refers to version 3 of the GNU General Public License.
-
-  "Copyright" also means copyright-like laws that apply to other kinds of
-works, such as semiconductor masks.
-
-  "The Program" refers to any copyrightable work licensed under this
-License.  Each licensee is addressed as "you".  "Licensees" and
-"recipients" may be individuals or organizations.
-
-  To "modify" a work means to copy from or adapt all or part of the work
-in a fashion requiring copyright permission, other than the making of an
-exact copy.  The resulting work is called a "modified version" of the
-earlier work or a work "based on" the earlier work.
-
-  A "covered work" means either the unmodified Program or a work based
-on the Program.
-
-  To "propagate" a work means to do anything with it that, without
-permission, would make you directly or secondarily liable for
-infringement under applicable copyright law, except executing it on a
-computer or modifying a private copy.  Propagation includes copying,
-distribution (with or without modification), making available to the
-public, and in some countries other activities as well.
-
-  To "convey" a work means any kind of propagation that enables other
-parties to make or receive copies.  Mere interaction with a user through
-a computer network, with no transfer of a copy, is not conveying.
-
-  An interactive user interface displays "Appropriate Legal Notices"
-to the extent that it includes a convenient and prominently visible
-feature that (1) displays an appropriate copyright notice, and (2)
-tells the user that there is no warranty for the work (except to the
-extent that warranties are provided), that licensees may convey the
-work under this License, and how to view a copy of this License.  If
-the interface presents a list of user commands or options, such as a
-menu, a prominent item in the list meets this criterion.
-
-  1. Source Code.
-
-  The "source code" for a work means the preferred form of the work
-for making modifications to it.  "Object code" means any non-source
-form of a work.
-
-  A "Standard Interface" means an interface that either is an official
-standard defined by a recognized standards body, or, in the case of
-interfaces specified for a particular programming language, one that
-is widely used among developers working in that language.
-
-  The "System Libraries" of an executable work include anything, other
-than the work as a whole, that (a) is included in the normal form of
-packaging a Major Component, but which is not part of that Major
-Component, and (b) serves only to enable use of the work with that
-Major Component, or to implement a Standard Interface for which an
-implementation is available to the public in source code form.  A
-"Major Component", in this context, means a major essential component
-(kernel, window system, and so on) of the specific operating system
-(if any) on which the executable work runs, or a compiler used to
-produce the work, or an object code interpreter used to run it.
-
-  The "Corresponding Source" for a work in object code form means all
-the source code needed to generate, install, and (for an executable
-work) run the object code and to modify the work, including scripts to
-control those activities.  However, it does not include the work's
-System Libraries, or general-purpose tools or generally available free
-programs which are used unmodified in performing those activities but
-which are not part of the work.  For example, Corresponding Source
-includes interface definition files associated with source files for
-the work, and the source code for shared libraries and dynamically
-linked subprograms that the work is specifically designed to require,
-such as by intimate data communication or control flow between those
-subprograms and other parts of the work.
-
-  The Corresponding Source need not include anything that users
-can regenerate automatically from other parts of the Corresponding
-Source.
-
-  The Corresponding Source for a work in source code form is that
-same work.
-
-  2. Basic Permissions.
-
-  All rights granted under this License are granted for the term of
-copyright on the Program, and are irrevocable provided the stated
-conditions are met.  This License explicitly affirms your unlimited
-permission to run the unmodified Program.  The output from running a
-covered work is covered by this License only if the output, given its
-content, constitutes a covered work.  This License acknowledges your
-rights of fair use or other equivalent, as provided by copyright law.
-
-  You may make, run and propagate covered works that you do not
-convey, without conditions so long as your license otherwise remains
-in force.  You may convey covered works to others for the sole purpose
-of having them make modifications exclusively for you, or provide you
-with facilities for running those works, provided that you comply with
-the terms of this License in conveying all material for which you do
-not control copyright.  Those thus making or running the covered works
-for you must do so exclusively on your behalf, under your direction
-and control, on terms that prohibit them from making any copies of
-your copyrighted material outside their relationship with you.
-
-  Conveying under any other circumstances is permitted solely under
-the conditions stated below.  Sublicensing is not allowed; section 10
-makes it unnecessary.
-
-  3. Protecting Users' Legal Rights From Anti-Circumvention Law.
-
-  No covered work shall be deemed part of an effective technological
-measure under any applicable law fulfilling obligations under article
-11 of the WIPO copyright treaty adopted on 20 December 1996, or
-similar laws prohibiting or restricting circumvention of such
-measures.
-
-  When you convey a covered work, you waive any legal power to forbid
-circumvention of technological measures to the extent such circumvention
-is effected by exercising rights under this License with respect to
-the covered work, and you disclaim any intention to limit operation or
-modification of the work as a means of enforcing, against the work's
-users, your or third parties' legal rights to forbid circumvention of
-technological measures.
-
-  4. Conveying Verbatim Copies.
-
-  You may convey verbatim copies of the Program's source code as you
-receive it, in any medium, provided that you conspicuously and
-appropriately publish on each copy an appropriate copyright notice;
-keep intact all notices stating that this License and any
-non-permissive terms added in accord with section 7 apply to the code;
-keep intact all notices of the absence of any warranty; and give all
-recipients a copy of this License along with the Program.
-
-  You may charge any price or no price for each copy that you convey,
-and you may offer support or warranty protection for a fee.
-
-  5. Conveying Modified Source Versions.
-
-  You may convey a work based on the Program, or the modifications to
-produce it from the Program, in the form of source code under the
-terms of section 4, provided that you also meet all of these conditions:
-
-    a) The work must carry prominent notices stating that you modified
-    it, and giving a relevant date.
-
-    b) The work must carry prominent notices stating that it is
-    released under this License and any conditions added under section
-    7.  This requirement modifies the requirement in section 4 to
-    "keep intact all notices".
-
-    c) You must license the entire work, as a whole, under this
-    License to anyone who comes into possession of a copy.  This
-    License will therefore apply, along with any applicable section 7
-    additional terms, to the whole of the work, and all its parts,
-    regardless of how they are packaged.  This License gives no
-    permission to license the work in any other way, but it does not
-    invalidate such permission if you have separately received it.
-
-    d) If the work has interactive user interfaces, each must display
-    Appropriate Legal Notices; however, if the Program has interactive
-    interfaces that do not display Appropriate Legal Notices, your
-    work need not make them do so.
-
-  A compilation of a covered work with other separate and independent
-works, which are not by their nature extensions of the covered work,
-and which are not combined with it such as to form a larger program,
-in or on a volume of a storage or distribution medium, is called an
-"aggregate" if the compilation and its resulting copyright are not
-used to limit the access or legal rights of the compilation's users
-beyond what the individual works permit.  Inclusion of a covered work
-in an aggregate does not cause this License to apply to the other
-parts of the aggregate.
-
-  6. Conveying Non-Source Forms.
-
-  You may convey a covered work in object code form under the terms
-of sections 4 and 5, provided that you also convey the
-machine-readable Corresponding Source under the terms of this License,
-in one of these ways:
-
-    a) Convey the object code in, or embodied in, a physical product
-    (including a physical distribution medium), accompanied by the
-    Corresponding Source fixed on a durable physical medium
-    customarily used for software interchange.
-
-    b) Convey the object code in, or embodied in, a physical product
-    (including a physical distribution medium), accompanied by a
-    written offer, valid for at least three years and valid for as
-    long as you offer spare parts or customer support for that product
-    model, to give anyone who possesses the object code either (1) a
-    copy of the Corresponding Source for all the software in the
-    product that is covered by this License, on a durable physical
-    medium customarily used for software interchange, for a price no
-    more than your reasonable cost of physically performing this
-    conveying of source, or (2) access to copy the
-    Corresponding Source from a network server at no charge.
-
-    c) Convey individual copies of the object code with a copy of the
-    written offer to provide the Corresponding Source.  This
-    alternative is allowed only occasionally and noncommercially, and
-    only if you received the object code with such an offer, in accord
-    with subsection 6b.
-
-    d) Convey the object code by offering access from a designated
-    place (gratis or for a charge), and offer equivalent access to the
-    Corresponding Source in the same way through the same place at no
-    further charge.  You need not require recipients to copy the
-    Corresponding Source along with the object code.  If the place to
-    copy the object code is a network server, the Corresponding Source
-    may be on a different server (operated by you or a third party)
-    that supports equivalent copying facilities, provided you maintain
-    clear directions next to the object code saying where to find the
-    Corresponding Source.  Regardless of what server hosts the
-    Corresponding Source, you remain obligated to ensure that it is
-    available for as long as needed to satisfy these requirements.
-
-    e) Convey the object code using peer-to-peer transmission, provided
-    you inform other peers where the object code and Corresponding
-    Source of the work are being offered to the general public at no
-    charge under subsection 6d.
-
-  A separable portion of the object code, whose source code is excluded
-from the Corresponding Source as a System Library, need not be
-included in conveying the object code work.
-
-  A "User Product" is either (1) a "consumer product", which means any
-tangible personal property which is normally used for personal, family,
-or household purposes, or (2) anything designed or sold for incorporation
-into a dwelling.  In determining whether a product is a consumer product,
-doubtful cases shall be resolved in favor of coverage.  For a particular
-product received by a particular user, "normally used" refers to a
-typical or common use of that class of product, regardless of the status
-of the particular user or of the way in which the particular user
-actually uses, or expects or is expected to use, the product.  A product
-is a consumer product regardless of whether the product has substantial
-commercial, industrial or non-consumer uses, unless such uses represent
-the only significant mode of use of the product.
-
-  "Installation Information" for a User Product means any methods,
-procedures, authorization keys, or other information required to install
-and execute modified versions of a covered work in that User Product from
-a modified version of its Corresponding Source.  The information must
-suffice to ensure that the continued functioning of the modified object
-code is in no case prevented or interfered with solely because
-modification has been made.
-
-  If you convey an object code work under this section in, or with, or
-specifically for use in, a User Product, and the conveying occurs as
-part of a transaction in which the right of possession and use of the
-User Product is transferred to the recipient in perpetuity or for a
-fixed term (regardless of how the transaction is characterized), the
-Corresponding Source conveyed under this section must be accompanied
-by the Installation Information.  But this requirement does not apply
-if neither you nor any third party retains the ability to install
-modified object code on the User Product (for example, the work has
-been installed in ROM).
-
-  The requirement to provide Installation Information does not include a
-requirement to continue to provide support service, warranty, or updates
-for a work that has been modified or installed by the recipient, or for
-the User Product in which it has been modified or installed.  Access to a
-network may be denied when the modification itself materially and
-adversely affects the operation of the network or violates the rules and
-protocols for communication across the network.
-
-  Corresponding Source conveyed, and Installation Information provided,
-in accord with this section must be in a format that is publicly
-documented (and with an implementation available to the public in
-source code form), and must require no special password or key for
-unpacking, reading or copying.
-
-  7. Additional Terms.
-
-  "Additional permissions" are terms that supplement the terms of this
-License by making exceptions from one or more of its conditions.
-Additional permissions that are applicable to the entire Program shall
-be treated as though they were included in this License, to the extent
-that they are valid under applicable law.  If additional permissions
-apply only to part of the Program, that part may be used separately
-under those permissions, but the entire Program remains governed by
-this License without regard to the additional permissions.
-
-  When you convey a copy of a covered work, you may at your option
-remove any additional permissions from that copy, or from any part of
-it.  (Additional permissions may be written to require their own
-removal in certain cases when you modify the work.)  You may place
-additional permissions on material, added by you to a covered work,
-for which you have or can give appropriate copyright permission.
-
-  Notwithstanding any other provision of this License, for material you
-add to a covered work, you may (if authorized by the copyright holders of
-that material) supplement the terms of this License with terms:
-
-    a) Disclaiming warranty or limiting liability differently from the
-    terms of sections 15 and 16 of this License; or
-
-    b) Requiring preservation of specified reasonable legal notices or
-    author attributions in that material or in the Appropriate Legal
-    Notices displayed by works containing it; or
-
-    c) Prohibiting misrepresentation of the origin of that material, or
-    requiring that modified versions of such material be marked in
-    reasonable ways as different from the original version; or
-
-    d) Limiting the use for publicity purposes of names of licensors or
-    authors of the material; or
-
-    e) Declining to grant rights under trademark law for use of some
-    trade names, trademarks, or service marks; or
-
-    f) Requiring indemnification of licensors and authors of that
-    material by anyone who conveys the material (or modified versions of
-    it) with contractual assumptions of liability to the recipient, for
-    any liability that these contractual assumptions directly impose on
-    those licensors and authors.
-
-  All other non-permissive additional terms are considered "further
-restrictions" within the meaning of section 10.  If the Program as you
-received it, or any part of it, contains a notice stating that it is
-governed by this License along with a term that is a further
-restriction, you may remove that term.  If a license document contains
-a further restriction but permits relicensing or conveying under this
-License, you may add to a covered work material governed by the terms
-of that license document, provided that the further restriction does
-not survive such relicensing or conveying.
-
-  If you add terms to a covered work in accord with this section, you
-must place, in the relevant source files, a statement of the
-additional terms that apply to those files, or a notice indicating
-where to find the applicable terms.
-
-  Additional terms, permissive or non-permissive, may be stated in the
-form of a separately written license, or stated as exceptions;
-the above requirements apply either way.
-
-  8. Termination.
-
-  You may not propagate or modify a covered work except as expressly
-provided under this License.  Any attempt otherwise to propagate or
-modify it is void, and will automatically terminate your rights under
-this License (including any patent licenses granted under the third
-paragraph of section 11).
-
-  However, if you cease all violation of this License, then your
-license from a particular copyright holder is reinstated (a)
-provisionally, unless and until the copyright holder explicitly and
-finally terminates your license, and (b) permanently, if the copyright
-holder fails to notify you of the violation by some reasonable means
-prior to 60 days after the cessation.
-
-  Moreover, your license from a particular copyright holder is
-reinstated permanently if the copyright holder notifies you of the
-violation by some reasonable means, this is the first time you have
-received notice of violation of this License (for any work) from that
-copyright holder, and you cure the violation prior to 30 days after
-your receipt of the notice.
-
-  Termination of your rights under this section does not terminate the
-licenses of parties who have received copies or rights from you under
-this License.  If your rights have been terminated and not permanently
-reinstated, you do not qualify to receive new licenses for the same
-material under section 10.
-
-  9. Acceptance Not Required for Having Copies.
-
-  You are not required to accept this License in order to receive or
-run a copy of the Program.  Ancillary propagation of a covered work
-occurring solely as a consequence of using peer-to-peer transmission
-to receive a copy likewise does not require acceptance.  However,
-nothing other than this License grants you permission to propagate or
-modify any covered work.  These actions infringe copyright if you do
-not accept this License.  Therefore, by modifying or propagating a
-covered work, you indicate your acceptance of this License to do so.
-
-  10. Automatic Licensing of Downstream Recipients.
-
-  Each time you convey a covered work, the recipient automatically
-receives a license from the original licensors, to run, modify and
-propagate that work, subject to this License.  You are not responsible
-for enforcing compliance by third parties with this License.
-
-  An "entity transaction" is a transaction transferring control of an
-organization, or substantially all assets of one, or subdividing an
-organization, or merging organizations.  If propagation of a covered
-work results from an entity transaction, each party to that
-transaction who receives a copy of the work also receives whatever
-licenses to the work the party's predecessor in interest had or could
-give under the previous paragraph, plus a right to possession of the
-Corresponding Source of the work from the predecessor in interest, if
-the predecessor has it or can get it with reasonable efforts.
-
-  You may not impose any further restrictions on the exercise of the
-rights granted or affirmed under this License.  For example, you may
-not impose a license fee, royalty, or other charge for exercise of
-rights granted under this License, and you may not initiate litigation
-(including a cross-claim or counterclaim in a lawsuit) alleging that
-any patent claim is infringed by making, using, selling, offering for
-sale, or importing the Program or any portion of it.
-
-  11. Patents.
-
-  A "contributor" is a copyright holder who authorizes use under this
-License of the Program or a work on which the Program is based.  The
-work thus licensed is called the contributor's "contributor version".
-
-  A contributor's "essential patent claims" are all patent claims
-owned or controlled by the contributor, whether already acquired or
-hereafter acquired, that would be infringed by some manner, permitted
-by this License, of making, using, or selling its contributor version,
-but do not include claims that would be infringed only as a
-consequence of further modification of the contributor version.  For
-purposes of this definition, "control" includes the right to grant
-patent sublicenses in a manner consistent with the requirements of
-this License.
-
-  Each contributor grants you a non-exclusive, worldwide, royalty-free
-patent license under the contributor's essential patent claims, to
-make, use, sell, offer for sale, import and otherwise run, modify and
-propagate the contents of its contributor version.
-
-  In the following three paragraphs, a "patent license" is any express
-agreement or commitment, however denominated, not to enforce a patent
-(such as an express permission to practice a patent or covenant not to
-sue for patent infringement).  To "grant" such a patent license to a
-party means to make such an agreement or commitment not to enforce a
-patent against the party.
-
-  If you convey a covered work, knowingly relying on a patent license,
-and the Corresponding Source of the work is not available for anyone
-to copy, free of charge and under the terms of this License, through a
-publicly available network server or other readily accessible means,
-then you must either (1) cause the Corresponding Source to be so
-available, or (2) arrange to deprive yourself of the benefit of the
-patent license for this particular work, or (3) arrange, in a manner
-consistent with the requirements of this License, to extend the patent
-license to downstream recipients.  "Knowingly relying" means you have
-actual knowledge that, but for the patent license, your conveying the
-covered work in a country, or your recipient's use of the covered work
-in a country, would infringe one or more identifiable patents in that
-country that you have reason to believe are valid.
-
-  If, pursuant to or in connection with a single transaction or
-arrangement, you convey, or propagate by procuring conveyance of, a
-covered work, and grant a patent license to some of the parties
-receiving the covered work authorizing them to use, propagate, modify
-or convey a specific copy of the covered work, then the patent license
-you grant is automatically extended to all recipients of the covered
-work and works based on it.
-
-  A patent license is "discriminatory" if it does not include within
-the scope of its coverage, prohibits the exercise of, or is
-conditioned on the non-exercise of one or more of the rights that are
-specifically granted under this License.  You may not convey a covered
-work if you are a party to an arrangement with a third party that is
-in the business of distributing software, under which you make payment
-to the third party based on the extent of your activity of conveying
-the work, and under which the third party grants, to any of the
-parties who would receive the covered work from you, a discriminatory
-patent license (a) in connection with copies of the covered work
-conveyed by you (or copies made from those copies), or (b) primarily
-for and in connection with specific products or compilations that
-contain the covered work, unless you entered into that arrangement,
-or that patent license was granted, prior to 28 March 2007.
-
-  Nothing in this License shall be construed as excluding or limiting
-any implied license or other defenses to infringement that may
-otherwise be available to you under applicable patent law.
-
-  12. No Surrender of Others' Freedom.
-
-  If conditions are imposed on you (whether by court order, agreement or
-otherwise) that contradict the conditions of this License, they do not
-excuse you from the conditions of this License.  If you cannot convey a
-covered work so as to satisfy simultaneously your obligations under this
-License and any other pertinent obligations, then as a consequence you may
-not convey it at all.  For example, if you agree to terms that obligate you
-to collect a royalty for further conveying from those to whom you convey
-the Program, the only way you could satisfy both those terms and this
-License would be to refrain entirely from conveying the Program.
-
-  13. Use with the GNU Affero General Public License.
-
-  Notwithstanding any other provision of this License, you have
-permission to link or combine any covered work with a work licensed
-under version 3 of the GNU Affero General Public License into a single
-combined work, and to convey the resulting work.  The terms of this
-License will continue to apply to the part which is the covered work,
-but the special requirements of the GNU Affero General Public License,
-section 13, concerning interaction through a network will apply to the
-combination as such.
-
-  14. Revised Versions of this License.
-
-  The Free Software Foundation may publish revised and/or new versions of
-the GNU General Public License from time to time.  Such new versions will
-be similar in spirit to the present version, but may differ in detail to
-address new problems or concerns.
-
-  Each version is given a distinguishing version number.  If the
-Program specifies that a certain numbered version of the GNU General
-Public License "or any later version" applies to it, you have the
-option of following the terms and conditions either of that numbered
-version or of any later version published by the Free Software
-Foundation.  If the Program does not specify a version number of the
-GNU General Public License, you may choose any version ever published
-by the Free Software Foundation.
-
-  If the Program specifies that a proxy can decide which future
-versions of the GNU General Public License can be used, that proxy's
-public statement of acceptance of a version permanently authorizes you
-to choose that version for the Program.
-
-  Later license versions may give you additional or different
-permissions.  However, no additional obligations are imposed on any
-author or copyright holder as a result of your choosing to follow a
-later version.
-
-  15. Disclaimer of Warranty.
-
-  THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
-APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
-HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
-OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
-IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
-ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
-
-  16. Limitation of Liability.
-
-  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
-THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
-GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE
-USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF
-DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD
-PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
-EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGES.
-
-  17. Interpretation of Sections 15 and 16.
-
-  If the disclaimer of warranty and limitation of liability provided
-above cannot be given local legal effect according to their terms,
-reviewing courts shall apply local law that most closely approximates
-an absolute waiver of all civil liability in connection with the
-Program, unless a warranty or assumption of liability accompanies a
-copy of the Program in return for a fee.
-
-                     END OF TERMS AND CONDITIONS
-
-            How to Apply These Terms to Your New Programs
-
-  If you develop a new program, and you want it to be of the greatest
-possible use to the public, the best way to achieve this is to make it
-free software which everyone can redistribute and change under these terms.
-
-  To do so, attach the following notices to the program.  It is safest
-to attach them to the start of each source file to most effectively
-state the exclusion of warranty; and each file should have at least
-the "copyright" line and a pointer to where the full notice is found.
-
-    {one line to give the program's name and a brief idea of what it does.}
-    Copyright (C) {year}  {name of author}
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-Also add information on how to contact you by electronic and paper mail.
-
-  If the program does terminal interaction, make it output a short
-notice like this when it starts in an interactive mode:
-
-    {project}  Copyright (C) {year}  {fullname}
-    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
-    This is free software, and you are welcome to redistribute it
-    under certain conditions; type `show c' for details.
-
-The hypothetical commands `show w' and `show c' should show the appropriate
-parts of the General Public License.  Of course, your program's commands
-might be different; for a GUI interface, you would use an "about box".
-
-  You should also get your employer (if you work as a programmer) or school,
-if any, to sign a "copyright disclaimer" for the program, if necessary.
-For more information on this, and how to apply and follow the GNU GPL, see
-<http://www.gnu.org/licenses/>.
-
-  The GNU General Public License does not permit incorporating your program
-into proprietary programs.  If your program is a subroutine library, you
-may consider it more useful to permit linking proprietary applications with
-the library.  If this is what you want to do, use the GNU Lesser General
-Public License instead of this License.  But first, please read
-<http://www.gnu.org/philosophy/why-not-lgpl.html>.
+[Asset Store Terms of Service and EULA](https://unity3d.com/ru/legal/as_terms)
+
+## 1. Background
+### 1.1
+
+The Unity Asset Store (“Unity Asset Store”) is owned and operated by Unity Technologies ApS (company no. 30 71 99 13), Vendersgade 28, DK-1363 Copenhagen, Denmark ("Unity"). Your use of the Unity Asset Store is governed by a legal agreement between you and Unity consisting of these Asset Store Terms of Service ("Terms") which you must accept by checking the box indicating your acceptance of these Terms when you register as a user of the Unity Asset Store.
+### 1.2
+
+In addition any Asset that you acquire from the Unity Asset Store that has been developed by Unity or that has been made available by third-parties ("Providers") that are not affiliated with Unity, will be subject to Unity's standard Unity Asset Store End User License Agreement ("Unity-EULA"), which is Appendix 1 to these Terms and which you must accept as an integrated part of these Terms by checking the box indicating your acceptance of these Terms when you are register as a user of the Unity Asset Store. Certain Assets may be governed by a Provider end user license agreement.
+### 1.3
+
+You may use Unity Asset Store to browse, locate, and download Assets (defined as (i) software or software development kits designed in order to facilitate the development of electronic games and interactive media (ii) content (for example – without limitation – computer graphics, including 3D computer graphics, sounds and music), tutorials and other digital materials created in order to become integrated parts of electronic games). Some of these Assets may be offered by Unity while others may be made available by Providers. You agree that Unity is not responsible for any Asset on the Unity Asset Store that originates from a source other than Unity. Additionally, some Assets may be made available to you at no charge while other Assets may be purchased for a fee. You agree that you are solely responsible for all fees associated with purchases you make on the Unity Asset Store.
+### 1.4
+
+In order to use Unity Asset Store you must be 18 years of age or older. On using the service you warrant that you have legal capacity to enter into the agreement.
+## 2. Unity's provision of the Unity Asset Store
+### 2.1
+
+You agree that Unity may stop (permanently or temporarily) providing the Unity Asset Store (or any features within the Unity Asset Store) to you or to users generally at Unity’s sole discretion, without prior notice to you.
+### 2.2
+
+Unity may make available to you various payment processing methods to facilitate the purchase of Assets from the Unity Asset Store. You agree to abide by any relevant terms of service or other legal agreement, whether with Unity or a third party, that governs your use of a given payment processing method. You agree that Unity reserves the right to add or remove payment processing methods at its sole discretion and without notice to you.
+### 2.3
+
+From time to time, Unity may discover an Asset on the Unity Asset Store that violates the Asset Store Provider Agreement between a Provider and Unity or other legal agreements, laws, regulations or policies. You agree that in such an instance Unity retains the right at its sole discretion to demand that such Asset is removed from any computer or other equipment under your control and you agree to promptly comply with such demand.
+## 3. Your Use of the Unity Asset Store
+### 3.1
+
+In order to access certain services in the Unity Asset Store, you may be required to provide information about yourself such as your name, address, and billing details. You agree that any such information you provide to Unity will always be accurate, correct and up to date.
+### 3.2
+
+You agree to use the Unity Asset Store only for purposes that are permitted by (a) the Terms and Asset Store Guidelines and (b) any applicable law, regulation or generally accepted practices or guidelines in the relevant jurisdictions. You agree to comply with all local laws and regulations regarding the download, installation and/or use of the Assets.
+### 3.3
+
+You agree not to access (or attempt to access) the Unity Asset Store by any means other than through the interface that is provided by Unity, unless you have been specifically allowed to do so in a separate agreement with Unity. You specifically agree not to access (or attempt to access) the Unity Asset Store through any automated means (including use of scripts, crawlers or similar technologies from time to time).
+### 3.4
+
+You agree that you will not engage in any activity that interferes with or disrupts the Unity Asset Store (or the servers, payment systems or networks which are connected to the Unity Asset Store). You agree that you will not use any of the Assets found on the Unity Asset Store in a way that interferes or disrupts any servers, payment systems, networks, or websites operated by Unity or any third party.
+### 3.5
+
+Unless you have been specifically permitted to do so in a separate agreement with Unity and except as permitted under the Unity-EULA, you agree that you will not reproduce, duplicate, copy, sell, trade or resell any Asset that you have acquired from the Unity Asset Store for any purpose.
+### 3.6
+
+You agree that you are solely responsible for (and that Unity has no responsibility to you or to any third party for) your use of the Unity Asset Store or any Assets, any breach of your obligations under the Terms, and for the consequences (including loss or damage of any kind which Unity may suffer) of any such breach.
+### 3.7
+
+You agree to comply with any and all applicable tax laws, including the reporting and payment of any taxes arising in connection with your use of the Unity Asset Store or the purchase of Assets through the Unity Asset Store, and that the reporting and payment of any such applicable taxes are your responsibility.
+### 3.8
+
+You agree that Unity and/or third parties own all right, title and interest in and to the Unity Asset Store and the Assets available through the Unity Asset Store, including without limitation all applicable Intellectual Property Rights in the Unity Asset Store and Assets. "Intellectual Property Rights" means any and all intellectual property rights wherever in the world and whenever arising (and including any application), including patent laws, copyright, trade secrets, know-how, confidential information, business names and domain names, computer programs, trademark laws, service marks, trade names, utility models, design rights, semi-conductor topography rights, database rights, goodwill or rights to sue for passing off, and any and all other proprietary rights worldwide. You agree that you will not, and will not allow any third party to,
+
+(i) copy, sell, license, distribute, transfer, modify, adapt, translate, prepare derivative works from, decompile, reverse engineer, disassemble or otherwise attempt to derive source code from the Unity Asset Store or the Assets, unless otherwise permitted,
+
+(ii) take any action to circumvent or defeat the security or content usage rules provided, deployed or enforced by any functionality (including without limitation digital rights management or forward-lock functionality) in the Unity Asset Store or Assets,
+
+(iii) use the Unity Asset Store or Assets to access, copy, transfer, transcode or retransmit content in violation of any law or third party rights, or
+
+(iv) remove, obscure, or alter Unity's or any third party's copyright notices, trademarks, or other proprietary rights notices affixed to or contained within the Unity Asset Store or Assets.
+### 3.9
+
+While Unity does not undertake any legal obligation to monitor, pre-screen, review, flag, filter, modify, refuse or remove any or all Assets or their content from the Unity Asset Store, Unity reserves the right to do so, and if Unity is notified by Provider or otherwise becomes aware and determines in its sole discretion that an Asset or any portion thereof; (a) violates the intellectual property rights or any other rights of any third party; (b) violates any applicable law or is subject to an injunction; (c) is pornographic, obscene or otherwise violates Unity's hosting policies or other terms of service as may be updated by Unity from time to time in its sole discretion; (d) is being distributed by Provider improperly; (e) may create liability for Unity; (f) is deemed by Unity to have a virus or is deemed to be malware, spyware or have an adverse impact on Unity; (g) violates the terms of this Agreement; or (h) the display of the Asset is impacting the integrity of Unity servers (i.e., Customers are unable to access such content or otherwise experience difficulty), Unity may demand that Provider fixes the Asset. In addition Unity shall itself be entitled to edit and make changes in the Asset. Finally Unity shall be entitled to remove the Asset from the Unity Asset Store immediately, or reclassify the Asset at its sole discretion. Unity reserves the right to suspend and/or bar any Provider from the Unity Asset Store at its sole discretion. Irrespective of the above, you agree that by using the Unity Asset Store you may be exposed to Assets that you may find offensive, indecent or objectionable and that you use the Unity Asset Store at your own risk.
+## 4. Unity Services and Third Party Assets and Services
+### 4.1
+
+Some components of Assets (whether developed by Unity or third parties) may also be governed by applicable open source software licenses. In the event of a conflict between the Terms, the applicable EULA and any such licenses, the open source software licenses shall prevail with respect to those components.
+## 5. Automatic Updates
+### 5.1
+
+Assets originating from Unity and Providers may communicate with Unity servers or Providers' servers as the case may be from time to time to check for available updates to the Asset Store and the Assets, such as bug fixes, patches, enhanced functions, missing plug-ins and new versions (collectively, "Updates"). By installing these Assets, you agree to such automatically requested and received Updates. The Asset Store may make connections to remote servers to provide Unity with anonymous usage statistics collected by Google Analytics that Unity uses to improve the Asset Store. The Asset Store may also have features that confirm your compliance with the terms of this Agreement.
+## 6. Indemnifications
+### 6.1
+
+To the maximum extent permitted by law, you agree to defend, indemnify and hold harmless Unity, its affiliates and their respective directors, officers, employees and agents from and against any and all claims, actions, suits or proceedings, as well as any and all losses, liabilities, damages, costs and expenses (including reasonable attorneys fees) arising out of or accruing from your use of the Unity Asset Store, including your downloading, installation, or use of any Assets, or your violation of these Terms.
+## 7.Termination
+### 7.1
+
+These Terms will continue to apply until terminated by either you or Unity as set out below.
+### 7.2
+
+If you want to terminate these Terms, you may do so by ceasing your use of the Unity Asset Store and any Assets downloaded from the Unity Asset Store.
+### 7.3
+
+Unity may at any time, terminate these Terms with you if: (A) you have breached any provision of these Terms; or (B) Unity is required to do so by law; or (C) Unity decides to no longer provide the Unity Asset Store.
+### 7.4
+
+When these Terms come to an end, all of the legal rights, obligations and liabilities that you and Unity have benefited from, been subject to (or which have accrued over time whilst these Terms have been in force) or which are expressed to continue indefinitely, shall be unaffected by this cessation, and the provisions of Section 11.7 shall continue to apply to such rights, obligations and liabilities indefinitely.
+## 8. Disclaimer of Warranties
+### 8.1
+
+YOU EXPRESSLY UNDERSTAND AND AGREE THAT YOUR USE OF THE ASSET STORE AND ANY ASSETS DOWNLOADED OR OTHERWISE OBTAINED THROUGH THE USE OF THE UNITY ASSET STORE IS AT YOUR SOLE RISK AND THAT THE UNITY ASSET STORE IS PROVIDED “AS IS” AND “AS AVAILABLE” WITHOUT WARRANTY OF ANY KIND, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW. IN PARTICULAR, UNITY, ITS SUBSIDIARIES, HOLDING COMPANIES AND AFFILIATES, AND ITS LICENSORS DO NOT REPRESENT OR WARRANT TO YOU THAT:
+
+(A) YOUR USE OF THE ASSETS WILL MEET YOUR REQUIREMENTS,
+
+(B) YOUR USE OF THE ASSETS WILL BE UNINTERRUPTED, TIMELY, SECURE OR FREE FROM ERROR,
+
+(C) ANY INFORMATION OBTAINED BY YOU AS A RESULT OF YOUR USE OF THE ASSETS WILL BE ACCURATE OR RELIABLE, AND
+
+(D) THAT DEFECTS IN THE OPERATION OR FUNCTIONALITY OF ANY SOFTWARE PROVIDED TO YOU AS PART OF THE ASSETS WILL BE CORRECTED.
+### 8.2
+
+YOUR USE OF THE UNITY ASSET STORE AND ANY ASSETS DOWNLOADED OR OTHERWISE OBTAINED THROUGH THE USE OF THE UNITY ASSET STORE IS AT YOUR OWN DISCRETION AND RISK AND YOU ARE SOLELY RESPONSIBLE FOR ANY DAMAGE TO YOUR COMPUTER SYSTEM, OR OTHER DEVICE, OR LOSS OF DATA THAT RESULTS FROM SUCH USE.
+### 8.3
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, UNITY FURTHER EXPRESSLY DISCLAIMS ALL WARRANTIES TERMS OR CONDITIONS OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO ANY IMPLIED WARRANTIES TERMS AND CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT, WITH RESPECT TO ANY ASSETS DOWNLOADED OR OTHERWISE OBTAINED THROUGH THE UNITY ASSET STORE AS WELL AS THE UNITY ASSET STORE ITSELF.
+### 8.4
+
+NONE OF THE ASSETS ARE INTENDED FOR USE IN THE OPERATION OF NUCLEAR FACILITIES, LIFE SUPPORT SYSTEMS, EMERGENCY COMMUNICATIONS, AIRCRAFT NAVIGATION OR COMMUNICATION SYSTEMS, AIR TRAFFIC CONTROL SYSTEMS, OR ANY OTHER SUCH ACTIVITIES IN WHICH CASE THE FAILURE OF THE ASSETS COULD LEAD TO DEATH, PERSONAL INJURY, OR SEVERE PHYSICAL OR ENVIRONMENTAL DAMAGE.
+## 9. Limitation of Liability
+### 9.1
+
+UNITY AND ITS SUBSIDIARIES, HOLDING COMPANIES AND OTHER AFFILIATES TOTAL LIABILITY TO YOU FROM ALL CAUSES OF ACTION AND UNDER ALL THEORIES OF LIABILITY UNDER THESE TERMS WILL BE LIMITED TO THE AMOUNTS PAID TO UNITY BY YOU IN THE PAST SIX MONTHS FOR THE ASSETS RELATING TO THE DISPUTE. IN NO EVENT WILL UNITY OR ITS SUBSIDIARIES, HOLDING COMPANIES AND OTHER AFFILIATES SHALL BE LIABLE TO YOU FOR ANY SPECIAL, INCIDENTAL, EXEMPLARY, PUNITIVE OR CONSEQUENTIAL DAMAGES (INCLUDING LOSS OF DATA, BUSINESS, PROFITS OR ABILITY TO EXECUTE) OR FOR the cost of procuring substitute products ARISING OUT OF OR IN CONNECTION WITH THESE TERMS OR YOUR USE OF THE ASSET STORE OR ANY ASSETS DOWNLOADED OR OTHERWISE OBTAINED FROM THE UNITY ASSET STORE, WHETHER SUCH LIABILITY ARISES FROM ANY CLAIM BASED UPON CONTRACT, WARRANTY, TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY OR OTHERWISE, AND WHETHER OR NOT UNITY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH LOSS OR DAMAGE. THE FOREGOING LIMITATIONS WILL SURVIVE AND APPLY EVEN IF ANY LIMITED REMEDY SPECIFIED IN THIS AGREEMENT IS FOUND TO HAVE FAILED OF ITS ESSENTIAL PURPOSE.
+### 9.2
+
+YOU EXPRESSLY UNDERSTAND AND AGREE THAT UNITY, ITS SUBSIDIARIES, HOLDING COMPANIES AND AFFILIATES, AND ITS LICENSORS SHALL NOT BE LIABLE TO YOU FOR ANY LOSS OR DAMAGE WHICH MAY BE INCURRED BY YOU, INCLUDING BUT NOT LIMITED TO LOSS OR DAMAGE AS A RESULT OF:
+
+(I) ANY RELIANCE PLACED BY YOU ON THE COMPLETENESS, ACCURACY OR EXISTENCE OF ANY ADVERTISING, OR AS A RESULT OF ANY RELATIONSHIP OR TRANSACTION BETWEEN YOU AND ANY, DEVELOPER, ADVERTISER OR SPONSOR WHOSE ADVERTISING APPEARS IN THE ASSETS OR ON THE UNITY ASSET STORE;
+
+(II) ANY CHANGES WHICH UNITY MAY MAKE TO THE ASSETS OR ON THE UNITY ASSET STORE, OR FOR ANY PERMANENT OR TEMPORARY CESSATION IN THE PROVISION OF THE UNITY ASSET STORE OR THE ASSETS (OR ANY FEATURES WITHIN THE ASSETS);
+
+(III) THE DELETION OF, CORRUPTION OF, OR FAILURE TO STORE, ANY CONTENT AND OTHER COMMUNICATIONS DATA MAINTAINED OR TRANSMITTED BY OR THROUGH YOUR USE OF THE UNITY ASSET STORE OR THE ASSETS;
+
+(IV) YOUR FAILURE TO PROVIDE UNITY WITH ACCURATE ACCOUNT INFORMATION;
+### 9.3
+
+NOTHING IN THE TERMS EXCLUDES THE LIABILITY FOR UNITY, ITS SUBSIDIARIES OR AFFILIATES FOR: (I) DEATH AND PERSONAL INJURY CAUSED BY NEGLIGENCE; (II) FRAUDULENT MISREPRESENTATION; OR (III) ANY OTHER LIABILITY WHICH CANNOT BE LIMITED BY APPLICABLE LAW.
+## 10. Change of Terms
+### 10.1
+
+Unity may add or make changes to the Terms from time to time. When these changes are made, Unity will make a new copy of the Terms available at the Unity Asset Store.
+### 10.2
+
+You understand and agree that if you use the Unity Asset Store and the Assets after the date on which the Terms have changed Unity will treat your use as acceptance of the updated Terms.
+## 11. General Legal Terms
+### 11.1
+
+These Terms constitutes the whole legal agreement between you and Unity and govern your use of the Unity Asset Store and the Assets, and completely replace any prior agreements between you and Unity in relation to the Unity Asset Store and the Assets. Each party confirms that, in entering into the Terms it has not relied upon any representations or statements not expressly incorporated herein. Notwithstanding anything else in the Terms, neither party limits or excludes liability for fraudulent misrepresentation.
+### 11.2
+
+You agree that if Unity does not exercise or enforce any legal right or remedy which is contained in these Terms (or which Unity has the benefit of under any applicable law), this will not be taken to be a formal waiver of Unity’s rights and that those rights or remedies will still be available to Unity.
+### 11.3
+
+If any court of law, having the jurisdiction to decide on this matter, rules that any provision of these Terms is invalid, then that provision will be removed from the Terms without affecting the rest of the Terms. The remaining provisions of these Terms will continue to be valid and enforceable.
+### 11.4
+
+You acknowledge and agree that each member of the group of companies with which Unity is affiliated shall be third party beneficiaries to these Terms and that such other companies shall be entitled to directly enforce, and rely upon, any provision of these Terms that confers a benefit on (or rights in favour of) them. Other than this, no other person or company shall be third party beneficiaries to these Terms. (whether pursuant to the contract, law or otherwise).
+### 11.5
+
+The rights granted in the Terms may not be assigned or transferred by you without the prior written approval of Unity. Nor shall you be permitted to delegate your responsibilities or obligations under these Terms without the prior written approval of Unity.
+### 11.6
+
+The rights granted in the Terms may be assigned or transferred by Unity without your prior written approval. In addition Unity shall be permitted to delegate its responsibilities or obligations under these Terms without your written approval.
+### 11.7
+
+These Terms, and your relationship with Unity under these Terms, shall be governed by the laws of Denmark without regard to its conflict of laws provisions. Any dispute arising out of or in connection with these Terms, including any disputes regarding the existence, validity or termination thereof, shall be settled by simplified arbitration arranged by The Danish Institute of Arbitration in accordance with the rules of simplified arbitration procedure adopted by The Danish Institute of Arbitration and in force at the time when such proceedings are commenced. Notwithstanding this, you agree that Unity shall still be allowed to apply for injunctive remedies (or an equivalent type of urgent legal relief) in any jurisdiction.
+
+# APPENDIX 1
+Asset STORE End User License Agreement
+## 1. Parties to the Agreement/The Subject Matter of the Agreement:
+### 1.1
+
+This Unity Asset Store End User License Agreement (hereinafter referred to as “EULA”) is a non-exclusive, legally binding end user license agreement between any individual or a single entity (“END-USER”) that acquires an Asset from the Unity Asset Store and either (i) Unity Technologies ApS (company no. 30 71 99 13), Vendersgade 28, DK-1363 Copenhagen, Denmark (“Licensor” or "Unity"), or as the case may be (ii) any third party (“Provider”) that distributes its Assets from the Unity Asset Store. Consequently, this EULA shall apply regardless of whether a purchased Asset is produced by Unity or by a Provider ("Licensor"). This EULA is therefore a non-exclusive, legally binding end user license agreement as the case may be between either (i) Unity and END-User (in which case the term "Licensor" shall refer to Unity), or (ii) Provider and End User (in which case the term "Licensor" shall refer to Provider).
+### 1.2
+
+By installing, copying, accessing, downloading or otherwise using the Assets, End User agrees to be bound the provisions of this EULA. All definitions of the Terms shall also apply in this EULA unless the context clearly provides for a different understanding.
+### 1.3
+
+The subject matter of this EULA is the licensing to END-USER of any Asset acquired by End User from the Unity Asset Store. The Assets are licensed, not sold.
+### 1.4
+
+END USER hereby acknowledges that in the event it acquires an ASSET which in the Unity Asset Store is marked as an Asset which is distributed by Provider (as opposed to Unity), then Provider shall be considered as Licensor of such Asset and, consequently, only Provider (as opposed to Unity) shall be responsible for any liability whatsoever under, any EULA or any breach by Provider, including (without limitation) liability for infringement of any intellectual property rights, irrespective of the fact that payment takes place to Unity.
+## 2. END-USER's Rights and Obligations
+### 2.1
+
+END-USER may use the licensed Assets only for their intended purpose.
+### 2.2
+
+Licensor grants to the END-USER a non-exclusive, worldwide, and perpetual license to the Asset to integrate Assets only as incorporated and embedded components of electronic games and interactive media and distribute such electronic game and interactive media. Except for game services software development kits (“Services SDKs”), END-USERS may modify Assets. END-USER may otherwise not reproduce, distribute, sublicense, rent, lease or lend the Assets. It is emphasized that the END-USERS shall not be entitled to distribute or transfer in any way (including, without, limitation by way of sublicense) the Assets in any other way than as integrated components of electronic games and interactive media. Without limitation of the foregoing it is emphasized that END-USER shall not be entitled to share the costs related to purchasing an Asset and then let any third party that has contributed to such purchase use such Asset (forum pooling).
+### 2.3
+
+EXCEPT FOR EDITOR EXTENSION ASSETS, END-USER is granted a license to install and use Assets on an unlimited number of computers provided that these computers are either all (i) physically located at a single physical location ("Site") belonging to END-USER, or (ii) laptops belonging to END-USER which have been made available by END-USER to its employees that are employed at the same Site provided all such computers have appropriately licensed Unity software installed. Consequently, any Asset may only be used at particular Site or on computers assigned to END-USER's employees employed at the same Site and may only be moved to another Site subject to prior written approval from Licensor. THIS CLAUSE 2.3 DOES NOT APPLY TO ASSETS THAT IN THE UNITY ASSET STORE ARE CATEGORIZED UNDER THE HEADING "EDITOR EXTENSIONS."
+### 2.4
+
+Editor Extensions: END-USER is granted a license to install and use any Assets which are categorized in the Asset Store as "Editor Extensions" only on one (1) computer. For the avoidance of doubt, Editor Extension Assets are licensed on a per computer basis may not be shared or used concurrently on different computers.
+### 2.5
+
+Game Services SDKs: If END-USER downloads and integrates Services SDKs, END-USER may be required to accept a Licensor end user agreement and/or additional Licensor terms and conditions to use such services.
+### 2.6
+
+END-USER shall pay for the license to the Assets in accordance with the payment process provided in the Asset Store. END USER shall provide customary billing and tax information such as name, billing address, credit card information and VAT number (for EU residents). END USER agrees to pay for all purchases hereby authorizes the collection of such amounts including applicable taxes by charging the credit card provided, either directly by Unity or indirectly, via a third party online payment processor. VAT numbers cannot be added or changed after the purchase is completed. If you are directed to a third party payment processor, you may be subject to terms and conditions governing use of that third party’s service and that third party’s Privacy Policy. Please review such third party’s terms and conditions and privacy policy before using the services. All sales are final and there shall be no refunds except as required by law.
+### 2.7
+
+Some components of Assets (whether developed by Unity or third parties) may also be governed by applicable open source software licenses. In the event of a conflict between the applicable EULA and any such open source licenses, the open source software licenses shall prevail with respect to those components.
+## 3. Licensor’s Rights and Obligations
+### 3.1
+
+Licensor shall render support services to END-USER only in the event a special agreement to this effect has been entered into.
+## 4. Termination
+### 4.1
+
+Without prejudice to any other rights, Licensor may terminate this EULA if END-USER fails to comply with the terms and conditions of this EULA and the Terms.
+### 4.2
+
+END-USER may terminate END-USER’s license at any time.
+### 4.3
+
+In the event that Unity at its discretion or as a result of a decision made by any competent court or authority makes a refund to END-USER of the fees paid for any Asset, then this EULA shall terminate for such Asset.
+### 4.4
+
+In the event that Unity at its discretion or as a result of a decision made by any competent court or authority makes a refund to END-USER of the fees paid for any Asset, then this EULA shall terminate for such Asset.
+## 5. Duplication Rights/Back Up Copy
+### 5.1
+
+END-USER may not make copies of the Assets, except and only to the extent that such activity is expressly permitted under mandatory statutory applicable law. In addition Licensor acknowledges that copies of the Assets may be made when the Assets have been integrated as parts of electronic games and interactive media, cf. Section 2.3 above.
+### 5.2
+
+After installation of one copy of the Asset pursuant to this EULA, END USER may keep the original copy of the Asset solely for back up or archival purposes.
+## 6. Reverse Engineering, Decompilation, and Disassembly
+### 6.1
+
+Except for Services SDKs, END USER may modify assets. END USER shall not reverse engineer, decompile, or disassemble Services SDKs, except and only to the extent that such activity is expressly permitted under mandatory statutory applicable law.
+## 7. Trademarks
+### 7.1
+
+This EULA does not grant END-USER any rights in connection with any trademarks or service marks of Licensor, Provider or Licensor's other suppliers.
+## 8. Upgrades and Support
+### 8.1
+
+Assets identified as upgrades replace and/or supplement the licensed Assets.
+### 8.2
+
+Licensor may at its own discretion from time to time provide upgrades of the Assets to END USER without requesting further payment. Irrespective hereof END-USER is only entitled to licenses to upgrades if END-USER has entered into an Upgrade Agreement with Licensor. END-USER may use the upgraded Assets only in accordance with the terms of this EULA.
+### 8.3
+
+END-USER is only entitled to support if END-USER has entered into a Support Agreement with Licensor.
+## 9. Copyright
+### 9.1
+
+The Assets are protected by copyright laws and international copyright treaties, as well as other intellectual property laws and treaties.
+### 9.2
+
+All title and intellectual property rights in and to the Assets (including but not limited to any software, images, photographs, animations, graphics, 3D graphics, video, audio, music, text, tutorials, and “applets” incorporated into the Assets), the accompanying printed materials, and any copies of the Assets are owned by Licensor. All rights not expressly granted are reserved by Licensor.
+## 10. Disclaimer of Warranties
+### 10.1
+
+END-USER UNDERSTANDS AND ACCEPTS THAT PRIOR TO PLACING ANY ASSET ON THE UNITY ASSET STORE, UNITY DOES NOT UNDERTAKE ANY LEGAL OBLIGATION TO MONITOR, PRE-SCREEN, REVIEW, FLAG, FILTER, MODIFY, REFUSE OR REMOVE ANY ASSET OR THEIR CONTENT FROM THE UNITY ASSET STORE. CONSEQUENTLY, END-USER EXPRESSLY UNDERSTANDS AND AGREES THAT ITS USE OF THE ASSETS IS AT END-USER'S SOLE RISK AND THAT THE ASSETS ARE PROVIDED “AS IS” AND “AS AVAILABLE” WITHOUT WARRANTY OF ANY KIND, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW. IN PARTICULAR, LICENSOR, ITS SUBSIDIARIES, HOLDING COMPANIES AND AFFILIATES, AND ITS LICENSORS DO NOT REPRESENT OR WARRANT TO END-USER THAT:
+
+(A) END-USER'S USE OF THE ASSETS WILL MEET END-USER'S REQUIREMENTS,
+
+(B) END-USER'S USE OF THE ASSETS WILL BE UNINTERRUPTED, TIMELY, SECURE OR FREE FROM ERROR,
+
+(C) ANY INFORMATION OBTAINED BY END-USER AS A RESULT OF END-USER'S USE OF THE ASSETS WILL BE ACCURATE OR RELIABLE, AND
+
+(D) THAT DEFECTS IN THE OPERATION OR FUNCTIONALITY OF ANY SOFTWARE PROVIDED TO END-USER AS PART OF THE ASSETS WILL BE CORRECTED.
+## 10.2
+
+END-USER'S USE OF ANY ASSETS IS AT END-USER'S OWN DISCRETION AND RISK AND END-USER IS SOLELY RESPONSIBLE FOR ANY DAMAGE TO END-USER'S COMPUTER SYSTEM, OR OTHER DEVICE, OR LOSS OF DATA THAT RESULTS FROM SUCH USE.
+### 10.3
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, LICENSOR FURTHER EXPRESSLY DISCLAIMS ALL WARRANTIES TERMS OR CONDITIONS OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO ANY IMPLIED WARRANTIES TERMS AND CONDITIONS OF MERCHANTABILITY, SATISFACTORY QUALITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT, WITH RESPECT TO ANY ASSETS.
+### 10.4
+
+NONE OF THE ASSETS ARE INTENDED FOR USE IN THE OPERATION OF NUCLEAR FACILITIES, LIFE SUPPORT SYSTEMS, EMERGENCY COMMUNICATIONS, AIRCRAFT NAVIGATION OR COMMUNICATION SYSTEMS, AIR TRAFFIC CONTROL SYSTEMS, OR ANY OTHER SUCH ACTIVITIES IN WHICH CASE THE FAILURE OF THE ASSETS COULD LEAD TO DEATH, PERSONAL INJURY, OR SEVERE PHYSICAL OR ENVIRONMENTAL DAMAGE.
+## 11. Limitation of Liability
+### 11.1
+
+LICENSOR AND ITS SUBSIDIARIES, HOLDING COMPANIES AND OTHER AFFILIATES TOTAL LIABILITY TO END-USER FROM ALL CAUSES OF ACTION AND UNDER ALL THEORIES OF LIABILITY UNDER THESE TERMS WILL BE LIMITED TO THE AMOUNTS PAID TO END-USER BY END-USER IN THE PAST SIX MONTHS FOR THE ASSETS RELATING TO THE DISPUTE. IN NO EVENT WILL LICENSOR OR ITS SUBSIDIARIES, HOLDING COMPANIES AND OTHER AFFILIATES SHALL BE LIABLE TO END-USER FOR ANY SPECIAL, INCIDENTAL, EXEMPLARY, PUNITIVE OR CONSEQUENTIAL DAMAGES (INCLUDING LOSS OF DATA, BUSINESS, PROFITS OR ABILITY TO EXECUTE) OR FOR the cost of procuring substitute products ARISING OUT OF OR IN CONNECTION WITH THESE TERMS OR YOUR USE OF THE ASSET STORE OR ANY ASSETS DOWNLOADED OR OTHERWISE OBTAINED FROM THE UNITY ASSET STORE, WHETHER SUCH LIABILITY ARISES FROM ANY CLAIM BASED UPON CONTRACT, WARRANTY, TORT (INCLUDING NEGLIGENCE), STRICT LIABILITY OR OTHERWISE, AND WHETHER OR NOT LICENSOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH LOSS OR DAMAGE. THE FOREGOING LIMITATIONS WILL SURVIVE AND APPLY EVEN IF ANY LIMITED REMEDY SPECIFIED IN THIS AGREEMENT IS FOUND TO HAVE FAILED OF ITS ESSENTIAL PURPOSE.
+### 11.2
+
+END-USER EXPRESSLY UNDERSTAND AND AGREE THAT LICENSOR, ITS SUBSIDIARIES, HOLDING COMPANIES AND AFFILIATES, AND ITS LICENSORS SHALL NOT BE LIABLE TO END-USER FOR ANY LOSS OR DAMAGE WHICH MAY BE INCURRED BY END-USER, INCLUDING BUT NOT LIMITED TO LOSS OR DAMAGE AS A RESULT OF:
+
+(I) ANY RELIANCE PLACED BY END-USER ON THE COMPLETENESS, ACCURACY OR EXISTENCE OF ANY ADVERTISING, OR AS A RESULT OF ANY RELATIONSHIP OR TRANSACTION BETWEEN END-USER AND LICENSOR OR ANY, DEVELOPER, ADVERTISER OR SPONSOR WHOSE ADVERTISING APPEARS IN THE ASSETS OR ON THE UNITY ASSET STORE;
+
+(II) ANY CHANGES WHICH LICENSOR MAY MAKE TO THE ASSETS OR ON THE UNITY ASSET STORE, OR FOR ANY PERMANENT OR TEMPORARY CESSATION IN THE PROVISION OF THE UNITY ASSET STORE OR THE ASSETS (OR ANY FEATURES WITHIN THE ASSETS);
+
+(III) THE DELETION OF, CORRUPTION OF, OR FAILURE TO STORE, ANY CONTENT AND OTHER COMMUNICATIONS DATA MAINTAINED OR TRANSMITTED BY OR THROUGH END-USER'S USE OF THE ASSETS;
+
+(IV) END-USER'S FAILURE TO PROVIDE UNITY WITH ACCURATE ACCOUNT INFORMATION;
+### 11.3
+
+NOTHING IN THE TERMS EXCLUDES THE LIABILITY FOR LICENSOR, ITS SUBSIDIARIES OR AFFILIATES FOR: (I) DEATH AND PERSONAL INJURY CAUSED BY NEGLIGENCE; (II) FRAUDULENT MISREPRESENTATION; OR (III) ANY OTHER LIABILITY WHICH CANNOT BE LIMITED BY APPLICABLE LAW.
+## 12. Export Restrictions
+### 12.1
+
+Assets available on the Unity Asset Store may be subject to laws, administrative regulations and executive orders of those authorities responsible according to any applicable laws relating to the control of imports and exports of the Assets (“Export Laws”). You agree to comply with all applicable Export Laws and you shall not export or re-export directly or indirectly (including via remote access) any part of the Assets to any country to which a license is required under the Export Laws without first obtaining a license.
+## 13. Venue and Applicable Law
+### 13.1
+
+This EULA and END-USER's relationship with Licensor under this EULA, shall be governed by the laws of Denmark without regard to its conflict of laws provisions. Any dispute arising out of or in connection with this Agreement, including any disputes regarding the existence, validity or termination thereof, shall be settled by simplified arbitration arranged by The Danish Institute of Arbitration in accordance with the rules of simplified arbitration procedure adopted by The Danish Institute of Arbitration and in force at the time when such proceedings are commenced. Notwithstanding this, Provider agrees that Licensor shall still be allowed to apply for injunctive remedies (or an equivalent type of urgent legal relief) in any jurisdiction
+
