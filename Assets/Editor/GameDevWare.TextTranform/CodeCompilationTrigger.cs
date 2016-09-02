@@ -21,18 +21,20 @@ using UnityEngine;
 
 namespace Assets.Editor.GameDevWare.TextTranform
 {
-	[InitializeOnLoad, Serializable]
-	internal class CodeCompilationTrigger : ScriptableObject
+	[InitializeOnLoad]
+	internal static class CodeCompilationTrigger
 	{
-		public static CodeCompilationTrigger Instance;
+		private static readonly EditorApplication.CallbackFunction InitializeCallback = Initialize;
 
 		static CodeCompilationTrigger()
 		{
-			Instance = ScriptableObject.CreateInstance<CodeCompilationTrigger>();
+			EditorApplication.update += InitializeCallback;
 		}
 
-		protected void Awake()
+		private static void Initialize()
 		{
+			EditorApplication.update -= InitializeCallback;
+
 			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TemplateInspector).TypeHandle);
 
 			foreach (var templatePath in TemplateSettings.ListTemplatesInProject())
