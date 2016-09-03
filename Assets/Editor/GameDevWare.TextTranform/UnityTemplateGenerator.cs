@@ -31,14 +31,9 @@ namespace Assets.Editor.GameDevWare.TextTranform
 		private static readonly Dictionary<string, Timer> TriggerDelays = new Dictionary<string, Timer>(StringComparer.Ordinal);
 		private static readonly Queue<string> PendingTemplateGenerations = new Queue<string>();
 
-		public UnityTemplateGenerator()
+
+		static UnityTemplateGenerator()
 		{
-			this.Refs.Add(typeof(UnityEngine.Debug).Assembly.Location);
-			this.Refs.Add(typeof(UnityEditor.EditorApplication).Assembly.Location);
-
-			var currentAssemblyLocation = Path.GetDirectoryName(typeof(UnityTemplateGenerator).Assembly.Location);
-			this.ReferencePaths.Add(currentAssemblyLocation);
-
 			EditorApplication.update += () =>
 			{
 				if (PendingTemplateGenerations.Count <= 0) return;
@@ -47,6 +42,14 @@ namespace Assets.Editor.GameDevWare.TextTranform
 					if (PendingTemplateGenerations.Count > 0)
 						RunForTemplate(PendingTemplateGenerations.Dequeue());
 			};
+		}
+		public UnityTemplateGenerator()
+		{
+			this.Refs.Add(typeof(UnityEngine.Debug).Assembly.Location);
+			this.Refs.Add(typeof(UnityEditor.EditorApplication).Assembly.Location);
+
+			var currentAssemblyLocation = Path.GetDirectoryName(typeof(UnityTemplateGenerator).Assembly.Location);
+			this.ReferencePaths.Add(currentAssemblyLocation);
 		}
 
 		public static void RunForTemplateWithDelay(string templatePath, TimeSpan delay)
@@ -76,12 +79,12 @@ namespace Assets.Editor.GameDevWare.TextTranform
 
 			timer.Change(delay, TimeSpan.FromTicks(-1));
 		}
-		public static void RunForTemplate(string templatePath)
+		public static bool RunForTemplate(string templatePath)
 		{
 			if (templatePath == null) throw new ArgumentNullException("templatePath");
 
 			templatePath = FileUtils.MakeProjectRelative(templatePath);
-			 
+
 			var settings = TemplateSettings.Load(templatePath);
 			var generator = new UnityTemplateGenerator();
 			var templateName = Path.GetFileNameWithoutExtension(templatePath);
@@ -103,7 +106,7 @@ namespace Assets.Editor.GameDevWare.TextTranform
 				Debug.LogWarning(string.Format("Failed to pre-process template '{0}'.", templatePath));
 				foreach (var error in generator.Errors)
 					Debug.LogWarning(error);
-				return;
+				return false;
 			}
 			if (Menu.VerboseLogs)
 				Debug.Log(string.Format("Pre-process T4 template '{0}' is complete successfully. Language: '{1}', References: '{2}', Output file: '{3}'.", templatePath, language, string.Join(", ", references ?? new string[0]), generatorOutputFile));
@@ -115,7 +118,7 @@ namespace Assets.Editor.GameDevWare.TextTranform
 				Debug.LogWarning(string.Format("Failed to process template '{0}'.", templatePath));
 				foreach (var error in generator.Errors)
 					Debug.LogWarning(error);
-				return;
+				return false;
 			}
 			if (Menu.VerboseLogs)
 				Debug.Log(string.Format("Process T4 template '{0}' is complete successfully. Output file: '{1}'.", templatePath, outputFile));
@@ -131,22 +134,30 @@ namespace Assets.Editor.GameDevWare.TextTranform
 					break;
 				default:
 					Debug.LogWarning("Invalid 'OutputType' is specified in template's settings.");
-					return;
+					return false;
 			}
 			var targetFile = settings.OutputPath;
 			if (targetFile == null)
-				targetFile = Path.ChangeExtension(templatePath, Path.GetExtension(sourceFile));
+				targetFile = Path.GetFullPath(Path.ChangeExtension(templatePath, Path.GetExtension(sourceFile)));
+			else
+				targetFile = Path.GetFullPath(targetFile);
 
 			if (File.Exists(targetFile) && FileUtils.ComputeMd5Hash(targetFile) == FileUtils.ComputeMd5Hash(sourceFile))
 			{
 				if (Menu.VerboseLogs)
 					Debug.Log(string.Format("Generated file is same as existing at location '{0}'.", targetFile));
-				return;
+				return true;
 			}
+
+			var targetDir = Path.GetDirectoryName(targetFile);
+			if (targetDir != null && Directory.Exists(targetDir) == false)
+				Directory.CreateDirectory(targetDir);
 
 			File.Copy(sourceFile, targetFile, overwrite: true);
 			File.Delete(outputFile);
 			File.Delete(generatorOutputFile);
+
+			return true;
 		}
 	}
 }

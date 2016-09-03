@@ -23,7 +23,7 @@ namespace Assets.Editor.GameDevWare.TextTranform
 	[SuppressMessage("ReSharper", "UnusedMember.Local")]
 	public static class Menu
 	{
-		public static bool VerboseLogs = false;
+		public static bool VerboseLogs = true;
 
 
 		[MenuItem("Tools/T4/Transform All Assets", false, 1)]
