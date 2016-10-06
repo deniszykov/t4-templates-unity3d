@@ -29,8 +29,8 @@ namespace Assets.Editor.GameDevWare.TextTranform
 	{
 		public enum OutputTypes
 		{
-			Generator,
-			Content
+			CodeGenerator,
+			Code
 		}
 		[Flags]
 		public enum Triggers
@@ -52,11 +52,11 @@ namespace Assets.Editor.GameDevWare.TextTranform
 			var settings = new TemplateSettings();
 			settings.Trigger = (int)0;
 			settings.TriggerDelay = (int)500;
-			settings.OutputType = (int)OutputTypes.Content;
+			settings.OutputType = (int)OutputTypes.Code;
 			settings.WatchedAssets = new string[0];
 			return settings;
 		}
-		public static TemplateSettings Load(Object templateAsset)
+		public static TemplateSettings Load(UnityEngine.Object templateAsset)
 		{
 			if (templateAsset == null) throw new NullReferenceException("templateAsset");
 
@@ -96,7 +96,7 @@ namespace Assets.Editor.GameDevWare.TextTranform
 			try
 			{
 				if (this.WatchedAssets == null) this.WatchedAssets = new string[0];
-
+				
 				var importer = AssetImporter.GetAtPath(templatePath);
 				importer.userData = JsonObject.From(this).Stringify();
 #if UNITY_5
@@ -105,7 +105,6 @@ namespace Assets.Editor.GameDevWare.TextTranform
 				EditorUtility.SetDirty(importer);
 				AssetDatabase.SaveAssets();
 #endif
-
 			}
 			catch (Exception e) { Debug.LogError("Failed to save template's settings: " + e); }
 		}

@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -31,7 +32,6 @@ namespace Assets.Editor.GameDevWare.TextTranform
 		private static readonly Dictionary<string, Timer> TriggerDelays = new Dictionary<string, Timer>(StringComparer.Ordinal);
 		private static readonly Queue<string> PendingTemplateGenerations = new Queue<string>();
 
-
 		static UnityTemplateGenerator()
 		{
 			EditorApplication.update += () =>
@@ -43,13 +43,19 @@ namespace Assets.Editor.GameDevWare.TextTranform
 						RunForTemplate(PendingTemplateGenerations.Dequeue());
 			};
 		}
+
 		public UnityTemplateGenerator()
 		{
-			this.Refs.Add(typeof(UnityEngine.Debug).Assembly.Location);
-			this.Refs.Add(typeof(UnityEditor.EditorApplication).Assembly.Location);
+			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+			{
+				var assemblyLocation = assembly.Location;
+				if (string.IsNullOrEmpty(assemblyLocation)) continue;
+				this.Refs.Add(assemblyLocation);
+			}
 
-			var currentAssemblyLocation = Path.GetDirectoryName(typeof(UnityTemplateGenerator).Assembly.Location);
-			this.ReferencePaths.Add(currentAssemblyLocation);
+			this.ReferencePaths.Add(Path.GetDirectoryName(typeof(UnityTemplateGenerator).Assembly.Location));
+			this.ReferencePaths.Add(Path.GetDirectoryName(typeof(UnityEngine.Debug).Assembly.Location));
+			this.ReferencePaths.Add(Path.GetDirectoryName(typeof(UnityEditor.EditorApplication).Assembly.Location));
 		}
 
 		public static void RunForTemplateWithDelay(string templatePath, TimeSpan delay)
@@ -116,8 +122,11 @@ namespace Assets.Editor.GameDevWare.TextTranform
 			if (generator.ProcessTemplate(templatePath, ref outputFile) == false)
 			{
 				Debug.LogWarning(string.Format("Failed to process template '{0}'.", templatePath));
-				foreach (var error in generator.Errors)
-					Debug.LogWarning(error);
+				var warnText = new StringBuilder();
+				foreach (CompilerError error in generator.Errors)
+					warnText.AppendLine(error.ToString());
+				if (warnText.Length > 0)
+					Debug.LogWarning(warnText);
 				return false;
 			}
 			if (Menu.VerboseLogs)
@@ -126,10 +135,10 @@ namespace Assets.Editor.GameDevWare.TextTranform
 			var sourceFile = default(string);
 			switch ((TemplateSettings.OutputTypes)settings.OutputType)
 			{
-				case TemplateSettings.OutputTypes.Content:
+				case TemplateSettings.OutputTypes.Code:
 					sourceFile = outputFile;
 					break;
-				case TemplateSettings.OutputTypes.Generator:
+				case TemplateSettings.OutputTypes.CodeGenerator:
 					sourceFile = generatorOutputFile;
 					break;
 				default:
@@ -146,7 +155,7 @@ namespace Assets.Editor.GameDevWare.TextTranform
 			{
 				if (Menu.VerboseLogs)
 					Debug.Log(string.Format("Generated file is same as existing at location '{0}'.", targetFile));
-				return true;
+				return false;
 			}
 
 			var targetDir = Path.GetDirectoryName(targetFile);
