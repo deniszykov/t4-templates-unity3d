@@ -21,8 +21,8 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("GameDevWare.TextTransform")]
-[assembly: AssemblyDescription("T4 text tranformation tools")]
+[assembly: AssemblyTitle("T4 CLI")]
+[assembly: AssemblyDescription("Command line utility for text transformation with using T4 templates. ")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GameDevWare")]
 [assembly: AssemblyProduct("GameDevWare.TextTransform")]
