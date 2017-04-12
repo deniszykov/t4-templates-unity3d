@@ -361,9 +361,12 @@ namespace Assets.Editor.GameDevWare.TextTranform.Processor
 				settings.Namespace = typeof (TextTransformation).Namespace;
 
 			//resolve the CodeDOM provider
-			if (String.IsNullOrEmpty(settings.Language))
+			if (String.IsNullOrEmpty(settings.Language) || settings.Language == "C#")
 			{
-				settings.Language = "C#";
+				if (Environment.Version < new Version(4, 0))
+					settings.Language = "C#v3.5";
+				else
+					settings.Language = "C#";
 			}
 
 			if (settings.Language == "C#v3.5")
