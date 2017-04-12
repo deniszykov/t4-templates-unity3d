@@ -1,4 +1,4 @@
-// 
+﻿// 
 // RecyclableAppDomain.cs
 //  
 // Author:
@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
 	public class TemplatingAppDomainRecycler

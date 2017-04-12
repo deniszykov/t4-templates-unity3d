@@ -22,6 +22,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Linq;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform
 {
 	[InitializeOnLoad, Serializable]

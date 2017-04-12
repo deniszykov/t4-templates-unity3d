@@ -1,4 +1,4 @@
-// 
+﻿// 
 // TextTemplateSettings.cs
 //  
 // Author:
@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
 	public class TextTemplateSettings

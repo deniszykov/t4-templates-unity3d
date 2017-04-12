@@ -1,4 +1,4 @@
-// 
+﻿// 
 // CompiledTemplate.cs
 //  
 // Author:
@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
 	public sealed class CompiledTemplate : MarshalByRefObject, IDisposable

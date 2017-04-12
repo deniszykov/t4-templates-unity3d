@@ -1,4 +1,4 @@
-// 
+﻿// 
 // CrossAppDomainAssemblyResolver.cs
 //  
 // Author:
@@ -26,6 +26,7 @@
 
 using System;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
 	/// <summary>

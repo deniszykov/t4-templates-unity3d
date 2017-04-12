@@ -1,4 +1,4 @@
-// 
+﻿// 
 // TemplatingHost.cs
 //  
 // Author:
@@ -31,6 +31,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
 	public class TemplateGenerator : MarshalByRefObject, ITextTemplatingEngineHost

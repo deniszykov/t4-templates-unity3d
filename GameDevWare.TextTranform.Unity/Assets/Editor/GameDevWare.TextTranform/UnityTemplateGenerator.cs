@@ -48,9 +48,17 @@ namespace Assets.Editor.GameDevWare.TextTranform
 		{
 			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
 			{
-				var assemblyLocation = assembly.Location;
-				if (string.IsNullOrEmpty(assemblyLocation)) continue;
-				this.Refs.Add(assemblyLocation);
+				if (assembly.ReflectionOnly)
+					continue;
+
+				try
+				{
+					var assemblyLocation = assembly.Location;
+					if (string.IsNullOrEmpty(assemblyLocation)) continue;
+
+					this.Refs.Add(assemblyLocation);
+				}
+				catch { /* ignore */ }
 			}
 
 			this.ReferencePaths.Add(Path.GetDirectoryName(typeof(UnityTemplateGenerator).Assembly.Location));

@@ -17,6 +17,7 @@
 using System;
 using System.Reflection;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Utils
 {
 	internal static class ObjectExtentions

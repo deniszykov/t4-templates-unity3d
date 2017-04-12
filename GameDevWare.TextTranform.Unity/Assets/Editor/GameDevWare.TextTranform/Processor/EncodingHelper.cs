@@ -1,4 +1,4 @@
-// 
+﻿// 
 // EncodingHelper.cs
 //  
 // Author:
@@ -27,6 +27,7 @@
 using System;
 using System.Text;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
 	public static class EncodingHelper

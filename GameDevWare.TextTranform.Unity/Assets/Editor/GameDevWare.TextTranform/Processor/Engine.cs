@@ -1,4 +1,4 @@
-// 
+﻿// 
 // Engine.cs
 //  
 // Author:
@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
 	public class Engine : ITextTemplatingEngine

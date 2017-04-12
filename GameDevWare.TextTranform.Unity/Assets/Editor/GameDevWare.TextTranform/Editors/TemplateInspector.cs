@@ -25,6 +25,7 @@ using UnityEngine;
 
 using Object = UnityEngine.Object;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Editors
 {
 	internal class TemplateInspector : UnityEditor.Editor

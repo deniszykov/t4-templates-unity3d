@@ -19,6 +19,7 @@ using Assets.Editor.GameDevWare.TextTranform.Editors;
 using UnityEditor;
 using UnityEngine;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform
 {
 	[InitializeOnLoad]

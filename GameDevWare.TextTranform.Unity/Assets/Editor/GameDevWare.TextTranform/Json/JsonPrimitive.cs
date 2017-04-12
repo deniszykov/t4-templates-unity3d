@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Json
 {
 	public class JsonPrimitive : JsonValue

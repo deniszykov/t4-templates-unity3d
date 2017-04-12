@@ -23,6 +23,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform
 {
 	internal sealed class TemplateSettings

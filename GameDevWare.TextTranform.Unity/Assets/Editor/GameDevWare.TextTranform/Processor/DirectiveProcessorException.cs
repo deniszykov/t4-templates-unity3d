@@ -1,4 +1,4 @@
-// 
+﻿// 
 // DirectiveProcessorException.cs
 //  
 // Author:
@@ -27,6 +27,7 @@
 using System;
 using System.Runtime.Serialization;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
 	[Serializable]

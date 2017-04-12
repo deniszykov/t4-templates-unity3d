@@ -7,9 +7,10 @@ using System.Text;
 using JsonPair = System.Collections.Generic.KeyValuePair<string, Assets.Editor.GameDevWare.TextTranform.Json.JsonValue>;
 using JsonPairEnumerable = System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, Assets.Editor.GameDevWare.TextTranform.Json.JsonValue>>;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Json
 {
-	public class JsonObject : JsonValue, IDictionary<string, JsonValue>, ICollection<KeyValuePair<string, JsonValue>>
+	public class JsonObject : JsonValue, IDictionary<string, JsonValue>
 	{
 		private static readonly Dictionary<Type, Dictionary<string, MemberInfo>> TypeMembers = new Dictionary<Type, Dictionary<string, MemberInfo>>();
 		// Use SortedDictionary to make result of ToString() deterministic

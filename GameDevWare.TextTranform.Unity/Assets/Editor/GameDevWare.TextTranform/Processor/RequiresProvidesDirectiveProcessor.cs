@@ -1,4 +1,4 @@
-// 
+﻿// 
 // RequiresProvidesDirectiveProcessor.cs
 //  
 // Author:
@@ -29,6 +29,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Text;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
 	public abstract class RequiresProvidesDirectiveProcessor : DirectiveProcessor

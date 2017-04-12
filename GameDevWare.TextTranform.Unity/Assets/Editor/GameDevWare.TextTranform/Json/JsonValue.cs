@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using JsonPair = System.Collections.Generic.KeyValuePair<string, Assets.Editor.GameDevWare.TextTranform.Json.JsonValue>;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Json
 {
 	public abstract class JsonValue : IEnumerable

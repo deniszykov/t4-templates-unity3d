@@ -22,12 +22,12 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Utils
 {
 	static class FileUtils
 	{
 		private readonly static char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
-
 
 		public static string MakeProjectRelative(string path)
 		{

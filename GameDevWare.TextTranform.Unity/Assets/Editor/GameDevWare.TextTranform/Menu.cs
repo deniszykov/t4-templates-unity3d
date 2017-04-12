@@ -14,10 +14,10 @@
 	https://unity3d.com/ru/legal/as_terms
 */
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using UnityEditor;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform
 {
 	[SuppressMessage("ReSharper", "UnusedMember.Local")]

@@ -1,4 +1,4 @@
-// 
+﻿// 
 // Template.cs
 //  
 // Author:
@@ -29,6 +29,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
 	public class ParsedTemplate

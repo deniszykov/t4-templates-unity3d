@@ -1,4 +1,4 @@
-// 
+﻿// 
 // Engine.cs
 //  
 // Author:
@@ -34,6 +34,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.CSharp;
 
+// ReSharper disable once CheckNamespace
 namespace Assets.Editor.GameDevWare.TextTranform.Processor
 {
 	public class TemplatingEngine : MarshalByRefObject, ITextTemplatingEngine
