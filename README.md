@@ -11,9 +11,9 @@ T4 template example:
 ```
 
 ## Use cases
-* Repeating source code generation
+* Source code generation
 * [Project resources catalogization](Assets/Editor/GameDevWare.TextTranform/Examples/FileList_Example.tt)
-* [Resource loading/reading code generation]((Assets/Editor/GameDevWare.TextTranform/Examples/ResourceAsyncLoad_Example.tt)
+* [Resource loading/reading code generation](Assets/Editor/GameDevWare.TextTranform/Examples/ResourceAsyncLoad_Example.tt)
 * [Code generation by DSL](Assets/Editor/GameDevWare.TextTranform/Examples/DSL_Example.tt)
 * Code generation for ORM (BLToolkit for example)
 * [Embedding environment information into project's build](Assets/Editor/GameDevWare.TextTranform/Examples/EnvironmentInfo_Example.tt)
@@ -35,7 +35,7 @@ Inspector window for T4 template contains following parameters:
 T4 template can use *hostspecific=true* [property](https://msdn.microsoft.com/en-us/library/bb126478.aspx#Anchor_4) to access *Host.ResolvePath* method, which maps path relatively to template's location.
 
 By default *UnityEngine.dll* and *UnityEditor.dll* assemblies are referenced in all templates. 
-You can reference project's assemblies *Assembly-CSharp* and *Assembly-CSharp-firstpass* by adding **assembly** [directive]((https://msdn.microsoft.com/en-us/library/bb126478.aspx#Anchor_3)):
+You can reference project's assemblies *Assembly-CSharp* and *Assembly-CSharp-firstpass* by adding **assembly** [directive](https://msdn.microsoft.com/en-us/library/bb126478.aspx#Anchor_3):
 ```xml
 <#@ assembly name="Assembly-CSharp" #>
 <#@ assembly name="Assembly-CSharp-firstpass" #>
