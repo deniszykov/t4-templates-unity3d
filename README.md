@@ -12,11 +12,11 @@ T4 template example:
 
 ## Use cases
 * Source code generation
-* [Project resources catalogization](Assets/Editor/GameDevWare.TextTranform/Examples/FileList_Example.tt)
-* [Resource loading/reading code generation](Assets/Editor/GameDevWare.TextTranform/Examples/ResourceAsyncLoad_Example.tt)
-* [Code generation by DSL](Assets/Editor/GameDevWare.TextTranform/Examples/DSL_Example.tt)
+* [Project resources catalogization](GameDevWare.TextTranform.Unity/Assets/Editor/GameDevWare.TextTranform/Examples/FileList_Example.tt)
+* [Resource loading/reading code generation](GameDevWare.TextTranform.Unity/Assets/Editor/GameDevWare.TextTranform/Examples/ResourceAsyncLoad_Example.tt)
+* [Code generation by DSL](GameDevWare.TextTranform.Unity/Assets/Editor/GameDevWare.TextTranform/Examples/DSL_Example.tt)
 * Code generation for ORM (BLToolkit for example)
-* [Embedding environment information into project's build](Assets/Editor/GameDevWare.TextTranform/Examples/EnvironmentInfo_Example.tt)
+* [Embedding environment information into project's build](GameDevWare.TextTranform.Unity/Assets/Editor/GameDevWare.TextTranform/Examples/EnvironmentInfo_Example.tt)
 	
 ## How to use
 Create or copy file with **.tt** extension. Select this file in Project window (Window -> Project), then in Inspector window (Window -> Inspector) setup T4 template's parameters. Click "Generate" button.
