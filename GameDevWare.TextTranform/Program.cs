@@ -68,7 +68,7 @@ namespace GameDevWare.TextTranform
 			string[] includes = null,
 			[Description("List of locations to search for referenced assemblies.")]
 			string[] referencePaths = null,
-			[Description("Flag indicating that generator based on template will be created instead of content.")]
+			[Description("Flag indicating that template generator's code should be written in output file.")]
 			bool createGenerator = false,
 			[Description("Flag indicating that verbose logs is required.")]
 			bool verbose = false
