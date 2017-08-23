@@ -19,6 +19,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Assets.Editor.GameDevWare.TextTranform.Utils;
 using UnityEditor;
 using UnityEngine;
@@ -58,42 +59,63 @@ namespace Assets.Editor.GameDevWare.TextTranform.Editors
 
 			try
 			{
-				var editorAssembly = typeof(EditorApplication).Assembly;
-				var assetType = Selection.activeObject.GetType();
-				var inspectorWindowType = editorAssembly.GetType("UnityEditor.InspectorWindow");
+				var selectedAssetType = Selection.activeObject.GetType();
+				var inspectorWindowType = typeof(EditorApplication).Assembly.GetType("UnityEditor.InspectorWindow");
 				var inspectorWindow = EditorWindow.GetWindow(inspectorWindowType);
-				var activeEditorTracker = inspectorWindow.GetFieldValue("m_Tracker");
-				var customEditorAttributesType = editorAssembly.GetType("UnityEditor.CustomEditorAttributes");
+				var activeEditorTracker = (ActiveEditorTracker)(inspectorWindow.HasProperty("tracker") ?
+					inspectorWindow.GetPropertyValue("tracker") :
+					inspectorWindow.GetFieldValue("m_Tracker"));
+				var customEditorAttributesType = typeof(EditorApplication).Assembly.GetType("UnityEditor.CustomEditorAttributes");
+				var monoEditorType = customEditorAttributesType.GetNestedType("MonoEditorType", BindingFlags.NonPublic);
 				var customEditorsList = (System.Collections.IList)customEditorAttributesType.GetFieldValue("kSCustomEditors");
-				var customEditor = customEditorsList.Cast<object>().FirstOrDefault(e => (Type)e.GetFieldValue("m_InspectedType") == assetType);
-				if (customEditor == null)
+				var cachedCustomEditorsList = customEditorAttributesType.HasField("kCachedEditorForType") ?
+					(Dictionary<Type, Type>)customEditorAttributesType.GetFieldValue("kCachedEditorForType") :
+					null;
+
+				foreach (var customEditor in customEditorsList)
 				{
-					// create and add new editor entry
-					customEditor = Activator.CreateInstance(editorAssembly.GetType("UnityEditor.CustomEditorAttributes+MonoEditorType"));
-					customEditor.SetFieldValue("m_InspectedType", assetType);
-					customEditor.SetFieldValue("m_InspectorType", typeof(TemplateInspector));
-					var editorIndex = customEditorsList.Add(customEditor);
-					// force rebuild editor list
-					activeEditorTracker.Invoke("ForceRebuild");
-					inspectorWindow.Invoke("Repaint");
-					// remove editor entry
-					customEditorsList.RemoveAt(editorIndex);
-				}
-				else
-				{
+					if (customEditor == null || (Type)customEditor.GetFieldValue("m_InspectedType") != selectedAssetType)
+						continue;
+
 					var originalInspectorType = (Type)customEditor.GetFieldValue("m_InspectorType");
 					// override inspector
 					customEditor.SetFieldValue("m_InspectorType", typeof(TemplateInspector));
+					if (cachedCustomEditorsList != null)
+						cachedCustomEditorsList[selectedAssetType] = typeof(TemplateInspector);
 					// force rebuild editor list
-					activeEditorTracker.Invoke("ForceRebuild");
-					inspectorWindow.Invoke("Repaint");
+					activeEditorTracker.ForceRebuild();
+					inspectorWindow.Repaint();
 					// restore original inspector
 					customEditor.SetFieldValue("m_InspectorType", originalInspectorType);
+					if (cachedCustomEditorsList != null)
+						cachedCustomEditorsList.Remove(selectedAssetType);
+
+					return;
 				}
+
+				var newMonoEditorType = Activator.CreateInstance(monoEditorType);
+				newMonoEditorType.SetFieldValue("m_InspectedType", selectedAssetType);
+				newMonoEditorType.SetFieldValue("m_InspectorType", typeof(TemplateInspector));
+				newMonoEditorType.SetFieldValue("m_EditorForChildClasses", false);
+				if (monoEditorType.HasField("m_IsFallback"))
+					newMonoEditorType.SetFieldValue("m_IsFallback", false);
+
+				// override inspector
+				customEditorsList.Insert(0, newMonoEditorType);
+				if (cachedCustomEditorsList != null)
+					cachedCustomEditorsList[selectedAssetType] = typeof(TemplateInspector);
+				// force rebuild editor list
+				activeEditorTracker.ForceRebuild();
+				inspectorWindow.Repaint();
+
+				// restore original inspector
+				customEditorsList.Remove(newMonoEditorType);
+				if (cachedCustomEditorsList != null)
+					cachedCustomEditorsList.Remove(selectedAssetType);
 			}
-			catch (Exception e)
+			catch (Exception updateEditorError)
 			{
-				Debug.LogError(e);
+				Debug.LogError(updateEditorError);
 			}
 		}
 
