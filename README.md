@@ -12,11 +12,11 @@ T4 template example:
 
 ## Use cases
 * Source code generation
-* [Project resources catalogization](GameDevWare.TextTranform.Unity/Assets/Editor/GameDevWare.TextTranform/Examples/FileList_Example.tt)
-* [Resource loading/reading code generation](GameDevWare.TextTranform.Unity/Assets/Editor/GameDevWare.TextTranform/Examples/ResourceAsyncLoad_Example.tt)
-* [Code generation by DSL](GameDevWare.TextTranform.Unity/Assets/Editor/GameDevWare.TextTranform/Examples/DSL_Example.tt)
+* [Project resources catalogization](GameDevWare.TextTransform.Unity/Assets/Editor/GameDevWare.TextTransform/Examples/FileList_Example.tt)
+* [Resource loading/reading code generation](GameDevWare.TextTransform.Unity/Assets/Editor/GameDevWare.TextTransform/Examples/ResourceAsyncLoad_Example.tt)
+* [Code generation by DSL](GameDevWare.TextTransform.Unity/Assets/Editor/GameDevWare.TextTransform/Examples/DSL_Example.tt)
 * Code generation for ORM (BLToolkit for example)
-* [Embedding environment information into project's build](GameDevWare.TextTranform.Unity/Assets/Editor/GameDevWare.TextTranform/Examples/EnvironmentInfo_Example.tt)
+* [Embedding environment information into project's build](GameDevWare.TextTransform.Unity/Assets/Editor/GameDevWare.TextTransform/Examples/EnvironmentInfo_Example.tt)
 	
 ## How to use
 Create or copy file with **.tt** extension. Select this file in Project window (Window -> Project), then in Inspector window (Window -> Inspector) setup T4 template's parameters. Click "Generate" button.
@@ -44,6 +44,10 @@ You can reference project's assemblies *Assembly-CSharp* and *Assembly-CSharp-fi
 [MSBuild Macros](https://msdn.microsoft.com/en-US/library/c02as0cs.aspx) are not available.
 
 You can run template generation from your code with **UnityTemplateGenerator.RunForTemplate(templatePath)** call.
+
+## Version 1.0.7
+fixed missing 's' in project name 'TextTran_S_form', files, namespaces, folders has been renamed.
+executable name of tools has been changed to 'GameDevWare.TextTransform.exe' new NuGet package will be published
 
 ## Contacts
 Please send any questions at support@gamedevware.com
