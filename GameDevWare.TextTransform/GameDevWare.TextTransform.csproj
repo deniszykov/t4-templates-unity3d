@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>
     </RootNamespace>
-    <AssemblyName>GameDevWare.TextTranform</AssemblyName>
+    <AssemblyName>GameDevWare.TextTransform</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -75,61 +75,61 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\CompiledTemplate.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\CompiledTemplate.cs">
       <Link>Processor\CompiledTemplate.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\CrossAppDomainAssemblyResolver.cs">
+    </Compile> 
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\CrossAppDomainAssemblyResolver.cs">
       <Link>Processor\CrossAppDomainAssemblyResolver.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\DirectiveProcessor.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\DirectiveProcessor.cs">
       <Link>Processor\DirectiveProcessor.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\DirectiveProcessorException.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\DirectiveProcessorException.cs">
       <Link>Processor\DirectiveProcessorException.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\EncodingHelper.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\EncodingHelper.cs">
       <Link>Processor\EncodingHelper.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\Engine.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\Engine.cs">
       <Link>Processor\Engine.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\FileUtil.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\FileUtil.cs">
       <Link>Processor\FileUtil.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\Interfaces.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\Interfaces.cs">
       <Link>Processor\Interfaces.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\ParameterDirectiveProcessor.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\ParameterDirectiveProcessor.cs">
       <Link>Processor\ParameterDirectiveProcessor.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\ParsedTemplate.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\ParsedTemplate.cs">
       <Link>Processor\ParsedTemplate.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\RecyclableAppDomain.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\RecyclableAppDomain.cs">
       <Link>Processor\RecyclableAppDomain.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\RequiresProvidesDirectiveProcessor.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\RequiresProvidesDirectiveProcessor.cs">
       <Link>Processor\RequiresProvidesDirectiveProcessor.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\TemplateGenerator.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\TemplateGenerator.cs">
       <Link>Processor\TemplateGenerator.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\TemplatingEngine.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\TemplatingEngine.cs">
       <Link>Processor\TemplatingEngine.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\TextTemplateSettings.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\TextTemplateSettings.cs">
       <Link>Processor\TextTemplateSettings.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\TextTemplatingSession.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\TextTemplatingSession.cs">
       <Link>Processor\TextTemplatingSession.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\TextTransformation.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\TextTransformation.cs">
       <Link>Processor\TextTransformation.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\Tokeniser.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\Tokeniser.cs">
       <Link>Processor\Tokeniser.cs</Link>
     </Compile>
-    <Compile Include="..\GameDevWare.TextTranform.Unity\Assets\Editor\GameDevWare.TextTranform\Processor\ToStringHelper.cs">
+    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\ToStringHelper.cs">
       <Link>Processor\ToStringHelper.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />

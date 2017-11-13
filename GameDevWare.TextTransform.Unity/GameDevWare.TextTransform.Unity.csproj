@@ -7,8 +7,8 @@
     <ProjectGuid>{425B3063-AE42-4802-9516-446DA938E08D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GameDevWare.TextTranform.Unity1</RootNamespace>
-    <AssemblyName>GameDevWare.TextTranform.Unity1</AssemblyName>
+    <RootNamespace>GameDevWare.TextTransform.Unity1</RootNamespace>
+    <AssemblyName>GameDevWare.TextTransform.Unity1</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,45 +44,45 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\GameDevWare.TextTranform\Properties\AssemblyInfo.cs">
+    <Compile Include="..\GameDevWare.TextTransform\Properties\AssemblyInfo.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\AssetChangesTrigger.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\CodeCompilationTrigger.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Editors\TemplateInspector.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonArray.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonObject.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonPrimitive.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonReader.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonType.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonValue.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Menu.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\CompiledTemplate.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\CrossAppDomainAssemblyResolver.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\DirectiveProcessor.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\DirectiveProcessorException.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\EncodingHelper.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\Engine.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\FileUtil.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\Interfaces.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\ParameterDirectiveProcessor.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\ParsedTemplate.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\RecyclableAppDomain.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\RequiresProvidesDirectiveProcessor.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\TemplateGenerator.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\TemplatingEngine.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\TextTemplateSettings.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\TextTemplatingSession.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\TextTransformation.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\Tokeniser.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\ToStringHelper.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\TemplateSettings.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\UnityTemplateGenerator.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Utils\ObjectExtentions.cs" />
-    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Utils\PathUtils.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\AssetChangesTrigger.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\CodeCompilationTrigger.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Editors\TemplateInspector.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Json\JsonArray.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Json\JsonObject.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Json\JsonPrimitive.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Json\JsonReader.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Json\JsonType.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Json\JsonValue.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Menu.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\CompiledTemplate.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\CrossAppDomainAssemblyResolver.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\DirectiveProcessor.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\DirectiveProcessorException.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\EncodingHelper.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\Engine.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\FileUtil.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\Interfaces.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\ParameterDirectiveProcessor.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\ParsedTemplate.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\RecyclableAppDomain.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\RequiresProvidesDirectiveProcessor.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\TemplateGenerator.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\TemplatingEngine.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\TextTemplateSettings.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\TextTemplatingSession.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\TextTransformation.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\Tokeniser.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Processor\ToStringHelper.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\TemplateSettings.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\UnityTemplateGenerator.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Utils\ObjectExtentions.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTransform\Utils\PathUtils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Editor\GameDevWare.TextTranform\Documentation.pdf" />
+    <None Include="Assets\Editor\GameDevWare.TextTransform\Documentation.pdf" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

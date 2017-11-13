@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Copyright (c) 2016 Denis Zykov, GameDevWare.com
 
 	This a part of "T4 Transform" Unity Asset - https://www.assetstore.unity3d.com/#!/content/63294
@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("T4 CLI")]
 [assembly: AssemblyDescription("Command line utility for text transformation with using T4 templates.\r\n" +
-								"usage: GameDevWare.TextTranform.exe Transform --templatePath <path-to-t4-template> [--outputPath <path-to-output-file>] [--references <additional-refs>] " +
+								"usage: GameDevWare.TextTransform.exe Transform --templatePath <path-to-t4-template> [--outputPath <path-to-output-file>] [--references <additional-refs>] " +
 								"[--namespaces <additional_namespaces>] [--includes <additional-includes>] [--referencePaths <reference-lookup-paths>] [--createGenerator] [--verbose]")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GameDevWare")]
@@ -53,7 +53,7 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("1.0.6.0")]
-[assembly: AssemblyFileVersion("1.0.6.0")]
-[assembly: AssemblyInformationalVersion("1.0.6")]
+[assembly: AssemblyVersion("1.0.7.0")]
+[assembly: AssemblyFileVersion("1.0.7.0")]
+[assembly: AssemblyInformationalVersion("1.0.7")]
 #endif

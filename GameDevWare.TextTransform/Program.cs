@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Copyright (c) 2016 Denis Zykov, GameDevWare.com
 
 	This a part of "T4 Transform" Unity Asset - https://www.assetstore.unity3d.com/#!/content/63294
@@ -20,11 +20,11 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Assets.Editor.GameDevWare.TextTranform.Processor;
+using Assets.Editor.GameDevWare.TextTransform.Processor;
 
 // ReSharper disable UnusedMember.Local
 // ReSharper disable once CheckNamespace
-namespace GameDevWare.TextTranform
+namespace GameDevWare.TextTransform
 {
 	class Program
 	{
