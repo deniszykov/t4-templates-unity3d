@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{425B3063-AE42-4802-9516-446DA938E08D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GameDevWare.TextTranform.Unity1</RootNamespace>
+    <AssemblyName>GameDevWare.TextTranform.Unity1</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEditor">
+      <HintPath>..\..\..\..\apps\unity4.7\Editor\Data\Managed\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\apps\unity4.7\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\GameDevWare.TextTranform\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\AssetChangesTrigger.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\CodeCompilationTrigger.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Editors\TemplateInspector.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonArray.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonObject.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonPrimitive.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonReader.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonType.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Json\JsonValue.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Menu.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\CompiledTemplate.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\CrossAppDomainAssemblyResolver.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\DirectiveProcessor.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\DirectiveProcessorException.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\EncodingHelper.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\Engine.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\FileUtil.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\Interfaces.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\ParameterDirectiveProcessor.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\ParsedTemplate.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\RecyclableAppDomain.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\RequiresProvidesDirectiveProcessor.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\TemplateGenerator.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\TemplatingEngine.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\TextTemplateSettings.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\TextTemplatingSession.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\TextTransformation.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\Tokeniser.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Processor\ToStringHelper.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\TemplateSettings.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\UnityTemplateGenerator.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Utils\ObjectExtentions.cs" />
+    <Compile Include="Assets\Editor\GameDevWare.TextTranform\Utils\PathUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Editor\GameDevWare.TextTranform\Documentation.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

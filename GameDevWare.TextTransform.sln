@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDevWare.TextTranform", "GameDevWare.TextTranform\GameDevWare.TextTranform.csproj", "{485C9711-2A63-6FB5-985B-2615CE239055}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDevWare.TextTransform", "GameDevWare.TextTransform\GameDevWare.TextTransform.csproj", "{485C9711-2A63-6FB5-985B-2615CE239055}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDevWare.TextTranform.Unity", "GameDevWare.TextTranform.Unity\GameDevWare.TextTranform.Unity.csproj", "{425B3063-AE42-4802-9516-446DA938E08D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDevWare.TextTransform.Unity", "GameDevWare.TextTransform.Unity\GameDevWare.TextTransform.Unity.csproj", "{425B3063-AE42-4802-9516-446DA938E08D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
