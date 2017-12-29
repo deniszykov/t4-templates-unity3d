@@ -1,0 +1,2 @@
+#1.0.7
+fixed missing 's' in project name 'TextTran_S_form', files, namespaces, folders has been renamed. executable name of tools has been changed to 'GameDevWare.TextTransform.exe' new NuGet package will be published
