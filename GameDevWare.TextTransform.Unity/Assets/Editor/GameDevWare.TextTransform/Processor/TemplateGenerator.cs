@@ -240,9 +240,17 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		{
 			if (System.IO.Path.IsPathRooted(assemblyReference))
 				return assemblyReference;
-			foreach (var referencePath in ReferencePaths)
+			foreach (var referencePath in this.ReferencePaths)
 			{
 				var path = System.IO.Path.Combine(referencePath, assemblyReference);
+				if (System.IO.File.Exists(path))
+					return path;
+
+				path = System.IO.Path.Combine(referencePath, assemblyReference) + ".dll";
+				if (System.IO.File.Exists(path))
+					return path;
+
+				path = System.IO.Path.Combine(referencePath, assemblyReference) + ".exe";
 				if (System.IO.File.Exists(path))
 					return path;
 			}

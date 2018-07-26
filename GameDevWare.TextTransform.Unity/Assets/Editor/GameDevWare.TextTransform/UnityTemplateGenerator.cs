@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Copyright (c) 2016 Denis Zykov, GameDevWare.com
 
 	This a part of "T4 Templates" Unity Asset - https://www.assetstore.unity3d.com/#!/content/63294
@@ -123,7 +123,8 @@ namespace Assets.Editor.GameDevWare.TextTransform
 				return false;
 			}
 			if (Menu.VerboseLogs)
-				Debug.Log(string.Format("Pre-process T4 template '{0}' is complete successfully. Language: '{1}', References: '{2}', Output file: '{3}'.", templatePath, language, string.Join(", ", references ?? new string[0]), generatorOutputFile));
+				Debug.Log(string.Format("Pre-process T4 template '{0}' is complete successfully. Language: '{1}', References: '{2}', Reference location paths: {3}, Include paths: {4}, Output file: '{5}'.", templatePath, language, string.Join(", ", references ?? new string[0]), 
+					string.Join(", ", generator.ReferencePaths.ToArray()), string.Join(", ", generator.IncludePaths.ToArray()), generatorOutputFile));
 
 			if (Menu.VerboseLogs)
 				Debug.Log(string.Format("Process T4 template '{0}'. Output File: '{1}'.", templatePath, outputFile));

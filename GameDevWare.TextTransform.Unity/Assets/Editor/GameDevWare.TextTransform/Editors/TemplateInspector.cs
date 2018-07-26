@@ -142,8 +142,12 @@ namespace Assets.Editor.GameDevWare.TextTransform.Editors
 				this.templateSettings.OutputPath = AssetDatabase.GetAssetPath(EditorGUILayout.ObjectField("Output Path", codeAsset, typeof(Object), false));
 			else
 				this.templateSettings.OutputPath = EditorGUILayout.TextField("Output Path", this.templateSettings.OutputPath);
+#if UNITY_5_3_OR_NEWER
+			this.templateSettings.Trigger = (int)(TemplateSettings.Triggers)EditorGUILayout.EnumFlagsField("Auto-Gen Triggers", (TemplateSettings.Triggers)this.templateSettings.Trigger);
+#else
 			this.templateSettings.Trigger = (int)(TemplateSettings.Triggers)EditorGUILayout.EnumMaskField("Auto-Gen Triggers", (TemplateSettings.Triggers)templateSettings.Trigger);
-			this.templateSettings.TriggerDelay = (int)EditorGUILayout.IntField("Auto-Gen Delay (Ms)", templateSettings.TriggerDelay);
+#endif
+			this.templateSettings.TriggerDelay = (int)EditorGUILayout.IntField("Auto-Gen Delay (Ms)", this.templateSettings.TriggerDelay);
 
 			if ((this.templateSettings.Trigger & (int)TemplateSettings.Triggers.AssetChanges) != 0)
 			{
@@ -161,7 +165,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Editors
 				}
 				EditorGUILayout.Space();
 				this.newAssetToWatch = EditorGUILayout.ObjectField("<New>", this.newAssetToWatch, typeof(Object), false);
-				if (Event.current.type == EventType.repaint && newAssetToWatch != null)
+				if (Event.current.type == (EventType)7 && this.newAssetToWatch != null)
 				{
 					var watchedAssets = new HashSet<string>(this.templateSettings.WatchedAssets);
 					watchedAssets.Remove("");
