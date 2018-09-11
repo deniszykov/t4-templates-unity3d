@@ -33,8 +33,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-	<AssemblyName>GameDevWare.TextTransform</AssemblyName>
-	<DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
+    <AssemblyName>GameDevWare.TextTransform</AssemblyName>
+    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,14 +59,14 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ConsoleApp.CommandLine">
-      <HintPath>..\packages\ConsoleApp.CommandLine.1.0.1\lib\net35\ConsoleApp.CommandLine.dll</HintPath>
+    <Reference Include="ConsoleApp.CommandLine, Version=1.3.2.0, Culture=neutral, PublicKeyToken=dc0b449018deb2ce, processorArchitecture=MSIL">
+      <HintPath>..\packages\ConsoleApp.CommandLine.1.3.2\lib\net35\ConsoleApp.CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.XML" />
     <Reference Include="System.Core" />
-    <Reference Include="TypeConvert">
-      <HintPath>..\packages\TypeConvert.1.0.0.7\lib\net35\TypeConvert.dll</HintPath>
+    <Reference Include="TypeConvert, Version=2.1.4.0, Culture=neutral, PublicKeyToken=7fa17a4c44bad980, processorArchitecture=MSIL">
+      <HintPath>..\packages\TypeConvert.2.1.4\lib\net35\TypeConvert.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -79,7 +79,7 @@
   <ItemGroup>
     <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\CompiledTemplate.cs">
       <Link>Processor\CompiledTemplate.cs</Link>
-    </Compile> 
+    </Compile>
     <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\CrossAppDomainAssemblyResolver.cs">
       <Link>Processor\CrossAppDomainAssemblyResolver.cs</Link>
     </Compile>

@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Copyright (c) 2016 Denis Zykov, GameDevWare.com
 
 	This a part of "T4 Templates" Unity Asset - https://www.assetstore.unity3d.com/#!/content/63294
@@ -16,6 +16,7 @@
 
 using System;
 using System.CodeDom;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -67,51 +68,104 @@ namespace Assets.Editor.GameDevWare.TextTransform.Editors
 					inspectorWindow.GetFieldValue("m_Tracker"));
 				var customEditorAttributesType = typeof(EditorApplication).Assembly.GetType("UnityEditor.CustomEditorAttributes");
 				var monoEditorType = customEditorAttributesType.GetNestedType("MonoEditorType", BindingFlags.NonPublic);
-				var customEditorsList = (System.Collections.IList)customEditorAttributesType.GetFieldValue("kSCustomEditors");
-				var cachedCustomEditorsList = customEditorAttributesType.HasField("kCachedEditorForType") ?
-					(Dictionary<Type, Type>)customEditorAttributesType.GetFieldValue("kCachedEditorForType") :
-					null;
 
-				foreach (var customEditor in customEditorsList)
+				var customEditorsList = customEditorAttributesType.GetFieldValue("kSCustomEditors") as IList;
+				var customEditorsDictionary = customEditorAttributesType.GetFieldValue("kSCustomEditors") as IDictionary;
+
+				// after unity 2018.*
+				if (customEditorsDictionary != null)
 				{
-					if (customEditor == null || (Type)customEditor.GetFieldValue("m_InspectedType") != selectedAssetType)
-						continue;
+					foreach (IEnumerable customEditors in customEditorsDictionary.Values)
+					{
+						foreach (var customEditor in customEditors)
+						{
+							if (customEditor == null || (Type)customEditor.GetFieldValue("m_InspectedType") != selectedAssetType)
+								continue;
 
-					var originalInspectorType = (Type)customEditor.GetFieldValue("m_InspectorType");
+							var originalInspectorType = (Type)customEditor.GetFieldValue("m_InspectorType");
+
+							// override inspector
+							customEditor.SetFieldValue("m_InspectorType", typeof(TemplateInspector));
+
+							// force rebuild editor list
+							activeEditorTracker.Invoke("ForceRebuild");
+							inspectorWindow.Repaint();
+
+							// restore original inspector
+							customEditor.SetFieldValue("m_InspectorType", originalInspectorType);
+							return;
+						}
+					}
+
+					var newMonoEditorType = Activator.CreateInstance(monoEditorType);
+					newMonoEditorType.SetFieldValue("m_InspectedType", selectedAssetType);
+					newMonoEditorType.SetFieldValue("m_InspectorType", typeof(TemplateInspector));
+					newMonoEditorType.SetFieldValue("m_EditorForChildClasses", false);
+					if (monoEditorType.HasField("m_IsFallback"))
+						newMonoEditorType.SetFieldValue("m_IsFallback", false);
+					var newMonoEditorTypeList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(monoEditorType));
+					newMonoEditorTypeList.Add(newMonoEditorType);
+
 					// override inspector
-					customEditor.SetFieldValue("m_InspectorType", typeof(TemplateInspector));
-					if (cachedCustomEditorsList != null)
-						cachedCustomEditorsList[selectedAssetType] = typeof(TemplateInspector);
+					customEditorsDictionary[selectedAssetType] =  newMonoEditorTypeList;
+
 					// force rebuild editor list
-					activeEditorTracker.ForceRebuild();
+					activeEditorTracker.Invoke("ForceRebuild");
 					inspectorWindow.Repaint();
+
 					// restore original inspector
-					customEditor.SetFieldValue("m_InspectorType", originalInspectorType);
-					if (cachedCustomEditorsList != null)
-						cachedCustomEditorsList.Remove(selectedAssetType);
-
-					return;
+					customEditorsDictionary.Remove(selectedAssetType);
 				}
+				// prior to unity 2018.*
+				else if (customEditorsList != null)
+				{
+					var cachedCustomEditorsByType = customEditorAttributesType.HasField("kCachedEditorForType") ?
+						(IDictionary<Type, Type>)customEditorAttributesType.GetFieldValue("kCachedEditorForType") :
+						null;
 
-				var newMonoEditorType = Activator.CreateInstance(monoEditorType);
-				newMonoEditorType.SetFieldValue("m_InspectedType", selectedAssetType);
-				newMonoEditorType.SetFieldValue("m_InspectorType", typeof(TemplateInspector));
-				newMonoEditorType.SetFieldValue("m_EditorForChildClasses", false);
-				if (monoEditorType.HasField("m_IsFallback"))
-					newMonoEditorType.SetFieldValue("m_IsFallback", false);
+					foreach (var customEditor in customEditorsList)
+					{
+						if (customEditor == null || (Type)customEditor.GetFieldValue("m_InspectedType") != selectedAssetType)
+							continue;
 
-				// override inspector
-				customEditorsList.Insert(0, newMonoEditorType);
-				if (cachedCustomEditorsList != null)
-					cachedCustomEditorsList[selectedAssetType] = typeof(TemplateInspector);
-				// force rebuild editor list
-				activeEditorTracker.ForceRebuild();
-				inspectorWindow.Repaint();
+						var originalInspectorType = (Type)customEditor.GetFieldValue("m_InspectorType");
 
-				// restore original inspector
-				customEditorsList.Remove(newMonoEditorType);
-				if (cachedCustomEditorsList != null)
-					cachedCustomEditorsList.Remove(selectedAssetType);
+						// override inspector
+						customEditor.SetFieldValue("m_InspectorType", typeof(TemplateInspector));
+						if (cachedCustomEditorsByType != null)
+							cachedCustomEditorsByType[selectedAssetType] = typeof(TemplateInspector);
+
+						// force rebuild editor list
+						activeEditorTracker.Invoke("ForceRebuild");
+						inspectorWindow.Repaint();
+
+						// restore original inspector
+						customEditor.SetFieldValue("m_InspectorType", originalInspectorType);
+						if (cachedCustomEditorsByType != null)
+							cachedCustomEditorsByType.Remove(selectedAssetType);
+						return;
+					}
+
+					var newMonoEditorType = Activator.CreateInstance(monoEditorType);
+					newMonoEditorType.SetFieldValue("m_InspectedType", selectedAssetType);
+					newMonoEditorType.SetFieldValue("m_InspectorType", typeof(TemplateInspector));
+					newMonoEditorType.SetFieldValue("m_EditorForChildClasses", false);
+					if (monoEditorType.HasField("m_IsFallback"))
+						newMonoEditorType.SetFieldValue("m_IsFallback", false);
+
+					// override inspector
+					customEditorsList.Insert(0, newMonoEditorType);
+					if (cachedCustomEditorsByType != null)
+						cachedCustomEditorsByType[selectedAssetType] = typeof(TemplateInspector);
+					// force rebuild editor list
+					activeEditorTracker.Invoke("ForceRebuild");
+					inspectorWindow.Repaint();
+
+					// restore original inspector
+					customEditorsList.Remove(newMonoEditorType);
+					if (cachedCustomEditorsByType != null)
+						cachedCustomEditorsByType.Remove(selectedAssetType);
+				}
 			}
 			catch (Exception updateEditorError)
 			{
@@ -142,7 +196,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Editors
 				this.templateSettings.OutputPath = AssetDatabase.GetAssetPath(EditorGUILayout.ObjectField("Output Path", codeAsset, typeof(Object), false));
 			else
 				this.templateSettings.OutputPath = EditorGUILayout.TextField("Output Path", this.templateSettings.OutputPath);
-#if UNITY_5_3_OR_NEWER
+#if UNITY_2017_1_OR_NEWER
 			this.templateSettings.Trigger = (int)(TemplateSettings.Triggers)EditorGUILayout.EnumFlagsField("Auto-Gen Triggers", (TemplateSettings.Triggers)this.templateSettings.Trigger);
 #else
 			this.templateSettings.Trigger = (int)(TemplateSettings.Triggers)EditorGUILayout.EnumMaskField("Auto-Gen Triggers", (TemplateSettings.Triggers)templateSettings.Trigger);

@@ -7,8 +7,8 @@
     <ProjectGuid>{425B3063-AE42-4802-9516-446DA938E08D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GameDevWare.TextTransform.Unity1</RootNamespace>
-    <AssemblyName>GameDevWare.TextTransform.Unity1</AssemblyName>
+    <RootNamespace>GameDevWare.TextTransform.Unity</RootNamespace>
+    <AssemblyName>GameDevWare.TextTransform.Unity</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

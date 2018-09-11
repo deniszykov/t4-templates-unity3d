@@ -1,7 +1,24 @@
 fileFormatVersion: 2
-guid: f02b3fe0a866fca419671914a860554a
-MonoAssemblyImporter:
+guid: d95747ad7660f1547be5178703805664
+timeCreated: 1531731013
+licenseType: Store
+PluginImporter:
   serializedVersion: 1
   iconMap: {}
   executionOrder: {}
+  isPreloaded: 0
+  platformData:
+    Any:
+      enabled: 0
+      settings: {}
+    Editor:
+      enabled: 1
+      settings:
+        DefaultValueInitialized: true
+    WindowsStoreApps:
+      enabled: 0
+      settings:
+        CPU: AnyCPU
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 
