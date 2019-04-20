@@ -3,8 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Json
+namespace GameDevWare.TextTransform.Json
 {
 	internal  class JsonPrimitive : JsonValue
 	{
@@ -92,10 +91,10 @@ namespace Assets.Editor.GameDevWare.TextTransform.Json
 			get
 			{
 				// FIXME: what should we do for null? Handle it as null so far.
-				if (Value == null)
+				if (this.Value == null)
 					return JsonType.String;
 
-				switch (Type.GetTypeCode(Value.GetType()))
+				switch (Type.GetTypeCode(this.Value.GetType()))
 				{
 					case TypeCode.Boolean:
 						return JsonType.Boolean;
@@ -111,43 +110,43 @@ namespace Assets.Editor.GameDevWare.TextTransform.Json
 		}
 		public override void Save(Stream stream)
 		{
-			switch (JsonType)
+			switch (this.JsonType)
 			{
 				case JsonType.Boolean:
-					if ((bool) Value)
+					if ((bool) this.Value)
 						stream.Write(true_bytes, 0, 4);
 					else
 						stream.Write(false_bytes, 0, 5);
 					break;
 				case JsonType.String:
 					stream.WriteByte((byte) '\"');
-					var bytes = Encoding.UTF8.GetBytes(EscapeString(Value.ToString()));
+					var bytes = Encoding.UTF8.GetBytes(this.EscapeString(this.Value.ToString()));
 					stream.Write(bytes, 0, bytes.Length);
 					stream.WriteByte((byte) '\"');
 					break;
 				default:
-					bytes = Encoding.UTF8.GetBytes(GetFormattedString());
+					bytes = Encoding.UTF8.GetBytes(this.GetFormattedString());
 					stream.Write(bytes, 0, bytes.Length);
 					break;
 			}
 		}
 		internal string GetFormattedString()
 		{
-			switch (JsonType)
+			switch (this.JsonType)
 			{
 				case JsonType.String:
-					if (Value is string || Value == null)
-						return (string) Value;
-					if (Value is char)
-						return Value.ToString();
-					throw new NotImplementedException("GetFormattedString from value type " + Value.GetType());
+					if (this.Value is string || this.Value == null)
+						return (string) this.Value;
+					if (this.Value is char)
+						return this.Value.ToString();
+					throw new NotImplementedException("GetFormattedString from value type " + this.Value.GetType());
 				case JsonType.Number:
 					string s;
-					if (Value is float || Value is double)
+					if (this.Value is float || this.Value is double)
 						// Use "round-trip" format
-						s = ((IFormattable) Value).ToString("R", NumberFormatInfo.InvariantInfo);
+						s = ((IFormattable) this.Value).ToString("R", NumberFormatInfo.InvariantInfo);
 					else
-						s = ((IFormattable) Value).ToString("G", NumberFormatInfo.InvariantInfo);
+						s = ((IFormattable) this.Value).ToString("G", NumberFormatInfo.InvariantInfo);
 					if (s == "NaN" || s == "Infinity" || s == "-Infinity")
 						return "\"" + s + "\"";
 					return s;

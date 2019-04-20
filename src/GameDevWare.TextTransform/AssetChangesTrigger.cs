@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Copyright (c) 2016 Denis Zykov, GameDevWare.com
 
 	This a part of "T4 Templates" Unity Asset - https://www.assetstore.unity3d.com/#!/content/63294
@@ -17,13 +17,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Assets.Editor.GameDevWare.TextTransform.Utils;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using GameDevWare.TextTransform.Utils;
 using UnityEditor;
 using UnityEngine;
-using System.Linq;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform
+namespace GameDevWare.TextTransform
 {
 	[InitializeOnLoad, Serializable]
 	internal class AssetChangesTrigger : AssetPostprocessor
@@ -32,6 +32,7 @@ namespace Assets.Editor.GameDevWare.TextTransform
 		private static readonly Dictionary<string, List<string>> templatePathByWatchedPaths = new Dictionary<string, List<string>>();
 		private static readonly HashSet<string> changedAssets = new HashSet<string>(StringComparer.Ordinal);
 		private static bool reloadWatchList = true;
+		private static int doDelayedAssetRefresh = -1;
 
 		static AssetChangesTrigger()
 		{
@@ -53,6 +54,15 @@ namespace Assets.Editor.GameDevWare.TextTransform
 			{
 				CreateWatchers();
 				reloadWatchList = false;
+			}
+
+			if (doDelayedAssetRefresh > 0 && --doDelayedAssetRefresh == 0)
+			{
+				if (Menu.VerboseLogs)
+					Debug.Log("Performing forced asset refresh.");
+
+				AssetDatabase.Refresh();
+				doDelayedAssetRefresh = -1;
 			}
 
 			CheckChangedAssets();
@@ -163,6 +173,10 @@ namespace Assets.Editor.GameDevWare.TextTransform
 					foreach (var asset in movedFromAssetPaths)
 						changedAssets.Add(FileUtils.MakeProjectRelative(asset));
 			}
+		}
+		public static void DoDelayedAssetRefresh()
+		{
+			doDelayedAssetRefresh = 100;
 		}
 	}
 }

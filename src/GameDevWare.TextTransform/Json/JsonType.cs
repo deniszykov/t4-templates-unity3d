@@ -1,5 +1,5 @@
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Json
+
+namespace GameDevWare.TextTransform.Json
 {
 	internal  enum JsonType
 	{

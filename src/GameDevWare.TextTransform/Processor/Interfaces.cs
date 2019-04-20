@@ -32,8 +32,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public interface IRecognizeHostSpecific
 	{

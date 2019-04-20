@@ -17,8 +17,7 @@
 using System.Diagnostics.CodeAnalysis;
 using UnityEditor;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform
+namespace GameDevWare.TextTransform
 {
 	[SuppressMessage("ReSharper", "UnusedMember.Local")]
 	public static class Menu
@@ -43,6 +42,7 @@ namespace Assets.Editor.GameDevWare.TextTransform
 		{
 			foreach (var templatePath in TemplateSettings.ListTemplatesInProject())
 				UnityTemplateGenerator.RunForTemplate(templatePath);
+			AssetChangesTrigger.DoDelayedAssetRefresh();
 		}
 	}
 }

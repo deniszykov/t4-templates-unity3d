@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net35;net45</TargetFrameworks>
@@ -24,6 +24,7 @@
 		<PackageTags>eval parser compiler expressions unity3d aot</PackageTags>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes />
+		<RootNamespace>GameDevWare.TextTransform</RootNamespace>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<Optimize>False</Optimize>
@@ -73,7 +74,7 @@
 
 	<Target Name="CopyDll" AfterTargets="PostBuildEvent" Condition=" '$(TargetFramework)' == 'net35' ">
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity.5.4/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
-		<Copy SourceFiles="$(ProjectDir)$(DocumentationFile)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity.5.7/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="$(ProjectDir)$(DocumentationFile)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity.5.4/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity.2017/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
 		<Copy SourceFiles="$(ProjectDir)$(DocumentationFile)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity.2017/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
 	</Target>

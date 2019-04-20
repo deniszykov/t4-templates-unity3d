@@ -29,8 +29,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public class ParsedTemplate
 	{
@@ -46,14 +45,14 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public List<ISegment> RawSegments
 		{
-			get { return segments; }
+			get { return this.segments; }
 		}
 
 		public IEnumerable<Directive> Directives
 		{
 			get
 			{
-				foreach (var seg in segments)
+				foreach (var seg in this.segments)
 				{
 					var dir = seg as Directive;
 					if (dir != null)
@@ -66,7 +65,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		{
 			get
 			{
-				foreach (var seg in segments)
+				foreach (var seg in this.segments)
 				{
 					var ts = seg as TemplateSegment;
 					if (ts != null)
@@ -77,7 +76,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public CompilerErrorCollection Errors
 		{
-			get { return errors; }
+			get { return this.errors; }
 		}
 
 		public static ParsedTemplate FromText(string content, ITextTemplatingEngineHost host)
@@ -96,17 +95,17 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public void Parse(ITextTemplatingEngineHost host, Tokeniser tokeniser)
 		{
-			Parse(host, tokeniser, true);
+			this.Parse(host, tokeniser, true);
 		}
 
 		public void ParseWithoutIncludes(Tokeniser tokeniser)
 		{
-			Parse(null, tokeniser, false);
+			this.Parse(null, tokeniser, false);
 		}
 
 		private void Parse(ITextTemplatingEngineHost host, Tokeniser tokeniser, bool parseIncludes)
 		{
-			Parse(host, tokeniser, parseIncludes, false);
+			this.Parse(host, tokeniser, parseIncludes, false);
 		}
 
 		private void Parse(ITextTemplatingEngineHost host, Tokeniser tokeniser, bool parseIncludes, bool isImport)
@@ -149,7 +148,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 										directive = new Directive(tokeniser.Value, tokeniser.Location);
 										directive.TagStartLocation = tokeniser.TagStartLocation;
 										if (!parseIncludes || !string.Equals(directive.Name, "include", StringComparison.OrdinalIgnoreCase))
-											segments.Add(directive);
+											this.segments.Add(directive);
 									}
 									else
 										attName = tokeniser.Value;
@@ -158,7 +157,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 									if (attName != null && directive != null)
 										directive.Attributes[attName] = tokeniser.Value;
 									else
-										LogError("Directive value without name", tokeniser.Location);
+										this.LogError("Directive value without name", tokeniser.Location);
 									attName = null;
 									break;
 								case State.Directive:
@@ -171,7 +170,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 							}
 						}
 						if (parseIncludes && directive != null && string.Equals(directive.Name, "include", StringComparison.OrdinalIgnoreCase))
-							Import(host, directive, Path.GetDirectoryName(tokeniser.Location.FileName));
+							this.Import(host, directive, Path.GetDirectoryName(tokeniser.Location.FileName));
 						break;
 					default:
 						throw new InvalidOperationException();
@@ -181,13 +180,13 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 					seg.TagStartLocation = tokeniser.TagStartLocation;
 					seg.EndLocation = tokeniser.TagEndLocation;
 					if (addToImportedHelpers)
-						importedHelperSegments.Add(seg);
+						this.importedHelperSegments.Add(seg);
 					else
-						segments.Add(seg);
+						this.segments.Add(seg);
 				}
 			}
 			if (!isImport)
-				AppendAnyImportedHelperSegments();
+				this.AppendAnyImportedHelperSegments();
 		}
 
 		private void Import(ITextTemplatingEngineHost host, Directive includeDirective, string relativeToDirectory)
@@ -195,7 +194,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			string fileName;
 			if (includeDirective.Attributes.Count > 1 || !includeDirective.Attributes.TryGetValue("file", out fileName))
 			{
-				LogError("Unexpected attributes in include directive", includeDirective.StartLocation);
+				this.LogError("Unexpected attributes in include directive", includeDirective.StartLocation);
 				return;
 			}
 
@@ -209,15 +208,15 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 			string content, resolvedName;
 			if (host.LoadIncludeText(fileName, out content, out resolvedName))
-				Parse(host, new Tokeniser(resolvedName, content), true, true);
+				this.Parse(host, new Tokeniser(resolvedName, content), true, true);
 			else
-				LogError("Could not resolve include file '" + fileName + "'.", includeDirective.StartLocation);
+				this.LogError("Could not resolve include file '" + fileName + "'.", includeDirective.StartLocation);
 		}
 
 		private void AppendAnyImportedHelperSegments()
 		{
-			segments.AddRange(importedHelperSegments);
-			importedHelperSegments.Clear();
+			this.segments.AddRange(this.importedHelperSegments);
+			this.importedHelperSegments.Clear();
 		}
 
 		private void LogError(string message, Location location, bool isWarning)
@@ -232,30 +231,30 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			}
 			else
 			{
-				err.FileName = rootFileName ?? string.Empty;
+				err.FileName = this.rootFileName ?? string.Empty;
 			}
 			err.IsWarning = isWarning;
-			errors.Add(err);
+			this.errors.Add(err);
 		}
 
 		public void LogError(string message)
 		{
-			LogError(message, Location.Empty, false);
+			this.LogError(message, Location.Empty, false);
 		}
 
 		public void LogWarning(string message)
 		{
-			LogError(message, Location.Empty, true);
+			this.LogError(message, Location.Empty, true);
 		}
 
 		public void LogError(string message, Location location)
 		{
-			LogError(message, location, false);
+			this.LogError(message, location, false);
 		}
 
 		public void LogWarning(string message, Location location)
 		{
-			LogError(message, location, true);
+			this.LogError(message, location, true);
 		}
 	}
 
@@ -300,9 +299,9 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		public string Extract(string key)
 		{
 			string value;
-			if (!Attributes.TryGetValue(key, out value))
+			if (!this.Attributes.TryGetValue(key, out value))
 				return null;
-			Attributes.Remove(key);
+			this.Attributes.Remove(key);
 			return value;
 		}
 	}
@@ -319,9 +318,9 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 	{
 		public Location(string fileName, int line, int column) : this()
 		{
-			FileName = fileName;
-			Column = column;
-			Line = line;
+			this.FileName = fileName;
+			this.Column = column;
+			this.Line = line;
 		}
 
 		public int Line { get; private set; }
@@ -335,12 +334,12 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public Location AddLine()
 		{
-			return new Location(FileName, Line + 1, 1);
+			return new Location(this.FileName, this.Line + 1, 1);
 		}
 
 		public Location AddCol()
 		{
-			return AddCols(1);
+			return this.AddCols(1);
 		}
 
 		public Location AddCols(int number)
@@ -350,12 +349,12 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public override string ToString()
 		{
-			return string.Format("[{0} ({1},{2})]", FileName, Line, Column);
+			return string.Format("[{0} ({1},{2})]", this.FileName, this.Line, this.Column);
 		}
 
 		public bool Equals(Location other)
 		{
-			return other.Line == Line && other.Column == Column && other.FileName == FileName;
+			return other.Line == this.Line && other.Column == this.Column && other.FileName == this.FileName;
 		}
 	}
 }

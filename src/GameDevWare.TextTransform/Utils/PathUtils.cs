@@ -22,8 +22,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Utils
+namespace GameDevWare.TextTransform.Utils
 {
 	internal static class FileUtils
 	{

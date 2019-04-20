@@ -27,8 +27,7 @@
 using System;
 using System.Runtime.Serialization;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	[Serializable]
 	public class DirectiveProcessorException : Exception

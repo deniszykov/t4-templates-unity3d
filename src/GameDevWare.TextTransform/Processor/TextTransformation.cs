@@ -29,8 +29,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Text;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public abstract class TextTransformation : IDisposable
 	{
@@ -56,21 +55,21 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public void Error(string message)
 		{
-			Errors.Add(new CompilerError("", 0, 0, "", message));
+			this.Errors.Add(new CompilerError("", 0, 0, "", message));
 		}
 
 		public void Warning(string message)
 		{
-			Errors.Add(new CompilerError("", 0, 0, "", message) { IsWarning = true });
+			this.Errors.Add(new CompilerError("", 0, 0, "", message) { IsWarning = true });
 		}
 
 		protected internal CompilerErrorCollection Errors
 		{
 			get
 			{
-				if (errors == null)
-					errors = new CompilerErrorCollection();
-				return errors;
+				if (this.errors == null)
+					this.errors = new CompilerErrorCollection();
+				return this.errors;
 			}
 		}
 
@@ -78,9 +77,9 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		{
 			get
 			{
-				if (indents == null)
-					indents = new Stack<int>();
-				return indents;
+				if (this.indents == null)
+					this.indents = new Stack<int>();
+				return this.indents;
 			}
 		}
 
@@ -90,11 +89,11 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public string PopIndent()
 		{
-			if (Indents.Count == 0)
+			if (this.Indents.Count == 0)
 				return "";
-			var lastPos = currentIndent.Length - Indents.Pop();
-			var last = currentIndent.Substring(lastPos);
-			currentIndent = currentIndent.Substring(0, lastPos);
+			var lastPos = this.currentIndent.Length - this.Indents.Pop();
+			var last = this.currentIndent.Substring(lastPos);
+			this.currentIndent = this.currentIndent.Substring(0, lastPos);
 			return last;
 		}
 
@@ -102,19 +101,19 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		{
 			if (indent == null)
 				throw new ArgumentNullException("indent");
-			Indents.Push(indent.Length);
-			currentIndent += indent;
+			this.Indents.Push(indent.Length);
+			this.currentIndent += indent;
 		}
 
 		public void ClearIndent()
 		{
-			currentIndent = string.Empty;
-			Indents.Clear();
+			this.currentIndent = string.Empty;
+			this.Indents.Clear();
 		}
 
 		public string CurrentIndent
 		{
-			get { return currentIndent; }
+			get { return this.currentIndent; }
 		}
 
 		#endregion
@@ -125,11 +124,11 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		{
 			get
 			{
-				if (builder == null)
-					builder = new StringBuilder();
-				return builder;
+				if (this.builder == null)
+					this.builder = new StringBuilder();
+				return this.builder;
 			}
-			set { builder = value; }
+			set { this.builder = value; }
 		}
 
 		public void Write(string textToAppend)
@@ -137,21 +136,21 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			if (string.IsNullOrEmpty(textToAppend))
 				return;
 
-			if ((GenerationEnvironment.Length == 0 || endsWithNewline) && CurrentIndent.Length > 0)
+			if ((this.GenerationEnvironment.Length == 0 || this.endsWithNewline) && this.CurrentIndent.Length > 0)
 			{
-				GenerationEnvironment.Append(CurrentIndent);
+				this.GenerationEnvironment.Append(this.CurrentIndent);
 			}
-			endsWithNewline = false;
+			this.endsWithNewline = false;
 
 			var last = textToAppend[textToAppend.Length - 1];
 			if (last == '\n' || last == '\r')
 			{
-				endsWithNewline = true;
+				this.endsWithNewline = true;
 			}
 
-			if (CurrentIndent.Length == 0)
+			if (this.CurrentIndent.Length == 0)
 			{
-				GenerationEnvironment.Append(textToAppend);
+				this.GenerationEnvironment.Append(textToAppend);
 				return;
 			}
 
@@ -178,32 +177,32 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 				var len = i - lastNewline;
 				if (len > 0)
 				{
-					GenerationEnvironment.Append(textToAppend, lastNewline, i - lastNewline);
+					this.GenerationEnvironment.Append(textToAppend, lastNewline, i - lastNewline);
 				}
-				GenerationEnvironment.Append(CurrentIndent);
+				this.GenerationEnvironment.Append(this.CurrentIndent);
 				lastNewline = i;
 			}
 			if (lastNewline > 0)
-				GenerationEnvironment.Append(textToAppend, lastNewline, textToAppend.Length - lastNewline);
+				this.GenerationEnvironment.Append(textToAppend, lastNewline, textToAppend.Length - lastNewline);
 			else
-				GenerationEnvironment.Append(textToAppend);
+				this.GenerationEnvironment.Append(textToAppend);
 		}
 
 		public void Write(string format, params object[] args)
 		{
-			Write(string.Format(format, args));
+			this.Write(string.Format(format, args));
 		}
 
 		public void WriteLine(string textToAppend)
 		{
-			Write(textToAppend);
-			GenerationEnvironment.AppendLine();
-			endsWithNewline = true;
+			this.Write(textToAppend);
+			this.GenerationEnvironment.AppendLine();
+			this.endsWithNewline = true;
 		}
 
 		public void WriteLine(string format, params object[] args)
 		{
-			WriteLine(string.Format(format, args));
+			this.WriteLine(string.Format(format, args));
 		}
 
 		#endregion
@@ -212,7 +211,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public void Dispose()
 		{
-			Dispose(true);
+			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 
@@ -222,7 +221,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		~TextTransformation()
 		{
-			Dispose(false);
+			this.Dispose(false);
 		}
 
 		#endregion

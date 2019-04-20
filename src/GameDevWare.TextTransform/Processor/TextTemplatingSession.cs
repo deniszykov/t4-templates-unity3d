@@ -28,8 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	[Serializable]
 	public sealed class TextTemplatingSession : Dictionary<string, Object>, ITextTemplatingSession, ISerializable
@@ -41,7 +40,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		TextTemplatingSession(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
-			Id = (Guid)info.GetValue("Id", typeof(Guid));
+			this.Id = (Guid)info.GetValue("Id", typeof(Guid));
 		}
 
 		public TextTemplatingSession(Guid id)
@@ -53,7 +52,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public override int GetHashCode()
 		{
-			return Id.GetHashCode();
+			return this.Id.GetHashCode();
 		}
 
 		public override bool Equals(object obj)
@@ -64,7 +63,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public bool Equals(Guid other)
 		{
-			return other.Equals(Id);
+			return other.Equals(this.Id);
 		}
 
 		public bool Equals(ITextTemplatingSession other)
@@ -75,7 +74,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData(info, context);
-			info.AddValue("Id", Id);
+			info.AddValue("Id", this.Id);
 		}
 	}
 }

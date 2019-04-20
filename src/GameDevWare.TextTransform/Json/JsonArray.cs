@@ -4,23 +4,22 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Json
+namespace GameDevWare.TextTransform.Json
 {
 	internal class JsonArray : JsonValue, IList<JsonValue>
 	{
 		private readonly List<JsonValue> list;
 		public JsonArray(params JsonValue[] items)
 		{
-			list = new List<JsonValue>();
-			AddRange(items);
+			this.list = new List<JsonValue>();
+			this.AddRange(items);
 		}
 		public JsonArray(IEnumerable<JsonValue> items)
 		{
 			if (items == null)
 				throw new ArgumentNullException("items");
 
-			list = new List<JsonValue>(items);
+			this.list = new List<JsonValue>(items);
 		}
 		public override JsonType JsonType
 		{
@@ -28,7 +27,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Json
 		}
 		public override int Count
 		{
-			get { return list.Count; }
+			get { return this.list.Count; }
 		}
 		public bool IsReadOnly
 		{
@@ -36,74 +35,74 @@ namespace Assets.Editor.GameDevWare.TextTransform.Json
 		}
 		public override sealed JsonValue this[int index]
 		{
-			get { return list[index]; }
-			set { list[index] = value; }
+			get { return this.list[index]; }
+			set { this.list[index] = value; }
 		}
 		public void Add(JsonValue item)
 		{
 			if (item == null)
 				throw new ArgumentNullException("item");
 
-			list.Add(item);
+			this.list.Add(item);
 		}
 		public void Clear()
 		{
-			list.Clear();
+			this.list.Clear();
 		}
 		public bool Contains(JsonValue item)
 		{
-			return list.Contains(item);
+			return this.list.Contains(item);
 		}
 		public void CopyTo(JsonValue[] array, int arrayIndex)
 		{
-			list.CopyTo(array, arrayIndex);
+			this.list.CopyTo(array, arrayIndex);
 		}
 		public int IndexOf(JsonValue item)
 		{
-			return list.IndexOf(item);
+			return this.list.IndexOf(item);
 		}
 		public void Insert(int index, JsonValue item)
 		{
-			list.Insert(index, item);
+			this.list.Insert(index, item);
 		}
 		public bool Remove(JsonValue item)
 		{
-			return list.Remove(item);
+			return this.list.Remove(item);
 		}
 		public void RemoveAt(int index)
 		{
-			list.RemoveAt(index);
+			this.list.RemoveAt(index);
 		}
 		IEnumerator<JsonValue> IEnumerable<JsonValue>.GetEnumerator()
 		{
-			return list.GetEnumerator();
+			return this.list.GetEnumerator();
 		}
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-			return list.GetEnumerator();
+			return this.list.GetEnumerator();
 		}
 		public void AddRange(IEnumerable<JsonValue> items)
 		{
 			if (items == null)
 				throw new ArgumentNullException("items");
 
-			list.AddRange(items);
+			this.list.AddRange(items);
 		}
 		public void AddRange(params JsonValue[] items)
 		{
 			if (items == null)
 				return;
 
-			list.AddRange(items);
+			this.list.AddRange(items);
 		}
 		public override void Save(Stream stream)
 		{
 			if (stream == null)
 				throw new ArgumentNullException("stream");
 			stream.WriteByte((byte) '[');
-			for (var i = 0; i < list.Count; i++)
+			for (var i = 0; i < this.list.Count; i++)
 			{
-				var v = list[i];
+				var v = this.list[i];
 				if (v != null)
 					v.Save(stream);
 				else
@@ -114,7 +113,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Json
 					stream.WriteByte((byte) 'l');
 				}
 
-				if (i < Count - 1)
+				if (i < this.Count - 1)
 				{
 					stream.WriteByte((byte) ',');
 					stream.WriteByte((byte) ' ');

@@ -31,8 +31,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public class TemplateGenerator : MarshalByRefObject, ITextTemplatingEngineHost
 	{
@@ -54,41 +53,41 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		//host properties for consumers to access
 		public CompilerErrorCollection Errors
 		{
-			get { return errors; }
+			get { return this.errors; }
 		}
 
 		public List<string> Refs
 		{
-			get { return refs; }
+			get { return this.refs; }
 		}
 
 		public List<string> Imports
 		{
-			get { return imports; }
+			get { return this.imports; }
 		}
 
 		public List<string> IncludePaths
 		{
-			get { return includePaths; }
+			get { return this.includePaths; }
 		}
 
 		public List<string> ReferencePaths
 		{
-			get { return referencePaths; }
+			get { return this.referencePaths; }
 		}
 
 		public string OutputFile
 		{
-			get { return outputFile; }
+			get { return this.outputFile; }
 		}
 
 		public bool UseRelativeLinePragmas { get; set; }
 
 		public TemplateGenerator()
 		{
-			Refs.Add(typeof(TextTransformation).Assembly.Location);
-			Refs.Add(typeof(Uri).Assembly.Location);
-			Imports.Add("System");
+			this.Refs.Add(typeof(TextTransformation).Assembly.Location);
+			this.Refs.Add(typeof(Uri).Assembly.Location);
+			this.Imports.Add("System");
 		}
 
 		public CompiledTemplate CompileTemplate(string content)
@@ -96,19 +95,19 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			if (String.IsNullOrEmpty(content))
 				throw new ArgumentNullException("content");
 
-			errors.Clear();
-			encoding = Encoding.UTF8;
+			this.errors.Clear();
+			this.encoding = Encoding.UTF8;
 
-			return Engine.CompileTemplate(content, this);
+			return this.Engine.CompileTemplate(content, this);
 		}
 
 		protected TemplatingEngine Engine
 		{
 			get
 			{
-				if (engine == null)
-					engine = new TemplatingEngine();
-				return engine;
+				if (this.engine == null)
+					this.engine = new TemplatingEngine();
+				return this.engine;
 			}
 		}
 
@@ -126,38 +125,38 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			}
 			catch (IOException ex)
 			{
-				errors.Clear();
-				AddError("Could not read input file '" + inputFile + "':\n" + ex);
+				this.errors.Clear();
+				this.AddError("Could not read input file '" + inputFile + "':\n" + ex);
 				return false;
 			}
 
 			string output;
-			ProcessTemplate(inputFile, content, ref outputFile, out output);
+			this.ProcessTemplate(inputFile, content, ref outputFile, out output);
 
 			try
 			{
-				if (!errors.HasErrors)
-					File.WriteAllText(outputFile, output, encoding);
+				if (!this.errors.HasErrors)
+					File.WriteAllText(outputFile, output, this.encoding);
 			}
 			catch (IOException ex)
 			{
-				AddError("Could not write output file '" + outputFile + "':\n" + ex);
+				this.AddError("Could not write output file '" + outputFile + "':\n" + ex);
 			}
 
-			return !errors.HasErrors;
+			return !this.errors.HasErrors;
 		}
 
 		public bool ProcessTemplate(string inputFileName, string inputContent, ref string outputFileName, out string outputContent)
 		{
-			errors.Clear();
-			encoding = Encoding.UTF8;
+			this.errors.Clear();
+			this.encoding = Encoding.UTF8;
 
-			outputFile = outputFileName;
-			inputFile = inputFileName;
-			outputContent = Engine.ProcessTemplate(inputContent, this);
-			outputFileName = outputFile;
+			this.outputFile = outputFileName;
+			this.inputFile = inputFileName;
+			outputContent = this.Engine.ProcessTemplate(inputContent, this);
+			outputFileName = this.outputFile;
 
-			return !errors.HasErrors;
+			return !this.errors.HasErrors;
 		}
 
 		public bool PreprocessTemplate(string inputFile, string className, string classNamespace,
@@ -178,44 +177,44 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			}
 			catch (IOException ex)
 			{
-				errors.Clear();
-				AddError("Could not read input file '" + inputFile + "':\n" + ex);
+				this.errors.Clear();
+				this.AddError("Could not read input file '" + inputFile + "':\n" + ex);
 				return false;
 			}
 
 			string output;
-			PreprocessTemplate(inputFile, className, classNamespace, content, out language, out references, out output);
+			this.PreprocessTemplate(inputFile, className, classNamespace, content, out language, out references, out output);
 
 			try
 			{
-				if (!errors.HasErrors)
+				if (!this.errors.HasErrors)
 					File.WriteAllText(outputFile, output, encoding);
 			}
 			catch (IOException ex)
 			{
-				AddError("Could not write output file '" + outputFile + "':\n" + ex);
+				this.AddError("Could not write output file '" + outputFile + "':\n" + ex);
 			}
 
-			return !errors.HasErrors;
+			return !this.errors.HasErrors;
 		}
 
 		public bool PreprocessTemplate(string inputFileName, string className, string classNamespace, string inputContent,
 			out string language, out string[] references, out string outputContent)
 		{
-			errors.Clear();
-			encoding = Encoding.UTF8;
+			this.errors.Clear();
+			this.encoding = Encoding.UTF8;
 
-			inputFile = inputFileName;
-			outputContent = Engine.PreprocessTemplate(inputContent, this, className, classNamespace, out language, out references);
+			this.inputFile = inputFileName;
+			outputContent = this.Engine.PreprocessTemplate(inputContent, this, className, classNamespace, out language, out references);
 
-			return !errors.HasErrors;
+			return !this.errors.HasErrors;
 		}
 
 		private CompilerError AddError(string error)
 		{
 			var err = new CompilerError();
 			err.ErrorText = error;
-			Errors.Add(err);
+			this.Errors.Add(err);
 			return err;
 		}
 
@@ -226,7 +225,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			switch (optionName)
 			{
 				case "UseRelativeLinePragmas":
-					return UseRelativeLinePragmas;
+					return this.UseRelativeLinePragmas;
 			}
 			return null;
 		}
@@ -268,19 +267,19 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		{
 			var key = new ParameterKey(processorName, directiveId, parameterName);
 			string value;
-			if (parameters.TryGetValue(key, out value))
+			if (this.parameters.TryGetValue(key, out value))
 				return value;
 			if (processorName != null || directiveId != null)
-				return ResolveParameterValue(null, null, parameterName);
+				return this.ResolveParameterValue(null, null, parameterName);
 			return null;
 		}
 
 		protected virtual Type ResolveDirectiveProcessor(string processorName)
 		{
 			KeyValuePair<string, string> value;
-			if (!directiveProcessors.TryGetValue(processorName, out value))
+			if (!this.directiveProcessors.TryGetValue(processorName, out value))
 				throw new Exception(string.Format("No directive processor registered as '{0}'", processorName));
-			var asmPath = ResolveAssemblyReference(value.Value);
+			var asmPath = this.ResolveAssemblyReference(value.Value);
 			if (asmPath == null)
 				throw new Exception(string.Format("Could not resolve assembly '{0}' for directive processor '{1}'", value.Value, processorName));
 			var asm = Assembly.LoadFrom(asmPath);
@@ -292,7 +291,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			path = Environment.ExpandEnvironmentVariables(path);
 			if (Path.IsPathRooted(path))
 				return path;
-			var dir = Path.GetDirectoryName(inputFile);
+			var dir = Path.GetDirectoryName(this.inputFile);
 			var test = Path.Combine(dir, path);
 			if (File.Exists(test) || Directory.Exists(test))
 				return test;
@@ -306,22 +305,22 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public void AddDirectiveProcessor(string name, string klass, string assembly)
 		{
-			directiveProcessors.Add(name, new KeyValuePair<string, string>(klass, assembly));
+			this.directiveProcessors.Add(name, new KeyValuePair<string, string>(klass, assembly));
 		}
 
 		public void AddParameter(string processorName, string directiveName, string parameterName, string value)
 		{
-			parameters.Add(new ParameterKey(processorName, directiveName, parameterName), value);
+			this.parameters.Add(new ParameterKey(processorName, directiveName, parameterName), value);
 		}
 
 		protected virtual bool LoadIncludeText(string requestFileName, out string content, out string location)
 		{
 			content = "";
-			location = ResolvePath(requestFileName);
+			location = this.ResolvePath(requestFileName);
 
 			if (location == null || !File.Exists(location))
 			{
-				foreach (var path in includePaths)
+				foreach (var path in this.includePaths)
 				{
 					var f = Path.Combine(path, requestFileName);
 					if (File.Exists(f))
@@ -342,7 +341,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			}
 			catch (IOException ex)
 			{
-				AddError("Could not read included file '" + location + "':\n" + ex);
+				this.AddError("Could not read included file '" + location + "':\n" + ex);
 			}
 			return false;
 		}
@@ -351,7 +350,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		bool ITextTemplatingEngineHost.LoadIncludeText(string requestFileName, out string content, out string location)
 		{
-			return LoadIncludeText(requestFileName, out content, out location);
+			return this.LoadIncludeText(requestFileName, out content, out location);
 		}
 
 		void ITextTemplatingEngineHost.LogErrors(CompilerErrorCollection errors)
@@ -361,34 +360,34 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		string ITextTemplatingEngineHost.ResolveAssemblyReference(string assemblyReference)
 		{
-			return ResolveAssemblyReference(assemblyReference);
+			return this.ResolveAssemblyReference(assemblyReference);
 		}
 
 		string ITextTemplatingEngineHost.ResolveParameterValue(string directiveId, string processorName, string parameterName)
 		{
-			return ResolveParameterValue(directiveId, processorName, parameterName);
+			return this.ResolveParameterValue(directiveId, processorName, parameterName);
 		}
 
 		Type ITextTemplatingEngineHost.ResolveDirectiveProcessor(string processorName)
 		{
-			return ResolveDirectiveProcessor(processorName);
+			return this.ResolveDirectiveProcessor(processorName);
 		}
 
 		string ITextTemplatingEngineHost.ResolvePath(string path)
 		{
-			return ResolvePath(path);
+			return this.ResolvePath(path);
 		}
 
 		void ITextTemplatingEngineHost.SetFileExtension(string extension)
 		{
 			extension = extension.TrimStart('.');
-			if (Path.HasExtension(outputFile))
+			if (Path.HasExtension(this.outputFile))
 			{
-				outputFile = Path.ChangeExtension(outputFile, extension);
+				this.outputFile = Path.ChangeExtension(this.outputFile, extension);
 			}
 			else
 			{
-				outputFile = outputFile + "." + extension;
+				this.outputFile = this.outputFile + "." + extension;
 			}
 		}
 
@@ -399,17 +398,17 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		IList<string> ITextTemplatingEngineHost.StandardAssemblyReferences
 		{
-			get { return refs; }
+			get { return this.refs; }
 		}
 
 		IList<string> ITextTemplatingEngineHost.StandardImports
 		{
-			get { return imports; }
+			get { return this.imports; }
 		}
 
 		string ITextTemplatingEngineHost.TemplateFile
 		{
-			get { return inputFile; }
+			get { return this.inputFile; }
 		}
 
 		#endregion
@@ -423,7 +422,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 				this.parameterName = parameterName ?? "";
 				unchecked
 				{
-					hashCode = this.processorName.GetHashCode()
+					this.hashCode = this.processorName.GetHashCode()
 							   ^ this.directiveName.GetHashCode()
 							   ^ this.parameterName.GetHashCode();
 				}
@@ -436,17 +435,17 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 			public override bool Equals(object obj)
 			{
-				return obj is ParameterKey && Equals((ParameterKey)obj);
+				return obj is ParameterKey && this.Equals((ParameterKey)obj);
 			}
 
 			public bool Equals(ParameterKey other)
 			{
-				return processorName == other.processorName && directiveName == other.directiveName && parameterName == other.parameterName;
+				return this.processorName == other.processorName && this.directiveName == other.directiveName && this.parameterName == other.parameterName;
 			}
 
 			public override int GetHashCode()
 			{
-				return hashCode;
+				return this.hashCode;
 			}
 		}
 

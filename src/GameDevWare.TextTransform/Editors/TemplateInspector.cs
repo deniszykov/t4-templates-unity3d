@@ -15,20 +15,18 @@
 */
 
 using System;
-using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Assets.Editor.GameDevWare.TextTransform.Utils;
+using GameDevWare.TextTransform.Utils;
 using UnityEditor;
 using UnityEngine;
-
 using Object = UnityEngine.Object;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Editors
+
+namespace GameDevWare.TextTransform.Editors
 {
 	internal class TemplateInspector : UnityEditor.Editor
 	{
@@ -96,7 +94,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Editors
 					newMonoEditorTypeList.Add(newMonoEditorType);
 
 					// override inspector
-					customEditorsDictionary[selectedAssetType] =  newMonoEditorTypeList;
+					customEditorsDictionary[selectedAssetType] = newMonoEditorTypeList;
 
 					// force rebuild editor list
 					activeEditorTracker.Invoke("ForceRebuild");
@@ -185,7 +183,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Editors
 				this.templateSettings.OutputPath = AssetDatabase.GetAssetPath(EditorGUILayout.ObjectField("Output Path", codeAsset, typeof(Object), false));
 			else
 				this.templateSettings.OutputPath = EditorGUILayout.TextField("Output Path", this.templateSettings.OutputPath);
-			this.templateSettings.Trigger = (int)(TemplateSettings.Triggers)EditorGUILayout.EnumMaskField("Auto-Gen Triggers", (TemplateSettings.Triggers)templateSettings.Trigger);
+			this.templateSettings.Trigger = (int)(TemplateSettings.Triggers)EditorGUILayout.EnumMaskField("Auto-Gen Triggers", (TemplateSettings.Triggers)this.templateSettings.Trigger);
 			this.templateSettings.TriggerDelay = (int)EditorGUILayout.IntField("Auto-Gen Delay (Ms)", this.templateSettings.TriggerDelay);
 
 			if ((this.templateSettings.Trigger & (int)TemplateSettings.Triggers.AssetChanges) != 0)
@@ -217,19 +215,37 @@ namespace Assets.Editor.GameDevWare.TextTransform.Editors
 
 			EditorGUILayout.Space();
 			GUILayout.Label("Actions", EditorStyles.boldLabel);
+
+			if (EditorApplication.isCompiling)
+				EditorGUILayout.HelpBox("No action could be made while Unity Editor is compiling scripts.", MessageType.Warning);
+
+			GUI.enabled = !EditorApplication.isCompiling;
 			EditorGUILayout.BeginHorizontal();
 			if (GUILayout.Button("Generate " + this.lastGenerationResult))
 			{
-				if (UnityTemplateGenerator.RunForTemplate(assetPath) == false)
+				switch (UnityTemplateGenerator.RunForTemplate(assetPath))
 				{
-					this.lastGenerationResult = "(Failure)";
-				}
-				else
-				{
-					this.lastGenerationResult = "(Success)";
+					case GenerationResult.Success:
+					case GenerationResult.NoChanges:
+						this.lastGenerationResult = "(Success)";
+						AssetChangesTrigger.DoDelayedAssetRefresh();
+						break;
+					case GenerationResult.UnknownOutputType:
+						this.lastGenerationResult = "(Unknown output type)";
+						break;
+					case GenerationResult.TemplateProcessingError:
+						this.lastGenerationResult = "(Template processing error)";
+						break;
+					case GenerationResult.TemplateCompilationError:
+						this.lastGenerationResult = "(Template compilation error)";
+						break;
+					default:
+						this.lastGenerationResult = "(Failure)";
+						break;
 				}
 			}
 			EditorGUILayout.EndHorizontal();
+			GUI.enabled = true;
 
 			if (GUI.changed)
 			{

@@ -5,10 +5,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using JsonPair = System.Collections.Generic.KeyValuePair<string, Assets.Editor.GameDevWare.TextTransform.Json.JsonValue>;
+using JsonPair = System.Collections.Generic.KeyValuePair<string, GameDevWare.TextTransform.Json.JsonValue>;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Json
+
+namespace GameDevWare.TextTransform.Json
 {
 	internal  abstract class JsonValue : IEnumerable
 	{
@@ -124,23 +124,23 @@ namespace Assets.Editor.GameDevWare.TextTransform.Json
 		{
 			if (stream == null)
 				throw new ArgumentNullException("stream");
-			Save(new StreamWriter(stream));
+			this.Save(new StreamWriter(stream));
 		}
 		public virtual void Save(TextWriter textWriter)
 		{
 			if (textWriter == null)
 				throw new ArgumentNullException("textWriter");
-			SaveInternal(textWriter);
+			this.SaveInternal(textWriter);
 		}
 		public string Stringify()
 		{
 			var stringWriter = new StringWriter(CultureInfo.InvariantCulture);
-			Save(stringWriter);
+			this.Save(stringWriter);
 			return stringWriter.ToString();
 		}
 		private void SaveInternal(TextWriter w)
 		{
-			switch (JsonType)
+			switch (this.JsonType)
 			{
 				case JsonType.Object:
 					w.Write('{');
@@ -150,7 +150,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Json
 						if (following)
 							w.Write(", ");
 						w.Write('\"');
-						w.Write(EscapeString(pair.Key));
+						w.Write(this.EscapeString(pair.Key));
 						w.Write("\": ");
 						if (pair.Value == null)
 							w.Write("null");
@@ -180,7 +180,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Json
 					break;
 				case JsonType.String:
 					w.Write('"');
-					w.Write(EscapeString(((JsonPrimitive)this).GetFormattedString()));
+					w.Write(this.EscapeString(((JsonPrimitive)this).GetFormattedString()));
 					w.Write('"');
 					break;
 				default:
@@ -191,12 +191,12 @@ namespace Assets.Editor.GameDevWare.TextTransform.Json
 		public abstract object As(Type type);
 		public T As<T>()
 		{
-			return (T)As(typeof(T));
+			return (T)this.As(typeof(T));
 		}
 		public override string ToString()
 		{
 			var sw = new StringWriter();
-			Save(sw);
+			this.Save(sw);
 			return sw.ToString();
 		}
 		// Characters which have to be escaped:
@@ -230,12 +230,12 @@ namespace Assets.Editor.GameDevWare.TextTransform.Json
 
 			for (var i = 0; i < src.Length; i++)
 			{
-				if (NeedEscape(src, i))
+				if (this.NeedEscape(src, i))
 				{
 					var sb = new StringBuilder();
 					if (i > 0)
 						sb.Append(src, 0, i);
-					return DoEscapeString(sb, src, i);
+					return this.DoEscapeString(sb, src, i);
 				}
 			}
 			return src;
@@ -245,7 +245,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Json
 			var start = cur;
 			for (var i = cur; i < src.Length; i++)
 			{
-				if (NeedEscape(src, i))
+				if (this.NeedEscape(src, i))
 				{
 					sb.Append(src, start, i - start);
 					switch (src[i])

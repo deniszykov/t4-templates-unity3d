@@ -15,12 +15,11 @@
 */
 
 using System;
-using Assets.Editor.GameDevWare.TextTransform.Editors;
+using GameDevWare.TextTransform.Editors;
 using UnityEditor;
 using UnityEngine;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform
+namespace GameDevWare.TextTransform
 {
 	[InitializeOnLoad]
 	internal static class CodeCompilationTrigger

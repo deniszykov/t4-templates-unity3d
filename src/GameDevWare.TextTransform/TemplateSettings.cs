@@ -17,14 +17,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Editor.GameDevWare.TextTransform.Json;
-using Assets.Editor.GameDevWare.TextTransform.Utils;
+using GameDevWare.TextTransform.Json;
+using GameDevWare.TextTransform.Utils;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform
+
+namespace GameDevWare.TextTransform
 {
 	public sealed class TemplateSettings
 	{

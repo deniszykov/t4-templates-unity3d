@@ -26,8 +26,7 @@
 
 using System;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public class Tokeniser
 	{
@@ -40,190 +39,190 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public Tokeniser(string fileName, string content)
 		{
-			State = State.Content;
+			this.State = State.Content;
 			this.content = content;
 			this.Location = this.nextStateLocation = this.nextStateTagStartLocation = new Location(fileName, 1, 1);
 		}
 
 		public bool Advance()
 		{
-			value = null;
-			State = nextState;
-			Location = nextStateLocation;
-			TagStartLocation = nextStateTagStartLocation;
-			if (nextState == State.EOF)
+			this.value = null;
+			this.State = this.nextState;
+			this.Location = this.nextStateLocation;
+			this.TagStartLocation = this.nextStateTagStartLocation;
+			if (this.nextState == State.EOF)
 				return false;
-			nextState = GetNextStateAndCurrentValue();
+			this.nextState = this.GetNextStateAndCurrentValue();
 			return true;
 		}
 
 		private State GetNextStateAndCurrentValue()
 		{
-			switch (State)
+			switch (this.State)
 			{
 				case State.Block:
 				case State.Expression:
 				case State.Helper:
-					return GetBlockEnd();
+					return this.GetBlockEnd();
 
 				case State.Directive:
-					return NextStateInDirective();
+					return this.NextStateInDirective();
 
 				case State.Content:
-					return NextStateInContent();
+					return this.NextStateInContent();
 
 				case State.DirectiveName:
-					return GetDirectiveName();
+					return this.GetDirectiveName();
 
 				case State.DirectiveValue:
-					return GetDirectiveValue();
+					return this.GetDirectiveValue();
 
 				default:
-					throw new InvalidOperationException("Unexpected state '" + State + "'");
+					throw new InvalidOperationException("Unexpected state '" + this.State + "'");
 			}
 		}
 
 		private State GetBlockEnd()
 		{
-			var start = position;
-			for (; position < content.Length; position++)
+			var start = this.position;
+			for (; this.position < this.content.Length; this.position++)
 			{
-				var c = content[position];
-				nextStateTagStartLocation = nextStateLocation;
-				nextStateLocation = nextStateLocation.AddCol();
+				var c = this.content[this.position];
+				this.nextStateTagStartLocation = this.nextStateLocation;
+				this.nextStateLocation = this.nextStateLocation.AddCol();
 				if (c == '\r')
 				{
-					if (position + 1 < content.Length && content[position + 1] == '\n')
-						position++;
-					nextStateLocation = nextStateLocation.AddLine();
+					if (this.position + 1 < this.content.Length && this.content[this.position + 1] == '\n')
+						this.position++;
+					this.nextStateLocation = this.nextStateLocation.AddLine();
 				}
 				else if (c == '\n')
 				{
-					nextStateLocation = nextStateLocation.AddLine();
+					this.nextStateLocation = this.nextStateLocation.AddLine();
 				}
-				else if (c == '>' && content[position - 1] == '#' && content[position - 2] != '\\')
+				else if (c == '>' && this.content[this.position - 1] == '#' && this.content[this.position - 2] != '\\')
 				{
-					value = content.Substring(start, position - start - 1);
-					position++;
-					TagEndLocation = nextStateLocation;
+					this.value = this.content.Substring(start, this.position - start - 1);
+					this.position++;
+					this.TagEndLocation = this.nextStateLocation;
 
 					//skip newlines directly after blocks, unless they're expressions
-					if (State != State.Expression && (position += IsNewLine()) > 0)
+					if (this.State != State.Expression && (this.position += this.IsNewLine()) > 0)
 					{
-						nextStateLocation = nextStateLocation.AddLine();
+						this.nextStateLocation = this.nextStateLocation.AddLine();
 					}
 					return State.Content;
 				}
 			}
-			throw new ParserException("Unexpected end of file.", nextStateLocation);
+			throw new ParserException("Unexpected end of file.", this.nextStateLocation);
 		}
 
 		private State GetDirectiveName()
 		{
-			var start = position;
-			for (; position < content.Length; position++)
+			var start = this.position;
+			for (; this.position < this.content.Length; this.position++)
 			{
-				var c = content[position];
+				var c = this.content[this.position];
 				if (!Char.IsLetterOrDigit(c))
 				{
-					value = content.Substring(start, position - start);
+					this.value = this.content.Substring(start, this.position - start);
 					return State.Directive;
 				}
-				nextStateLocation = nextStateLocation.AddCol();
+				this.nextStateLocation = this.nextStateLocation.AddCol();
 			}
-			throw new ParserException("Unexpected end of file.", nextStateLocation);
+			throw new ParserException("Unexpected end of file.", this.nextStateLocation);
 		}
 
 		private State GetDirectiveValue()
 		{
-			var start = position;
+			var start = this.position;
 			int delimiter = '\0';
-			for (; position < content.Length; position++)
+			for (; this.position < this.content.Length; this.position++)
 			{
-				var c = content[position];
-				nextStateLocation = nextStateLocation.AddCol();
+				var c = this.content[this.position];
+				this.nextStateLocation = this.nextStateLocation.AddCol();
 				if (c == '\r')
 				{
-					if (position + 1 < content.Length && content[position + 1] == '\n')
-						position++;
-					nextStateLocation = nextStateLocation.AddLine();
+					if (this.position + 1 < this.content.Length && this.content[this.position + 1] == '\n')
+						this.position++;
+					this.nextStateLocation = this.nextStateLocation.AddLine();
 				}
 				else if (c == '\n')
-					nextStateLocation = nextStateLocation.AddLine();
+					this.nextStateLocation = this.nextStateLocation.AddLine();
 				if (delimiter == '\0')
 				{
 					if (c == '\'' || c == '"')
 					{
-						start = position;
+						start = this.position;
 						delimiter = c;
 					}
 					else if (!Char.IsWhiteSpace(c))
 					{
-						throw new ParserException("Unexpected character '" + c + "'. Expecting attribute value.", nextStateLocation);
+						throw new ParserException("Unexpected character '" + c + "'. Expecting attribute value.", this.nextStateLocation);
 					}
 					continue;
 				}
 				if (c == delimiter)
 				{
-					value = content.Substring(start + 1, position - start - 1);
-					position++;
+					this.value = this.content.Substring(start + 1, this.position - start - 1);
+					this.position++;
 					return State.Directive;
 				}
 			}
-			throw new ParserException("Unexpected end of file.", nextStateLocation);
+			throw new ParserException("Unexpected end of file.", this.nextStateLocation);
 		}
 
 		private State NextStateInContent()
 		{
-			var start = position;
-			for (; position < content.Length; position++)
+			var start = this.position;
+			for (; this.position < this.content.Length; this.position++)
 			{
-				var c = content[position];
-				nextStateTagStartLocation = nextStateLocation;
-				nextStateLocation = nextStateLocation.AddCol();
+				var c = this.content[this.position];
+				this.nextStateTagStartLocation = this.nextStateLocation;
+				this.nextStateLocation = this.nextStateLocation.AddCol();
 				if (c == '\r')
 				{
-					if (position + 1 < content.Length && content[position + 1] == '\n')
-						position++;
-					nextStateLocation = nextStateLocation.AddLine();
+					if (this.position + 1 < this.content.Length && this.content[this.position + 1] == '\n')
+						this.position++;
+					this.nextStateLocation = this.nextStateLocation.AddLine();
 				}
 				else if (c == '\n')
 				{
-					nextStateLocation = nextStateLocation.AddLine();
+					this.nextStateLocation = this.nextStateLocation.AddLine();
 				}
-				else if (c == '<' && position + 2 < content.Length && content[position + 1] == '#')
+				else if (c == '<' && this.position + 2 < this.content.Length && this.content[this.position + 1] == '#')
 				{
-					TagEndLocation = nextStateLocation;
-					var type = content[position + 2];
+					this.TagEndLocation = this.nextStateLocation;
+					var type = this.content[this.position + 2];
 					if (type == '@')
 					{
-						nextStateLocation = nextStateLocation.AddCols(2);
-						value = content.Substring(start, position - start);
-						position += 3;
+						this.nextStateLocation = this.nextStateLocation.AddCols(2);
+						this.value = this.content.Substring(start, this.position - start);
+						this.position += 3;
 						return State.Directive;
 					}
 					if (type == '=')
 					{
-						nextStateLocation = nextStateLocation.AddCols(2);
-						value = content.Substring(start, position - start);
-						position += 3;
+						this.nextStateLocation = this.nextStateLocation.AddCols(2);
+						this.value = this.content.Substring(start, this.position - start);
+						this.position += 3;
 						return State.Expression;
 					}
 					if (type == '+')
 					{
-						nextStateLocation = nextStateLocation.AddCols(2);
-						value = content.Substring(start, position - start);
-						position += 3;
+						this.nextStateLocation = this.nextStateLocation.AddCols(2);
+						this.value = this.content.Substring(start, this.position - start);
+						this.position += 3;
 						return State.Helper;
 					}
-					value = content.Substring(start, position - start);
-					nextStateLocation = nextStateLocation.AddCol();
-					position += 2;
+					this.value = this.content.Substring(start, this.position - start);
+					this.nextStateLocation = this.nextStateLocation.AddCol();
+					this.position += 2;
 					return State.Block;
 				}
 			}
 			//EOF is only valid when we're in content
-			value = content.Substring(start);
+			this.value = this.content.Substring(start);
 			return State.EOF;
 		}
 
@@ -231,11 +230,11 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		{
 			var found = 0;
 
-			if (position < content.Length && content[position] == '\r')
+			if (this.position < this.content.Length && this.content[this.position] == '\r')
 			{
 				found++;
 			}
-			if (position + found < content.Length && content[position + found] == '\n')
+			if (this.position + found < this.content.Length && this.content[this.position + found] == '\n')
 			{
 				found++;
 			}
@@ -244,18 +243,18 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		private State NextStateInDirective()
 		{
-			for (; position < content.Length; position++)
+			for (; this.position < this.content.Length; this.position++)
 			{
-				var c = content[position];
+				var c = this.content[this.position];
 				if (c == '\r')
 				{
-					if (position + 1 < content.Length && content[position + 1] == '\n')
-						position++;
-					nextStateLocation = nextStateLocation.AddLine();
+					if (this.position + 1 < this.content.Length && this.content[this.position + 1] == '\n')
+						this.position++;
+					this.nextStateLocation = this.nextStateLocation.AddLine();
 				}
 				else if (c == '\n')
 				{
-					nextStateLocation = nextStateLocation.AddLine();
+					this.nextStateLocation = this.nextStateLocation.AddLine();
 				}
 				else if (Char.IsLetter(c))
 				{
@@ -263,51 +262,51 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 				}
 				else if (c == '=')
 				{
-					nextStateLocation = nextStateLocation.AddCol();
-					position++;
+					this.nextStateLocation = this.nextStateLocation.AddCol();
+					this.position++;
 					return State.DirectiveValue;
 				}
-				else if (c == '#' && position + 1 < content.Length && content[position + 1] == '>')
+				else if (c == '#' && this.position + 1 < this.content.Length && this.content[this.position + 1] == '>')
 				{
-					position += 2;
-					TagEndLocation = nextStateLocation.AddCols(2);
-					nextStateLocation = nextStateLocation.AddCols(3);
+					this.position += 2;
+					this.TagEndLocation = this.nextStateLocation.AddCols(2);
+					this.nextStateLocation = this.nextStateLocation.AddCols(3);
 
 					//skip newlines directly after directives
-					if ((position += IsNewLine()) > 0)
+					if ((this.position += this.IsNewLine()) > 0)
 					{
-						nextStateLocation = nextStateLocation.AddLine();
+						this.nextStateLocation = this.nextStateLocation.AddLine();
 					}
 
 					return State.Content;
 				}
 				else if (!Char.IsWhiteSpace(c))
 				{
-					throw new ParserException("Directive ended unexpectedly with character '" + c + "'", nextStateLocation);
+					throw new ParserException("Directive ended unexpectedly with character '" + c + "'", this.nextStateLocation);
 				}
 				else
 				{
-					nextStateLocation = nextStateLocation.AddCol();
+					this.nextStateLocation = this.nextStateLocation.AddCol();
 				}
 			}
-			throw new ParserException("Unexpected end of file.", nextStateLocation);
+			throw new ParserException("Unexpected end of file.", this.nextStateLocation);
 		}
 
 		public State State { get; private set; }
 
 		public int Position
 		{
-			get { return position; }
+			get { return this.position; }
 		}
 
 		public string Content
 		{
-			get { return content; }
+			get { return this.content; }
 		}
 
 		public string Value
 		{
-			get { return value; }
+			get { return this.value; }
 		}
 
 		public Location Location { get; private set; }
@@ -332,7 +331,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 	{
 		public ParserException(string message, Location location) : base(message)
 		{
-			Location = location;
+			this.Location = location;
 		}
 
 		public Location Location { get; private set; }

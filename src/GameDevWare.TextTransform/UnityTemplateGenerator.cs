@@ -20,12 +20,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
-using Assets.Editor.GameDevWare.TextTransform.Processor;
-using Assets.Editor.GameDevWare.TextTransform.Utils;
+using GameDevWare.TextTransform.Processor;
+using GameDevWare.TextTransform.Utils;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Editor.GameDevWare.TextTransform
+namespace GameDevWare.TextTransform
 {
 	public class UnityTemplateGenerator : TemplateGenerator
 	{
@@ -55,6 +55,7 @@ namespace Assets.Editor.GameDevWare.TextTransform
 				{
 					var assemblyLocation = assembly.Location;
 					if (string.IsNullOrEmpty(assemblyLocation)) continue;
+					if (File.Exists(assemblyLocation) == false) continue;
 
 					this.Refs.Add(assemblyLocation);
 				}
@@ -93,7 +94,7 @@ namespace Assets.Editor.GameDevWare.TextTransform
 
 			timer.Change(delay, TimeSpan.FromTicks(-1));
 		}
-		public static bool RunForTemplate(string templatePath)
+		public static GenerationResult RunForTemplate(string templatePath)
 		{
 			if (templatePath == null) throw new ArgumentNullException("templatePath");
 
@@ -120,7 +121,7 @@ namespace Assets.Editor.GameDevWare.TextTransform
 				Debug.LogWarning(string.Format("Failed to pre-process template '{0}'.", templatePath));
 				foreach (var error in generator.Errors)
 					Debug.LogWarning(error);
-				return false;
+				return GenerationResult.TemplateCompilationError;
 			}
 			if (Menu.VerboseLogs)
 				Debug.Log(string.Format("Pre-process T4 template '{0}' is complete successfully. Language: '{1}', References: '{2}', Reference location paths: {3}, Include paths: {4}, Output file: '{5}'.", templatePath, language, string.Join(", ", references ?? new string[0]), 
@@ -136,7 +137,7 @@ namespace Assets.Editor.GameDevWare.TextTransform
 					warnText.AppendLine(error.ToString());
 				if (warnText.Length > 0)
 					Debug.LogWarning(warnText);
-				return false;
+				return GenerationResult.TemplateProcessingError;
 			}
 			if (Menu.VerboseLogs)
 				Debug.Log(string.Format("Process T4 template '{0}' is complete successfully. Output file: '{1}'.", templatePath, outputFile));
@@ -152,7 +153,7 @@ namespace Assets.Editor.GameDevWare.TextTransform
 					break;
 				default:
 					Debug.LogWarning("Invalid 'OutputType' is specified in template's settings.");
-					return false;
+					return GenerationResult.UnknownOutputType;
 			}
 			var targetFile = settings.OutputPath;
 			if (targetFile == null)
@@ -164,7 +165,7 @@ namespace Assets.Editor.GameDevWare.TextTransform
 			{
 				if (Menu.VerboseLogs)
 					Debug.Log(string.Format("Generated file is same as existing at location '{0}'.", targetFile));
-				return false;
+				return GenerationResult.NoChanges;
 			}
 
 			var targetDir = Path.GetDirectoryName(targetFile);
@@ -174,10 +175,8 @@ namespace Assets.Editor.GameDevWare.TextTransform
 			File.Copy(sourceFile, targetFile, overwrite: true);
 			File.Delete(outputFile);
 			File.Delete(generatorOutputFile);
-
-			AssetDatabase.Refresh();
-
-			return true;
+			
+			return GenerationResult.Success;
 		}
 	}
 }

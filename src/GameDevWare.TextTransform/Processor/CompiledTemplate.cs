@@ -30,8 +30,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public sealed class CompiledTemplate : MarshalByRefObject, IDisposable
 	{
@@ -43,11 +42,11 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		public CompiledTemplate(ITextTemplatingEngineHost host, CompilerResults results, string fullName, CultureInfo culture,
 			string[] assemblyFiles)
 		{
-			AppDomain.CurrentDomain.AssemblyResolve += ResolveReferencedAssemblies;
+			AppDomain.CurrentDomain.AssemblyResolve += this.ResolveReferencedAssemblies;
 			this.host = host;
 			this.culture = culture;
 			this.assemblyFiles = assemblyFiles;
-			Load(results, fullName);
+			this.Load(results, fullName);
 		}
 
 		private void Load(CompilerResults results, string fullName)
@@ -56,31 +55,31 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			var transformType = assembly.GetType(fullName);
 			//MS Templating Engine does not look on the type itself, 
 			//it checks only that required methods are exists in the compiled type 
-			textTransformation = Activator.CreateInstance(transformType);
+			this.textTransformation = Activator.CreateInstance(transformType);
 
 			//set the host property if it exists
 			Type hostType = null;
-			var gen = host as TemplateGenerator;
+			var gen = this.host as TemplateGenerator;
 			if (gen != null)
 			{
 				hostType = gen.SpecificHostType;
 			}
 			var hostProp = transformType.GetProperty("Host", hostType ?? typeof(ITextTemplatingEngineHost));
 			if (hostProp != null && hostProp.CanWrite)
-				hostProp.SetValue(textTransformation, host, null);
+				hostProp.SetValue(this.textTransformation, this.host, null);
 
-			var sessionHost = host as ITextTemplatingSessionHost;
+			var sessionHost = this.host as ITextTemplatingSessionHost;
 			if (sessionHost != null)
 			{
 				//FIXME: should we create a session if it's null?
 				var sessionProp = transformType.GetProperty("Session", typeof(IDictionary<string, object>));
-				sessionProp.SetValue(textTransformation, sessionHost.Session, null);
+				sessionProp.SetValue(this.textTransformation, sessionHost.Session, null);
 			}
 		}
 
 		public string Process()
 		{
-			var ttType = textTransformation.GetType();
+			var ttType = this.textTransformation.GetType();
 
 			var errorProp = ttType.GetProperty("Errors", BindingFlags.Instance | BindingFlags.NonPublic);
 			if (errorProp == null)
@@ -91,12 +90,12 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 				throw new ArgumentException("Template must have 'Error(string message)' method");
 			}
 
-			var errors = (CompilerErrorCollection)errorProp.GetValue(textTransformation, null);
+			var errors = (CompilerErrorCollection)errorProp.GetValue(this.textTransformation, null);
 			errors.Clear();
 
 			//set the culture
-			if (culture != null)
-				ToStringHelper.FormatProvider = culture;
+			if (this.culture != null)
+				ToStringHelper.FormatProvider = this.culture;
 			else
 				ToStringHelper.FormatProvider = CultureInfo.InvariantCulture;
 
@@ -107,24 +106,24 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 			if (initMethod == null)
 			{
-				errorMethod.Invoke(textTransformation, new object[] { "Error running transform: no method Initialize()" });
+				errorMethod.Invoke(this.textTransformation, new object[] { "Error running transform: no method Initialize()" });
 			}
 			else if (transformMethod == null)
 			{
-				errorMethod.Invoke(textTransformation, new object[] { "Error running transform: no method TransformText()" });
+				errorMethod.Invoke(this.textTransformation, new object[] { "Error running transform: no method TransformText()" });
 			}
 			else
 				try
 				{
-					initMethod.Invoke(textTransformation, null);
-					output = (string)transformMethod.Invoke(textTransformation, null);
+					initMethod.Invoke(this.textTransformation, null);
+					output = (string)transformMethod.Invoke(this.textTransformation, null);
 				}
 				catch (Exception ex)
 				{
-					errorMethod.Invoke(textTransformation, new object[] { "Error running transform: " + ex });
+					errorMethod.Invoke(this.textTransformation, new object[] { "Error running transform: " + ex });
 				}
 
-			host.LogErrors(errors);
+			this.host.LogErrors(errors);
 
 			ToStringHelper.FormatProvider = CultureInfo.InvariantCulture;
 			return output;
@@ -133,13 +132,13 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		private Assembly ResolveReferencedAssemblies(object sender, ResolveEventArgs args)
 		{
 			var asmName = new AssemblyName(args.Name);
-			foreach (var asmFile in assemblyFiles)
+			foreach (var asmFile in this.assemblyFiles)
 			{
 				if (asmName.Name == System.IO.Path.GetFileNameWithoutExtension(asmFile))
 					return Assembly.LoadFrom(asmFile);
 			}
 
-			var path = host.ResolveAssemblyReference(asmName.Name + ".dll");
+			var path = this.host.ResolveAssemblyReference(asmName.Name + ".dll");
 			if (System.IO.File.Exists(path))
 				return Assembly.LoadFrom(path);
 
@@ -148,10 +147,10 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public void Dispose()
 		{
-			if (host != null)
+			if (this.host != null)
 			{
-				host = null;
-				AppDomain.CurrentDomain.AssemblyResolve -= ResolveReferencedAssemblies;
+				this.host = null;
+				AppDomain.CurrentDomain.AssemblyResolve -= this.ResolveReferencedAssemblies;
 			}
 		}
 	}

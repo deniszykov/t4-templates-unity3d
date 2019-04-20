@@ -24,8 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+
+namespace GameDevWare.TextTransform.Processor
 {
 	public class Engine : ITextTemplatingEngine
 	{
@@ -37,13 +37,13 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public string ProcessTemplate(string content, ITextTemplatingEngineHost host)
 		{
-			return engine.ProcessTemplate(content, host);
+			return this.engine.ProcessTemplate(content, host);
 		}
 
 		public string PreprocessTemplate(string content, ITextTemplatingEngineHost host, string className,
 			string classNamespace, out string language, out string[] references)
 		{
-			return engine.PreprocessTemplate(content, host, className, classNamespace, out language, out references);
+			return this.engine.PreprocessTemplate(content, host, className, classNamespace, out language, out references);
 		}
 
 		public const string CacheAssembliesOptionString = "CacheAssemblies";

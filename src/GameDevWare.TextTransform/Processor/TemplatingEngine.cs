@@ -34,14 +34,13 @@ using System.Reflection;
 using System.Text;
 using Microsoft.CSharp;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public class TemplatingEngine : MarshalByRefObject, ITextTemplatingEngine
 	{
 		public string ProcessTemplate(string content, ITextTemplatingEngineHost host)
 		{
-			var tpl = CompileTemplate(content, host);
+			var tpl = this.CompileTemplate(content, host);
 			try
 			{
 				if (tpl != null)

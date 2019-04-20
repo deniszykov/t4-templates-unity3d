@@ -29,8 +29,7 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public abstract class DirectiveProcessor : IDirectiveProcessor
 	{
@@ -69,7 +68,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		CompilerErrorCollection IDirectiveProcessor.Errors
 		{
-			get { return errors; }
+			get { return this.errors; }
 		}
 
 		void IDirectiveProcessor.SetProcessingRunIsHostSpecific(bool hostSpecific)

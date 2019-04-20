@@ -27,8 +27,7 @@
 using System;
 using System.IO;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public static class FileUtil
 	{

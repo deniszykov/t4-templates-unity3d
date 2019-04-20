@@ -28,8 +28,7 @@
 using System;
 using System.Collections.Generic;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public class TemplatingAppDomainRecycler
 	{
@@ -48,13 +47,13 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public TemplatingAppDomainRecycler.Handle GetHandle()
 		{
-			lock (lockObj)
+			lock (this.lockObj)
 			{
-				if (domain == null || domain.Domain == null || domain.UnusedHandles == 0)
+				if (this.domain == null || this.domain.Domain == null || this.domain.UnusedHandles == 0)
 				{
-					domain = new RecyclableAppDomain(name);
+					this.domain = new RecyclableAppDomain(this.name);
 				}
-				return domain.GetHandle();
+				return this.domain.GetHandle();
 			}
 		}
 
@@ -80,12 +79,12 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 					DisallowApplicationBaseProbing = false,
 					ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile,
 				};
-				domain = AppDomain.CreateDomain(name, null, info);
+				this.domain = AppDomain.CreateDomain(name, null, info);
 				var t = typeof(DomainAssemblyLoader);
-				AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-				assemblyMap = (DomainAssemblyLoader)domain.CreateInstanceFromAndUnwrap(t.Assembly.Location, t.FullName);
-				AppDomain.CurrentDomain.AssemblyResolve -= CurrentDomain_AssemblyResolve;
-				domain.AssemblyResolve += assemblyMap.Resolve; // new DomainAssemblyLoader(assemblyMap).Resolve;
+				AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomain_AssemblyResolve;
+				this.assemblyMap = (DomainAssemblyLoader)this.domain.CreateInstanceFromAndUnwrap(t.Assembly.Location, t.FullName);
+				AppDomain.CurrentDomain.AssemblyResolve -= this.CurrentDomain_AssemblyResolve;
+				this.domain.AssemblyResolve += this.assemblyMap.Resolve; // new DomainAssemblyLoader(assemblyMap).Resolve;
 			}
 
 			private System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
@@ -98,34 +97,34 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 			public int UnusedHandles
 			{
-				get { return unusedHandles; }
+				get { return this.unusedHandles; }
 			}
 
 			public int LiveHandles
 			{
-				get { return liveHandles; }
+				get { return this.liveHandles; }
 			}
 
 			public AppDomain Domain
 			{
-				get { return domain; }
+				get { return this.domain; }
 			}
 
 			public void AddAssembly(System.Reflection.Assembly assembly)
 			{
-				assemblyMap.Add(assembly.FullName, assembly.Location);
+				this.assemblyMap.Add(assembly.FullName, assembly.Location);
 			}
 
 			public Handle GetHandle()
 			{
 				lock (this)
 				{
-					if (unusedHandles <= 0)
+					if (this.unusedHandles <= 0)
 					{
 						throw new InvalidOperationException("No handles left");
 					}
-					unusedHandles--;
-					liveHandles++;
+					this.unusedHandles--;
+					this.liveHandles++;
 				}
 				return new Handle(this);
 			}
@@ -135,29 +134,29 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 				int lh;
 				lock (this)
 				{
-					liveHandles--;
-					lh = liveHandles;
+					this.liveHandles--;
+					lh = this.liveHandles;
 				}
 				//We must unload domain every time after using it for generation
 				//Otherwise we could not load new version of the project-generated 
 				//assemblies into it. So remove checking for unusedHandles == 0
 				if (lh == 0)
 				{
-					UnloadDomain();
+					this.UnloadDomain();
 				}
 			}
 
 			private void UnloadDomain()
 			{
-				AppDomain.Unload(domain);
-				domain = null;
-				assemblyMap = null;
+				AppDomain.Unload(this.domain);
+				this.domain = null;
+				this.assemblyMap = null;
 				GC.SuppressFinalize(this);
 			}
 
 			~RecyclableAppDomain()
 			{
-				if (liveHandles != 0)
+				if (this.liveHandles != 0)
 					Console.WriteLine("WARNING: recyclable AppDomain's handles were not all disposed");
 			}
 		}
@@ -173,26 +172,26 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 			public AppDomain Domain
 			{
-				get { return parent.Domain; }
+				get { return this.parent.Domain; }
 			}
 
 			public void Dispose()
 			{
-				if (parent == null)
+				if (this.parent == null)
 					return;
-				var p = parent;
+				var p = this.parent;
 				lock (this)
 				{
-					if (parent == null)
+					if (this.parent == null)
 						return;
-					parent = null;
+					this.parent = null;
 				}
 				p.ReleaseHandle();
 			}
 
 			public void AddAssembly(System.Reflection.Assembly assembly)
 			{
-				parent.AddAssembly(assembly);
+				this.parent.AddAssembly(assembly);
 			}
 		}
 
@@ -207,7 +206,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 			public System.Reflection.Assembly Resolve(object sender, ResolveEventArgs args)
 			{
-				var assemblyFile = ResolveAssembly(args.Name);
+				var assemblyFile = this.ResolveAssembly(args.Name);
 				if (assemblyFile != null)
 					return System.Reflection.Assembly.LoadFrom(assemblyFile);
 				return null;
@@ -216,14 +215,14 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			public string ResolveAssembly(string name)
 			{
 				string result;
-				if (map.TryGetValue(name, out result))
+				if (this.map.TryGetValue(name, out result))
 					return result;
 				return null;
 			}
 
 			public void Add(string name, string location)
 			{
-				map[name] = location;
+				this.map[name] = location;
 			}
 
 			//keep this alive as long as the app domain is alive

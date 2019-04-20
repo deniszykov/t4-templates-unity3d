@@ -29,8 +29,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Text;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public abstract class RequiresProvidesDirectiveProcessor : DirectiveProcessor
 	{
@@ -71,54 +70,54 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public override string GetClassCodeForProcessingRun()
 		{
-			AssertNotProcessing();
-			return codeBuffer.ToString();
+			this.AssertNotProcessing();
+			return this.codeBuffer.ToString();
 		}
 
 		public override string[] GetImportsForProcessingRun()
 		{
-			AssertNotProcessing();
+			this.AssertNotProcessing();
 			return null;
 		}
 
 		public override string[] GetReferencesForProcessingRun()
 		{
-			AssertNotProcessing();
+			this.AssertNotProcessing();
 			return null;
 		}
 
 		public override string GetPostInitializationCodeForProcessingRun()
 		{
-			AssertNotProcessing();
-			return postInitBuffer.ToString();
+			this.AssertNotProcessing();
+			return this.postInitBuffer.ToString();
 		}
 
 		public override string GetPreInitializationCodeForProcessingRun()
 		{
-			AssertNotProcessing();
-			return preInitBuffer.ToString();
+			this.AssertNotProcessing();
+			return this.preInitBuffer.ToString();
 		}
 
 		public override void StartProcessingRun(CodeDomProvider languageProvider, string templateContents, CompilerErrorCollection errors)
 		{
-			AssertNotProcessing();
-			isInProcessingRun = true;
+			this.AssertNotProcessing();
+			this.isInProcessingRun = true;
 			base.StartProcessingRun(languageProvider, templateContents, errors);
 
 			this.languageProvider = languageProvider;
-			codeBuffer.Length = 0;
-			preInitBuffer.Length = 0;
-			postInitBuffer.Length = 0;
+			this.codeBuffer.Length = 0;
+			this.preInitBuffer.Length = 0;
+			this.postInitBuffer.Length = 0;
 		}
 
 		public override void FinishProcessingRun()
 		{
-			isInProcessingRun = false;
+			this.isInProcessingRun = false;
 		}
 
 		private void AssertNotProcessing()
 		{
-			if (isInProcessingRun)
+			if (this.isInProcessingRun)
 				throw new InvalidOperationException();
 		}
 
@@ -148,7 +147,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			string provides;
 			if (arguments.TryGetValue("provides", out provides))
 			{
-				foreach (var arg in ParseArgs(provides))
+				foreach (var arg in this.ParseArgs(provides))
 				{
 					providesDictionary.Add(arg.Key, arg.Value);
 				}
@@ -157,20 +156,20 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			string requires;
 			if (arguments.TryGetValue("requires", out requires))
 			{
-				foreach (var arg in ParseArgs(requires))
+				foreach (var arg in this.ParseArgs(requires))
 				{
 					requiresDictionary.Add(arg.Key, arg.Value);
 				}
 			}
 
-			InitializeRequiresDictionary(directiveName, requiresDictionary);
-			InitializeProvidesDictionary(directiveName, providesDictionary);
+			this.InitializeRequiresDictionary(directiveName, requiresDictionary);
+			this.InitializeProvidesDictionary(directiveName, providesDictionary);
 
-			var id = ProvideUniqueId(directiveName, arguments, requiresDictionary, providesDictionary);
+			var id = this.ProvideUniqueId(directiveName, arguments, requiresDictionary, providesDictionary);
 
 			foreach (var req in requiresDictionary)
 			{
-				var val = host.ResolveParameterValue(id, FriendlyName, req.Key);
+				var val = this.host.ResolveParameterValue(id, this.FriendlyName, req.Key);
 				if (val != null)
 					requiresDictionary[req.Key] = val;
 				else if (req.Value == null)
@@ -179,16 +178,16 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 			foreach (var req in providesDictionary)
 			{
-				var val = host.ResolveParameterValue(id, FriendlyName, req.Key);
+				var val = this.host.ResolveParameterValue(id, this.FriendlyName, req.Key);
 				if (val != null)
 					providesDictionary[req.Key] = val;
 			}
 
-			PostProcessArguments(directiveName, requiresDictionary, providesDictionary);
+			this.PostProcessArguments(directiveName, requiresDictionary, providesDictionary);
 
-			GeneratePreInitializationCode(directiveName, preInitBuffer, languageProvider, requiresDictionary, providesDictionary);
-			GeneratePostInitializationCode(directiveName, postInitBuffer, languageProvider, requiresDictionary, providesDictionary);
-			GenerateTransformCode(directiveName, codeBuffer, languageProvider, requiresDictionary, providesDictionary);
+			this.GeneratePreInitializationCode(directiveName, this.preInitBuffer, this.languageProvider, requiresDictionary, providesDictionary);
+			this.GeneratePostInitializationCode(directiveName, this.postInitBuffer, this.languageProvider, requiresDictionary, providesDictionary);
+			this.GenerateTransformCode(directiveName, this.codeBuffer, this.languageProvider, requiresDictionary, providesDictionary);
 		}
 
 		protected virtual string ProvideUniqueId(string directiveName, IDictionary<string, string> arguments,
@@ -199,7 +198,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		protected ITextTemplatingEngineHost Host
 		{
-			get { return host; }
+			get { return this.host; }
 		}
 	}
 }

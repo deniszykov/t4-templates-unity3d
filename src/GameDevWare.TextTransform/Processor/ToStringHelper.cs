@@ -26,8 +26,7 @@
 
 using System;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public static class ToStringHelper
 	{

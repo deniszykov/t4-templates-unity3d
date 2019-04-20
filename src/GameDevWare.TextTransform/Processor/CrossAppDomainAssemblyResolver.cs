@@ -26,8 +26,7 @@
 
 using System;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	/// <summary>
 	///     Provides a handler for AssemblyResolve events that looks them up in the domain that created the resolver.
@@ -39,7 +38,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public System.Reflection.Assembly Resolve(object sender, ResolveEventArgs args)
 		{
-			var location = parent.GetAssemblyPath(args.Name);
+			var location = this.parent.GetAssemblyPath(args.Name);
 			if (location != null)
 				return System.Reflection.Assembly.LoadFrom(location);
 			return null;

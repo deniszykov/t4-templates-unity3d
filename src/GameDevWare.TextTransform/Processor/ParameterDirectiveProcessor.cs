@@ -29,8 +29,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public sealed class ParameterDirectiveProcessor : DirectiveProcessor, IRecognizeHostSpecific
 	{
@@ -43,9 +42,9 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 		public override void StartProcessingRun(CodeDomProvider languageProvider, string templateContents, CompilerErrorCollection errors)
 		{
 			base.StartProcessingRun(languageProvider, templateContents, errors);
-			provider = languageProvider;
-			postStatements.Clear();
-			members.Clear();
+			this.provider = languageProvider;
+			this.postStatements.Clear();
+			this.members.Clear();
 		}
 
 		public override void FinishProcessingRun()
@@ -56,15 +55,15 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 						new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "Errors"), "HasErrors"),
 					CodeBinaryOperatorType.ValueEquality,
 					new CodePrimitiveExpression(false)),
-				postStatements.ToArray());
+				this.postStatements.ToArray());
 
-			postStatements.Clear();
-			postStatements.Add(statement);
+			this.postStatements.Clear();
+			this.postStatements.Add(statement);
 		}
 
 		public override string GetClassCodeForProcessingRun()
 		{
-			return TemplatingEngine.GenerateIndentedClassCode(provider, members);
+			return TemplatingEngine.GenerateIndentedClassCode(this.provider, this.members);
 		}
 
 		public override string[] GetImportsForProcessingRun()
@@ -74,7 +73,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 
 		public override string GetPostInitializationCodeForProcessingRun()
 		{
-			return TemplatingEngine.IndentSnippetText(provider, StatementsToCode(postStatements), "            ");
+			return TemplatingEngine.IndentSnippetText(this.provider, this.StatementsToCode(this.postStatements), "            ");
 		}
 
 		public override string GetPreInitializationCodeForProcessingRun()
@@ -88,7 +87,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			using (var sw = new StringWriter())
 			{
 				foreach (var statement in statements)
-					provider.GenerateCodeFromStatement(statement, sw, options);
+					this.provider.GenerateCodeFromStatement(statement, sw, options);
 				return sw.ToString();
 			}
 		}
@@ -126,8 +125,8 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 				Type = typeRef
 			};
 			property.GetStatements.Add(new CodeMethodReturnStatement(fieldRef));
-			members.Add(new CodeMemberField(typeRef, fieldName));
-			members.Add(property);
+			this.members.Add(new CodeMemberField(typeRef, fieldName));
+			this.members.Add(property);
 
 			var acquiredName = "_" + name + "Acquired";
 			var valRef = new CodeVariableReferenceExpression("data");
@@ -166,7 +165,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Processor
 			this.postStatements.Add(checkSession);
 
 			//if acquiredVariable is false, tries to gets the value from the host
-			if (hostSpecific)
+			if (this.hostSpecific)
 			{
 				var hostRef = new CodePropertyReferenceExpression(thisRef, "Host");
 				var checkHost = new CodeConditionStatement(

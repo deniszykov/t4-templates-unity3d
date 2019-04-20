@@ -28,17 +28,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-// ReSharper disable once CheckNamespace
-namespace Assets.Editor.GameDevWare.TextTransform.Processor
+namespace GameDevWare.TextTransform.Processor
 {
 	public class TextTemplateSettings
 	{
 		public TextTemplateSettings()
 		{
-			Imports = new HashSet<string>();
-			Assemblies = new HashSet<string>();
-			CustomDirectives = new List<CustomDirective>();
-			DirectiveProcessors = new Dictionary<string, IDirectiveProcessor>();
+			this.Imports = new HashSet<string>();
+			this.Assemblies = new HashSet<string>();
+			this.CustomDirectives = new List<CustomDirective>();
+			this.DirectiveProcessors = new Dictionary<string, IDirectiveProcessor>();
 		}
 
 		public bool HostSpecific { get; set; }
