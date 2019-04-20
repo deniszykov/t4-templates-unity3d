@@ -13,8 +13,6 @@
 *.user
 *.log
 _ReSharper*
-*.csproj
-*.sln
 *.userprefs
 *.exe
 *.dll
@@ -32,4 +30,3 @@ Assets/StreamingAssets/
 Assets/Bundles/
 ProjectSettings/
 Assets/AssetStoreTools/
-build-nuget-package.bat
