@@ -3,3 +3,6 @@ added library target
 removed support for Unity 3.4 and lower
 moved all code to Gamedewware.TextTransform namespace
 added auto-detection of generated assets by Unity
+added compilation check before running transformations
+added additional information for generation failure cases
+fixed generation 'failure' if generated code is as last one generated code

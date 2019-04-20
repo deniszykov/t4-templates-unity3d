@@ -7,24 +7,20 @@
 		<PackageId>GameDevWare.TextTransform</PackageId>
 		<Description>Text to Text Transformation Templates (T4) transfomation library for Unity.</Description>
 		<Company>GameDevWare</Company>
-		<ApplicationIcon />
 		<OutputType>Library</OutputType>
 		<OutputTypeEx>library</OutputTypeEx>
-		<StartupObject />		
 		<SignAssembly>true</SignAssembly>
-		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
 		<AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
 		<DelaySign>false</DelaySign>
-	    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\GameDevWare.TextTransform.xml</DocumentationFile>	
-		<PackageProjectUrl>https://github.com/deniszykov/csharp-eval-unity3d</PackageProjectUrl>
-		<PackageLicenseUrl>https://raw.githubusercontent.com/deniszykov/csharp-eval-unity3d/master/License.md</PackageLicenseUrl>
-		<Copyright>(c) Denis Zykov, GameDevWare 2018</Copyright>
-		<RepositoryUrl>https://github.com/deniszykov/csharp-eval-unity3d</RepositoryUrl>
+		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\GameDevWare.TextTransform.xml</DocumentationFile>
+		<PackageProjectUrl>https://github.com/deniszykov/t4-templates-unity3d</PackageProjectUrl>
+		<PackageLicenseUrl>https://raw.githubusercontent.com/deniszykov/t4-templates-unity3d/master/LICENSE.md</PackageLicenseUrl>
+		<Copyright>(c) Denis Zykov, GameDevWare 2019</Copyright>
+		<RepositoryUrl>https://github.com/deniszykov/t4-templates-unity3d</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>eval parser compiler expressions unity3d aot</PackageTags>
+		<PackageTags>t4 text transform unity</PackageTags>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageReleaseNotes />
-		<RootNamespace>GameDevWare.TextTransform</RootNamespace>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<Optimize>False</Optimize>
@@ -46,9 +42,23 @@
 		<DefineConstants>$(DefineConstants);NET45</DefineConstants>
 	</PropertyGroup>
 	<ItemGroup>
-	  <Compile Remove="Temp\**" />
-	  <EmbeddedResource Remove="Temp\**" />
-	  <None Remove="Temp\**" />
+		<Compile Remove="Temp\**" />
+		<EmbeddedResource Remove="Temp\**" />
+		<None Remove="Temp\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\GameDevWare.TextTransform.Tool\GameDevWare.TextTransform.Tool.csproj">
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<OutputItemType>Content</OutputItemType>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</ProjectReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include=".\bin\$(Configuration)\net45\GameDevWare.TextTransform.exe" Link="GameDevWare.TextTransform.exe">
+			<Pack>true</Pack>
+			<PackagePath>tools\</PackagePath>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>

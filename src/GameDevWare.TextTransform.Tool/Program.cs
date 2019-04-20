@@ -13,19 +13,21 @@
 	to use it in your project you should accept Terms of Service and EULA 
 	https://unity3d.com/ru/legal/as_terms
 */
-#if !(UNITY_5 || UNITY_4 || UNITY_3_3 || UNITY_3_4 || UNITY_3_5)
 
 using System;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Assets.Editor.GameDevWare.TextTransform.Processor;
+using GameDevWare.TextTransform.Processor;
 
 // ReSharper disable UnusedMember.Local
 // ReSharper disable once CheckNamespace
 namespace GameDevWare.TextTransform
 {
+	[Description("usage: GameDevWare.TextTransform.exe Transform --templatePath <path-to-t4-template> [--outputPath <path-to-output-file>] " +
+		"[--references <additional-refs>] [--namespaces <additional_namespaces>] [--includes <additional-includes>] " +
+		"[--referencePaths <reference-lookup-paths>] [--createGenerator] [--verbose]")]
 	class Program
 	{
 		public static void Main(string[] args)
@@ -150,4 +152,3 @@ namespace GameDevWare.TextTransform
 		}
 	}
 }
-#endif
