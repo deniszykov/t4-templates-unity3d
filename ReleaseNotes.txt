@@ -1,3 +1,5 @@
 # 1.0.10
 added library target
 removed support for Unity 3.4 and lower
+moved all code to Gamedewware.TextTransform namespace
+added auto-detection of generated assets by Unity
