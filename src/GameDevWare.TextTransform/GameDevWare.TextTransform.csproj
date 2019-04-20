@@ -1,151 +1,78 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{485C9711-2A63-6FB5-985B-2615CE239055}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>
-    </RootNamespace>
-    <AssemblyName>GameDevWare.TextTransform</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyName>GameDevWare.TextTransform</AssemblyName>
-    <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <NoWarn>0169</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <NoWarn>0169</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="ConsoleApp.CommandLine, Version=1.3.2.0, Culture=neutral, PublicKeyToken=dc0b449018deb2ce, processorArchitecture=MSIL">
-      <HintPath>..\packages\ConsoleApp.CommandLine.1.3.2\lib\net35\ConsoleApp.CommandLine.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.XML" />
-    <Reference Include="System.Core" />
-    <Reference Include="TypeConvert, Version=2.1.4.0, Culture=neutral, PublicKeyToken=7fa17a4c44bad980, processorArchitecture=MSIL">
-      <HintPath>..\packages\TypeConvert.2.1.4\lib\net35\TypeConvert.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\CompiledTemplate.cs">
-      <Link>Processor\CompiledTemplate.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\CrossAppDomainAssemblyResolver.cs">
-      <Link>Processor\CrossAppDomainAssemblyResolver.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\DirectiveProcessor.cs">
-      <Link>Processor\DirectiveProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\DirectiveProcessorException.cs">
-      <Link>Processor\DirectiveProcessorException.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\EncodingHelper.cs">
-      <Link>Processor\EncodingHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\Engine.cs">
-      <Link>Processor\Engine.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\FileUtil.cs">
-      <Link>Processor\FileUtil.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\Interfaces.cs">
-      <Link>Processor\Interfaces.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\ParameterDirectiveProcessor.cs">
-      <Link>Processor\ParameterDirectiveProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\ParsedTemplate.cs">
-      <Link>Processor\ParsedTemplate.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\RecyclableAppDomain.cs">
-      <Link>Processor\RecyclableAppDomain.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\RequiresProvidesDirectiveProcessor.cs">
-      <Link>Processor\RequiresProvidesDirectiveProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\TemplateGenerator.cs">
-      <Link>Processor\TemplateGenerator.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\TemplatingEngine.cs">
-      <Link>Processor\TemplatingEngine.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\TextTemplateSettings.cs">
-      <Link>Processor\TextTemplateSettings.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\TextTemplatingSession.cs">
-      <Link>Processor\TextTemplatingSession.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\TextTransformation.cs">
-      <Link>Processor\TextTransformation.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\Tokeniser.cs">
-      <Link>Processor\Tokeniser.cs</Link>
-    </Compile>
-    <Compile Include="..\GameDevWare.TextTransform.Unity\Assets\Editor\GameDevWare.TextTransform\Processor\ToStringHelper.cs">
-      <Link>Processor\ToStringHelper.cs</Link>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release' ">
-    <GetFrameworkPath>
-      <Output TaskParameter="FrameworkVersion35Path" PropertyName="FrameworkPath" />
-    </GetFrameworkPath>
-    <Exec Command="&quot;$(SolutionDir)/packages/ILRepack.2.0.10/tools/ILRepack.exe&quot; /target:exe &quot;/targetplatform:v2,$(FrameworkPath)&quot; /xmldocs /union /parallel /internalize &quot;/out:$(TargetPath)&quot; &quot;$(TargetPath)&quot; &quot;$(TargetDir)ConsoleApp.CommandLine.dll&quot; &quot;$(TargetDir)TypeConvert.dll&quot;" WorkingDirectory="$(SolutionDir)" />
-    <Delete Files="$(TargetDir)ConsoleApp.CommandLine.dll;$(TargetDir)TypeConvert.dll" />
-  </Target>
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>net35;net45</TargetFrameworks>
+		<Authors>Denis Zykov</Authors>
+		<Version>1.0.10</Version>
+		<PackageId>GameDevWare.TextTransform</PackageId>
+		<Description>Text to Text Transformation Templates (T4) transfomation library for Unity.</Description>
+		<Company>GameDevWare</Company>
+		<ApplicationIcon />
+		<OutputType>Library</OutputType>
+		<OutputTypeEx>library</OutputTypeEx>
+		<StartupObject />		
+		<SignAssembly>true</SignAssembly>
+		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+		<AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
+		<DelaySign>false</DelaySign>
+	    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\GameDevWare.TextTransform.xml</DocumentationFile>	
+		<PackageProjectUrl>https://github.com/deniszykov/csharp-eval-unity3d</PackageProjectUrl>
+		<PackageLicenseUrl>https://raw.githubusercontent.com/deniszykov/csharp-eval-unity3d/master/License.md</PackageLicenseUrl>
+		<Copyright>(c) Denis Zykov, GameDevWare 2018</Copyright>
+		<RepositoryUrl>https://github.com/deniszykov/csharp-eval-unity3d</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>eval parser compiler expressions unity3d aot</PackageTags>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageReleaseNotes />
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<Optimize>False</Optimize>
+		<DefineConstants>RELEASE</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+		<DefineConstants>$(DefineConstants);NETSTANDARD;</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
+		<DefineConstants>$(DefineConstants);NETSTANDARD;</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
+		<DefineConstants>$(DefineConstants);NET35</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+		<DefineConstants>$(DefineConstants);NET45</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Temp\**" />
+	  <EmbeddedResource Remove="Temp\**" />
+	  <None Remove="Temp\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="UnityEditor">
+			<HintPath>..\..\..\..\..\apps\unity\Editor\Data\Managed\UnityEditor.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine">
+			<HintPath>..\..\..\..\..\apps\unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<Target Name="ReadPackageMetadataromFile" BeforeTargets="GenerateNuspec">
+		<ItemGroup>
+			<ReleaseNotesFile Include="..\..\ReleaseNotes.txt" />
+		</ItemGroup>
+		<ReadLinesFromFile File="@(ReleaseNotesFile)">
+			<Output TaskParameter="Lines" ItemName="PackageReleaseNotesLines" />
+		</ReadLinesFromFile>
+		<CreateProperty Value="@(PackageReleaseNotesLines->'%(Identity)', '%0D%0A')">
+			<Output PropertyName="PackageReleaseNotes" TaskParameter="Value" />
+		</CreateProperty>
+	</Target>
+
+	<Target Name="CopyDll" AfterTargets="PostBuildEvent" Condition=" '$(TargetFramework)' == 'net35' ">
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProjectDir)../GameDevWare.Dynamic.Expressions.Unity/Assets/Plugins/GameDevWare.Dynamic.Expressions/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="$(ProjectDir)$(DocumentationFile)" DestinationFolder="$(ProjectDir)../GameDevWare.Dynamic.Expressions.Unity/Assets/Plugins/GameDevWare.Dynamic.Expressions/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+	</Target>
 </Project>
