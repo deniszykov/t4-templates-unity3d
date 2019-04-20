@@ -72,7 +72,9 @@
 	</Target>
 
 	<Target Name="CopyDll" AfterTargets="PostBuildEvent" Condition=" '$(TargetFramework)' == 'net35' ">
-		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
-		<Copy SourceFiles="$(ProjectDir)$(DocumentationFile)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity.5.4/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="$(ProjectDir)$(DocumentationFile)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity.5.7/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity.2017/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="$(ProjectDir)$(DocumentationFile)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity.2017/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
 	</Target>
 </Project>
