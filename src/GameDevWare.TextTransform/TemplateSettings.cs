@@ -100,12 +100,7 @@ namespace Assets.Editor.GameDevWare.TextTransform
 				
 				var importer = AssetImporter.GetAtPath(templatePath);
 				importer.userData = JsonObject.From(this).Stringify();
-#if UNITY_5
 				importer.SaveAndReimport();
-#else
-				EditorUtility.SetDirty(importer);
-				AssetDatabase.SaveAssets();
-#endif
 			}
 			catch (Exception e) { Debug.LogError("Failed to save template's settings: " + e); }
 		}

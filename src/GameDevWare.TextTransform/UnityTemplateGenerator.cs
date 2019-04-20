@@ -175,6 +175,8 @@ namespace Assets.Editor.GameDevWare.TextTransform
 			File.Delete(outputFile);
 			File.Delete(generatorOutputFile);
 
+			AssetDatabase.Refresh();
+
 			return true;
 		}
 	}

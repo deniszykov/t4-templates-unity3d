@@ -29,16 +29,12 @@ namespace Assets.Editor.GameDevWare.TextTransform
 		private static void SwitchVerboseLogs()
 		{
 			VerboseLogs = !VerboseLogs;
-#if UNITY_5_3_OR_NEWER
 			UnityEditor.Menu.SetChecked("Tools/T4/Verbose Logs", VerboseLogs);
-#endif
 		}
 		[MenuItem("Tools/T4/Verbose Logs", true, 20)]
 		private static bool SwitchVerboseLogsCheck()
 		{
-#if UNITY_5_3_OR_NEWER
 			UnityEditor.Menu.SetChecked("Tools/T4/Verbose Logs", VerboseLogs);
-#endif
 			return true;
 		}
 

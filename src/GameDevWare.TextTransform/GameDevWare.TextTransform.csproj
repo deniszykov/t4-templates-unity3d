@@ -72,7 +72,7 @@
 	</Target>
 
 	<Target Name="CopyDll" AfterTargets="PostBuildEvent" Condition=" '$(TargetFramework)' == 'net35' ">
-		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProjectDir)../GameDevWare.Dynamic.Expressions.Unity/Assets/Plugins/GameDevWare.Dynamic.Expressions/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
-		<Copy SourceFiles="$(ProjectDir)$(DocumentationFile)" DestinationFolder="$(ProjectDir)../GameDevWare.Dynamic.Expressions.Unity/Assets/Plugins/GameDevWare.Dynamic.Expressions/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="$(ProjectDir)$(DocumentationFile)" DestinationFolder="$(ProjectDir)../GameDevWare.TextTransform.Unity/Assets/Editor/GameDevWare.TextTransform/" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
 	</Target>
 </Project>

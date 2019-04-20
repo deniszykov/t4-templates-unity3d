@@ -39,18 +39,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Editors
 
 		static TemplateInspector()
 		{
-#if UNITY_5
 			Selection.selectionChanged += OnSelectionChanged;
-#else
-			var selection = default(Object);
-			EditorApplication.update += () =>
-			{
-				if (selection == Selection.activeObject)
-					return;
-				selection = Selection.activeObject;
-				OnSelectionChanged();
-			};
-#endif
 		}
 
 		public static void OnSelectionChanged()
@@ -196,11 +185,7 @@ namespace Assets.Editor.GameDevWare.TextTransform.Editors
 				this.templateSettings.OutputPath = AssetDatabase.GetAssetPath(EditorGUILayout.ObjectField("Output Path", codeAsset, typeof(Object), false));
 			else
 				this.templateSettings.OutputPath = EditorGUILayout.TextField("Output Path", this.templateSettings.OutputPath);
-#if UNITY_2017_1_OR_NEWER
-			this.templateSettings.Trigger = (int)(TemplateSettings.Triggers)EditorGUILayout.EnumFlagsField("Auto-Gen Triggers", (TemplateSettings.Triggers)this.templateSettings.Trigger);
-#else
 			this.templateSettings.Trigger = (int)(TemplateSettings.Triggers)EditorGUILayout.EnumMaskField("Auto-Gen Triggers", (TemplateSettings.Triggers)templateSettings.Trigger);
-#endif
 			this.templateSettings.TriggerDelay = (int)EditorGUILayout.IntField("Auto-Gen Delay (Ms)", this.templateSettings.TriggerDelay);
 
 			if ((this.templateSettings.Trigger & (int)TemplateSettings.Triggers.AssetChanges) != 0)
@@ -236,9 +221,13 @@ namespace Assets.Editor.GameDevWare.TextTransform.Editors
 			if (GUILayout.Button("Generate " + this.lastGenerationResult))
 			{
 				if (UnityTemplateGenerator.RunForTemplate(assetPath) == false)
+				{
 					this.lastGenerationResult = "(Failure)";
+				}
 				else
+				{
 					this.lastGenerationResult = "(Success)";
+				}
 			}
 			EditorGUILayout.EndHorizontal();
 

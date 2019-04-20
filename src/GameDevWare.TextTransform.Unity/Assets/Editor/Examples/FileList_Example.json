@@ -2,11 +2,13 @@
 	"files":
 	[
 		"DSL_Example.cs",
+		"DSL_Example.cs.meta",
 		"DSL_Example.dsl",
 		"DSL_Example.dsl.meta",
 		"DSL_Example.tt",
 		"DSL_Example.tt.meta",
 		"EnvironmentInfo_Example.cs",
+		"EnvironmentInfo_Example.cs.meta",
 		"EnvironmentInfo_Example.tt",
 		"EnvironmentInfo_Example.tt.meta",
 		"FileList_Example.json",
@@ -15,6 +17,8 @@
 		"FileList_Example.tt.meta",
 		"FileList_Example1.json",
 		"FileList_Example1.json.meta",
+		"ResourceAsyncLoad_Example.cs",
+		"ResourceAsyncLoad_Example.cs.meta",
 		"ResourceAsyncLoad_Example.tt",
 		"ResourceAsyncLoad_Example.tt.meta"
 	]
