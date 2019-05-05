@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net35;net45</TargetFrameworks>
 		<Authors>Denis Zykov</Authors>
-		<Version>1.0.10</Version>
+		<Version>1.0.11</Version>
 		<PackageId>GameDevWare.TextTransform</PackageId>
 		<Description>Text to Text Transformation Templates (T4) transfomation library for Unity.</Description>
 		<Company>GameDevWare</Company>
@@ -45,6 +45,9 @@
 		<Compile Remove="Temp\**" />
 		<EmbeddedResource Remove="Temp\**" />
 		<None Remove="Temp\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="..\..\ReleaseNotes.txt" Link="ReleaseNotes.txt" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\GameDevWare.TextTransform.Tool\GameDevWare.TextTransform.Tool.csproj">

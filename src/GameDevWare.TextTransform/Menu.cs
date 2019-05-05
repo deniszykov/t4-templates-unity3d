@@ -14,9 +14,10 @@
 	https://unity3d.com/ru/legal/as_terms
 */
 
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using UnityEditor;
+using UnityEngine;
 
 namespace GameDevWare.TextTransform
 {
@@ -42,15 +43,17 @@ namespace GameDevWare.TextTransform
 		private static void T4TransformAllAssets()
 		{
 			foreach (var templatePath in TemplateSettings.ListTemplatesInProject())
-				UnityTemplateGenerator.RunForTemplate(templatePath);
+			{
+				var assetName = Path.GetFileName(templatePath);
+				Debug.Log(string.Format("Running transformation for '{0}' asset...", assetName));
+				var result = UnityTemplateGenerator.RunForTemplate(templatePath);
+				Debug.Log(string.Format("Transformation for '{0}' asset is completed. Result: {1}", assetName, result));
+			}
 			AssetChangesTrigger.DoDelayedAssetRefresh();
 		}
 		[MenuItem("Tools/T4/Transform All Assets", true, 1)]
 		private static bool T4TransformAllAssetsCheck()
 		{
-			if (Selection.activeObject == null)
-				return false;
-
 			return !EditorApplication.isCompiling;
 		}
 	}
