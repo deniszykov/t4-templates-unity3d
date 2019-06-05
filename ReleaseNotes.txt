@@ -1,2 +1,1 @@
-fixed "Transform All Assets" menu action
-added more logging in "Transform All Assets"
+added better compilation/processing error messages

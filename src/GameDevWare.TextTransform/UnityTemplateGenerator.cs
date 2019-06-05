@@ -120,7 +120,11 @@ namespace GameDevWare.TextTransform
 			{
 				Debug.LogWarning(string.Format("Failed to pre-process template '{0}'.", templatePath));
 				foreach (var error in generator.Errors)
-					Debug.LogWarning(error);
+				{
+					var log = (Action<object>)Debug.LogError;
+					log.BeginInvoke(error, null, null);
+				}
+				FocusConsoleWindow();
 				return GenerationResult.TemplateCompilationError;
 			}
 			if (Menu.VerboseLogs)
@@ -132,11 +136,12 @@ namespace GameDevWare.TextTransform
 			if (generator.ProcessTemplate(templatePath, ref outputFile) == false)
 			{
 				Debug.LogWarning(string.Format("Failed to process template '{0}'.", templatePath));
-				var warnText = new StringBuilder();
 				foreach (CompilerError error in generator.Errors)
-					warnText.AppendLine(error.ToString());
-				if (warnText.Length > 0)
-					Debug.LogWarning(warnText);
+				{
+					var log = (Action<object>)Debug.LogError;
+					log.BeginInvoke(error, null, null);
+				}
+				FocusConsoleWindow();
 				return GenerationResult.TemplateProcessingError;
 			}
 			if (Menu.VerboseLogs)
@@ -177,6 +182,16 @@ namespace GameDevWare.TextTransform
 			File.Delete(generatorOutputFile);
 			
 			return GenerationResult.Success;
+		}
+
+		public static void FocusConsoleWindow()
+		{
+			var consoleWindowType = typeof(SceneView).Assembly.GetType("UnityEditor.ConsoleWindow", throwOnError: false);
+			if (consoleWindowType == null)
+				return;
+
+			var consoleWindow = EditorWindow.GetWindow(consoleWindowType);
+			consoleWindow.Focus();
 		}
 	}
 }
