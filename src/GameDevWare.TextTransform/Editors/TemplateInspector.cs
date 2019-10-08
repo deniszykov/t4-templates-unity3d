@@ -62,6 +62,7 @@ namespace GameDevWare.TextTransform.Editors
 				// after unity 2018.*
 				if (customEditorsDictionary != null)
 				{
+					var activeEditors = default(IEnumerable);
 					foreach (IEnumerable customEditors in customEditorsDictionary.Values)
 					{
 						foreach (var customEditor in customEditors)
@@ -76,8 +77,17 @@ namespace GameDevWare.TextTransform.Editors
 
 							// force rebuild editor list
 							activeEditorTracker.Invoke("ForceRebuild");
-							inspectorWindow.Repaint();
 
+							activeEditors = (IEnumerable)activeEditorTracker.GetPropertyValue("activeEditors") ?? Enumerable.Empty<object>();
+
+							foreach (Editor activeEditor in activeEditors)
+							{
+								try { activeEditor.SetPropertyValue("alwaysAllowExpansion", true); }
+								catch { /* ignore */ }
+							}
+
+							inspectorWindow.Repaint();
+							
 							// restore original inspector
 							customEditor.SetFieldValue("m_InspectorType", originalInspectorType);
 							return;
@@ -98,6 +108,14 @@ namespace GameDevWare.TextTransform.Editors
 
 					// force rebuild editor list
 					activeEditorTracker.Invoke("ForceRebuild");
+
+					activeEditors = (IEnumerable)activeEditorTracker.GetPropertyValue("activeEditors") ?? Enumerable.Empty<object>();
+					foreach (Editor activeEditor in activeEditors)
+					{
+						try { activeEditor.SetPropertyValue("alwaysAllowExpansion", true); }
+						catch { /* ignore */ }
+					}
+
 					inspectorWindow.Repaint();
 
 					// restore original inspector
