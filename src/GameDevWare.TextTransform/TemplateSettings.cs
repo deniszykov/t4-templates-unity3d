@@ -77,7 +77,7 @@ namespace GameDevWare.TextTransform
 
 				if (templateSettings != null)
 				{
-					templateSettings.OutputPath = FileUtils.MakeProjectRelative(templateSettings.OutputPath);
+					templateSettings.OutputPath = PathUtils.MakeProjectRelative(templateSettings.OutputPath);
 					if (templateSettings.WatchedAssets.Any(string.IsNullOrEmpty))
 						templateSettings.WatchedAssets = templateSettings.WatchedAssets.Where(s => !string.IsNullOrEmpty(s)).ToArray();
 				}
@@ -108,7 +108,7 @@ namespace GameDevWare.TextTransform
 		public static List<string> ListTemplatesInProject()
 		{
 			var allTemplates = (from id in AssetDatabase.FindAssets("t:DefaultAsset").Union(AssetDatabase.FindAssets("t:TextAsset"))
-								let path = FileUtils.MakeProjectRelative(AssetDatabase.GUIDToAssetPath(id))
+								let path = PathUtils.MakeProjectRelative(AssetDatabase.GUIDToAssetPath(id))
 								where path != null && IsTemplateAsset(path)
 								select path).ToList();
 			return allTemplates;

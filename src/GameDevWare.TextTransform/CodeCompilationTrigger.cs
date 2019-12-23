@@ -43,7 +43,7 @@ namespace GameDevWare.TextTransform
 				if ((settings.Trigger & (int)TemplateSettings.Triggers.CodeCompilation) == 0)
 					continue;
 
-				if (Menu.VerboseLogs)
+				if (Settings.Current.Verbose)
 					Debug.Log(string.Format("Code compilation in project is triggered T4 template's generator at '{0}'.", templatePath));
 
 				UnityTemplateGenerator.RunForTemplateWithDelay(templatePath, TimeSpan.FromMilliseconds(settings.TriggerDelay));

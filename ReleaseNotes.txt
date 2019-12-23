@@ -1,1 +1,4 @@
-added better compilation/processing error messages
+add settings window at "Edit -> Preferences... -> T4"
+add option to exclude assemblies from T4 template compilation and processing
+add option to include additional assemblies into T4 compilation process
+add option to include/exclude paths from T4 compilation process

@@ -25,7 +25,6 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-
 namespace GameDevWare.TextTransform.Editors
 {
 	internal class TemplateInspector : UnityEditor.Editor
@@ -181,7 +180,7 @@ namespace GameDevWare.TextTransform.Editors
 		public override void OnInspectorGUI()
 		{
 			var asset = (Object)this.target;
-			var assetPath = FileUtils.MakeProjectRelative(AssetDatabase.GetAssetPath(asset));
+			var assetPath = PathUtils.MakeProjectRelative(AssetDatabase.GetAssetPath(asset));
 			if (assetPath == null || assetPath.EndsWith(".tt") == false)
 			{
 				this.DrawDefaultInspector();

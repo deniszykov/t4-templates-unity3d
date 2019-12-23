@@ -24,13 +24,14 @@ using UnityEngine;
 
 namespace GameDevWare.TextTransform.Utils
 {
-	internal static class FileUtils
+	internal static class PathUtils
 	{
-		private readonly static char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
+		private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
+		private static readonly string DirectorySeparator= Path.DirectorySeparatorChar.ToString();
 
 		public static string MakeProjectRelative(string path)
 		{
-			if (String.IsNullOrEmpty(path)) return null;
+			if (string.IsNullOrEmpty(path)) return null;
 			var fullPath = Path.GetFullPath(Environment.CurrentDirectory).Replace("\\", "/");
 			path = Path.GetFullPath(path).Replace("\\", "/");
 
@@ -40,14 +41,22 @@ namespace GameDevWare.TextTransform.Utils
 				fullPath = fullPath.Substring(0, fullPath.Length - 1);
 
 			if (path == fullPath)
-				path = ".";
+				path = "." + DirectorySeparator;
 			else if (path.StartsWith(fullPath, StringComparison.Ordinal))
-				path = path.Substring(fullPath.Length + 1);
+				path = path.Substring(fullPath.Length + 1).Replace("/", DirectorySeparator);
 			else
 				path = null;
 
 			return path;
 		}
+		public static string MakeProjectAbsolute(string path)
+		{
+			if (path == null) throw new ArgumentNullException(nameof(path));
+
+			return Normalize(Path.GetFullPath(path));
+		}
+
+
 		public static string ComputeMd5Hash(string path, int tries = 5)
 		{
 			if (path == null) throw new ArgumentNullException("path");
@@ -85,6 +94,12 @@ namespace GameDevWare.TextTransform.Utils
 					fileName[c] = '_';
 			}
 			return fileName.ToString();
+		}
+		public static string Normalize(string path)
+		{
+			if (path == null) throw new ArgumentNullException(nameof(path));
+
+			return path.Replace("\\", DirectorySeparator).Replace("/", DirectorySeparator);
 		}
 	}
 }

@@ -58,7 +58,7 @@ namespace GameDevWare.TextTransform
 
 			if (doDelayedAssetRefresh > 0 && --doDelayedAssetRefresh == 0)
 			{
-				if (Menu.VerboseLogs)
+				if (Settings.Current.Verbose)
 					Debug.Log("Performing forced asset refresh.");
 
 				AssetDatabase.Refresh();
@@ -84,7 +84,7 @@ namespace GameDevWare.TextTransform
 			var triggeredTemplatePaths = new HashSet<string>();
 			foreach (var changedAsset in changedAssetsCopy)
 			{
-				//if (Menu.VerboseLogs)
+				//if (Settings.Current.Verbose)
 				//	Debug.Log("Changed Asset: " + changedAsset);
 
 				if (!File.Exists(changedAsset))
@@ -98,7 +98,7 @@ namespace GameDevWare.TextTransform
 
 			foreach (var templatePath in triggeredTemplatePaths)
 			{
-				if (Menu.VerboseLogs)
+				if (Settings.Current.Verbose)
 					Debug.Log(string.Format("Asset modification is triggered T4 template's generator at '{0}'.", templatePath));
 
 				var settings = TemplateSettings.Load(templatePath);
@@ -137,7 +137,7 @@ namespace GameDevWare.TextTransform
 						};
 						watcher.Changed += (sender, args) =>
 						{
-							var path = FileUtils.MakeProjectRelative(args.FullPath);
+							var path = PathUtils.MakeProjectRelative(args.FullPath);
 							lock (changedAssets)
 								changedAssets.Add(path);
 						};
@@ -159,19 +159,19 @@ namespace GameDevWare.TextTransform
 			{
 				if (importedAssets != null)
 					foreach (var asset in importedAssets)
-						changedAssets.Add(FileUtils.MakeProjectRelative(asset));
+						changedAssets.Add(PathUtils.MakeProjectRelative(asset));
 
 				if (deletedAssets != null)
 					foreach (var asset in deletedAssets)
-						changedAssets.Add(FileUtils.MakeProjectRelative(asset));
+						changedAssets.Add(PathUtils.MakeProjectRelative(asset));
 
 				if (movedAssets != null)
 					foreach (var asset in movedAssets)
-						changedAssets.Add(FileUtils.MakeProjectRelative(asset));
+						changedAssets.Add(PathUtils.MakeProjectRelative(asset));
 
 				if (movedFromAssetPaths != null)
 					foreach (var asset in movedFromAssetPaths)
-						changedAssets.Add(FileUtils.MakeProjectRelative(asset));
+						changedAssets.Add(PathUtils.MakeProjectRelative(asset));
 			}
 		}
 		public static void DoDelayedAssetRefresh()

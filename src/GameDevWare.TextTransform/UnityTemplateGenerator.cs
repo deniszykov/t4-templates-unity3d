@@ -18,6 +18,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using GameDevWare.TextTransform.Processor;
@@ -46,20 +47,45 @@ namespace GameDevWare.TextTransform
 
 		public UnityTemplateGenerator()
 		{
+			var excludedAssemblyNames = new HashSet<string>(Settings.Current.GetExcludeAssemblyNames().Select(n => n.Name), StringComparer.Ordinal);
+			var excludedPaths = new HashSet<string>(Settings.Current.GetExcludePaths(), StringComparer.OrdinalIgnoreCase);
+
 			foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
 			{
 				if (assembly.ReflectionOnly)
 					continue;
 
+				var assemblyName = assembly.GetName().Name;
+
+				if (excludedAssemblyNames.Contains(assemblyName))
+					continue; // excluded
+
 				try
 				{
-					var assemblyLocation = assembly.Location;
+					var assemblyLocation = PathUtils.Normalize(assembly.Location);
 					if (string.IsNullOrEmpty(assemblyLocation)) continue;
 					if (File.Exists(assemblyLocation) == false) continue;
+					if (excludedPaths.Contains(assemblyLocation)) continue;
 
 					this.Refs.Add(assemblyLocation);
 				}
 				catch { /* ignore */ }
+			}
+
+			foreach (var includePath in Settings.Current.GetIncludePaths())
+			{
+				if (File.Exists(includePath))
+				{
+					this.Refs.Add(includePath);
+				}
+				else if (Directory.Exists(includePath))
+				{
+					this.ReferencePaths.Add(includePath);
+				}
+				else if (Settings.Current.Verbose)
+				{
+					Debug.LogWarning(string.Format("Unable to locate assembly file or directory at '{0}' for inclusion in T4 template generation.", includePath));
+				}
 			}
 
 			this.ReferencePaths.Add(Path.GetDirectoryName(typeof(UnityTemplateGenerator).Assembly.Location));
@@ -71,7 +97,7 @@ namespace GameDevWare.TextTransform
 		{
 			if (templatePath == null) throw new ArgumentNullException("templatePath");
 
-			templatePath = FileUtils.MakeProjectRelative(templatePath);
+			templatePath = PathUtils.MakeProjectRelative(templatePath);
 
 			if (delay <= TimeSpan.Zero)
 			{
@@ -98,7 +124,7 @@ namespace GameDevWare.TextTransform
 		{
 			if (templatePath == null) throw new ArgumentNullException("templatePath");
 
-			templatePath = FileUtils.MakeProjectRelative(templatePath);
+			templatePath = PathUtils.MakeProjectRelative(templatePath);
 
 			var settings = TemplateSettings.Load(templatePath);
 			var generator = new UnityTemplateGenerator();
@@ -114,7 +140,7 @@ namespace GameDevWare.TextTransform
 
 			if (Directory.Exists(generatorOutputDir) == false) Directory.CreateDirectory(generatorOutputDir);
 
-			if (Menu.VerboseLogs)
+			if (Settings.Current.Verbose)
 				Debug.Log(string.Format("Pre-process T4 template '{0}'. Output directory: '{1}'.", templatePath, generatorOutputDir));
 			if (generator.PreprocessTemplate(templatePath, templateName, templateNamespace, generatorOutputFile, Encoding.UTF8, out language, out references) == false)
 			{
@@ -127,11 +153,11 @@ namespace GameDevWare.TextTransform
 				FocusConsoleWindow();
 				return GenerationResult.TemplateCompilationError;
 			}
-			if (Menu.VerboseLogs)
-				Debug.Log(string.Format("Pre-process T4 template '{0}' is complete successfully. Language: '{1}', References: '{2}', Reference location paths: {3}, Include paths: {4}, Output file: '{5}'.", templatePath, language, string.Join(", ", references ?? new string[0]), 
+			if (Settings.Current.Verbose)
+				Debug.Log(string.Format("Pre-process T4 template '{0}' is complete successfully. Language: '{1}', References: '{2}', Reference location paths: {3}, Include paths: {4}, Output file: '{5}'.", templatePath, language, string.Join(", ", references ?? new string[0]),
 					string.Join(", ", generator.ReferencePaths.ToArray()), string.Join(", ", generator.IncludePaths.ToArray()), generatorOutputFile));
 
-			if (Menu.VerboseLogs)
+			if (Settings.Current.Verbose)
 				Debug.Log(string.Format("Process T4 template '{0}'. Output File: '{1}'.", templatePath, outputFile));
 			if (generator.ProcessTemplate(templatePath, ref outputFile) == false)
 			{
@@ -144,7 +170,7 @@ namespace GameDevWare.TextTransform
 				FocusConsoleWindow();
 				return GenerationResult.TemplateProcessingError;
 			}
-			if (Menu.VerboseLogs)
+			if (Settings.Current.Verbose)
 				Debug.Log(string.Format("Process T4 template '{0}' is complete successfully. Output file: '{1}'.", templatePath, outputFile));
 
 			var sourceFile = default(string);
@@ -166,9 +192,9 @@ namespace GameDevWare.TextTransform
 			else
 				targetFile = Path.GetFullPath(targetFile);
 
-			if (File.Exists(targetFile) && FileUtils.ComputeMd5Hash(targetFile) == FileUtils.ComputeMd5Hash(sourceFile))
+			if (File.Exists(targetFile) && PathUtils.ComputeMd5Hash(targetFile) == PathUtils.ComputeMd5Hash(sourceFile))
 			{
-				if (Menu.VerboseLogs)
+				if (Settings.Current.Verbose)
 					Debug.Log(string.Format("Generated file is same as existing at location '{0}'.", targetFile));
 				return GenerationResult.NoChanges;
 			}
@@ -180,7 +206,7 @@ namespace GameDevWare.TextTransform
 			File.Copy(sourceFile, targetFile, overwrite: true);
 			File.Delete(outputFile);
 			File.Delete(generatorOutputFile);
-			
+
 			return GenerationResult.Success;
 		}
 
