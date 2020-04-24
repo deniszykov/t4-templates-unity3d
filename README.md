@@ -1,5 +1,5 @@
 # Introduction
-This Unity [editor extension](https://www.assetstore.unity3d.com/#!/content/63294) provides [T4 text templates](https://msdn.microsoft.com/en-US/library/bb126445.aspx) processor. 
+This Unity [editor extension](https://assetstore.unity.com/packages/tools/utilities/t4-code-generation-63294) provides [T4 text templates](https://msdn.microsoft.com/en-US/library/bb126445.aspx) processor. 
 T4 template is a mixture of text blocks and control logic that can generate a text file. The control logic is written as fragments of program code in C#.
 The generated file can be text of any kind, such as resource file, source code or web page.
 
@@ -53,6 +53,6 @@ executable name of tools has been changed to 'GameDevWare.TextTransform.exe' new
 Please send any questions at support@gamedevware.com
 
 ## License
-If you embed this package, you MUST provide a [link](https://www.assetstore.unity3d.com/#!/content/63294) and warning about embedded package in the description of your package.
+If you embed this package, you MUST provide a [link](https://assetstore.unity.com/packages/tools/utilities/t4-code-generation-63294) and warning about embedded package in the description of your package.
 
 [Asset Store Terms of Service and EULA](LICENSE.md)
