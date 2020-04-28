@@ -45,6 +45,9 @@ You can reference project's assemblies *Assembly-CSharp* and *Assembly-CSharp-fi
 
 You can run template generation from your code with **UnityTemplateGenerator.RunForTemplate(templatePath)** call.
 
+## Version 2.0.0
+there is some breaking changes due renaming in this version
+
 ## Version 1.0.7
 fixed missing 's' in project name 'TextTran_S_form', files, namespaces, folders has been renamed.
 executable name of tools has been changed to 'GameDevWare.TextTransform.exe' new NuGet package will be published
