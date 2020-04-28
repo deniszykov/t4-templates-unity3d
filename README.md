@@ -22,8 +22,8 @@ T4 template example:
 Create or copy file with **.tt** extension. Select this file in Project window (Window -> Project), then in Inspector window (Window -> Inspector) setup T4 template's parameters. Click "Generate" button.
 Inspector window for T4 template contains following parameters:
 * **Output Type** - type of generated file
-  * **Content** - normal template's output. It corresponds to "Design-time T4 text templates" in Microsoft's terminology.
-  * **Generator** - generator-class which can generate content when TransformText() is called. It corresponds to "Run time T4 text templates" in Microsoft's terminology.
+  * **Text** - normal template's output. It corresponds to "Design-time T4 text templates" in Microsoft's terminology.
+  * **Text Generator** - generator-class which can generate content when TransformText() is called. It corresponds to "Run time T4 text templates" in Microsoft's terminology.
 * **Output Path** - path to generated file. If not specified, generated file will have file name of template and file extension from *output* directive.
 * **Auto-Gen Triggers** - list of events which trigger auto-generation.
   * **Code Compilation** - after each code compilation
