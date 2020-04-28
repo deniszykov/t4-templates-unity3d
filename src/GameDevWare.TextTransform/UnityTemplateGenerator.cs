@@ -28,6 +28,9 @@ using UnityEngine;
 
 namespace GameDevWare.TextTransform
 {
+	/// <summary>
+	/// T4 Template based generator. Use <see cref="UnityTemplateGenerator.RunForTemplate(string)"/> method to run transformation.
+	/// </summary>
 	public class UnityTemplateGenerator : TemplateGenerator
 	{
 		private static readonly Dictionary<string, Timer> TriggerDelays = new Dictionary<string, Timer>(StringComparer.Ordinal);
@@ -44,7 +47,9 @@ namespace GameDevWare.TextTransform
 						RunForTemplate(PendingTemplateGenerations.Dequeue());
 			};
 		}
-
+		/// <summary>
+		/// Create instance of <see cref="UnityTemplateGenerator"/>.
+		/// </summary>
 		public UnityTemplateGenerator()
 		{
 			var excludedAssemblyNames = new HashSet<string>(Settings.Current.GetExcludeAssemblyNames().Select(n => n.Name), StringComparer.Ordinal);
@@ -93,6 +98,11 @@ namespace GameDevWare.TextTransform
 			this.ReferencePaths.Add(Path.GetDirectoryName(typeof(UnityEditor.EditorApplication).Assembly.Location));
 		}
 
+		/// <summary>
+		/// Run T4 template transformation at <paramref name="templatePath"/> after <paramref name="delay"/>.
+		/// </summary>
+		/// <param name="templatePath">Path to T4 template.</param>
+		/// <param name="delay">Defer value.</param>
 		public static void RunForTemplateWithDelay(string templatePath, TimeSpan delay)
 		{
 			if (templatePath == null) throw new ArgumentNullException("templatePath");
@@ -120,13 +130,42 @@ namespace GameDevWare.TextTransform
 
 			timer.Change(delay, TimeSpan.FromTicks(-1));
 		}
-		public static GenerationResult RunForTemplate(string templatePath)
+		/// <summary>
+		/// Run T4 template transformation with at <paramref name="templatePath"/> with default settings.
+		/// </summary>
+		/// <param name="templatePath">Path to T4 template.</param>
+		/// <returns>Result of transformation.</returns>
+		public static TransformationResult RunForTemplate(string templatePath)
+		{
+			return RunForTemplate(templatePath, default(string));
+		}
+		/// <summary>
+		/// Run T4 template transformation with at <paramref name="templatePath"/> with additional settings.
+		/// </summary>
+		/// <param name="templatePath">Path to T4 template.</param>
+		/// <param name="outputPath">Output path. It will override <see cref="TemplateSettings.OutputPath"/> from <paramref name="settings"/> parameter.</param>
+		/// <param name="settings">Settings override for this run.</param>
+		/// <param name="parameters">Additional template parameters. They could be retrieved with following code. <code>this.Host.ResolveParameterValue("-", "-", "someKey");</code>.</param>
+		/// <param name="assemblyReferences">Additional assemblies to load during transformation. Could be assembly name or full path to assembly.</param>
+		/// <param name="assemblyReferencesLookupPaths">Additional assembly lookup paths. Used during referenced assemblies resolution.</param>
+		/// <param name="includeLookupPaths">Additional lookup path for &lt;#=include#&gt; directives.</param>
+		/// <returns>Result of transformation.</returns>
+		public static TransformationResult RunForTemplate
+		(
+			string templatePath,
+			string outputPath,
+			TemplateSettings settings = null,
+			Dictionary<string, string> parameters = null,
+			List<string> assemblyReferences = null,
+			List<string> assemblyReferencesLookupPaths = null,
+			List<string> includeLookupPaths = null
+		)
 		{
 			if (templatePath == null) throw new ArgumentNullException("templatePath");
 
 			templatePath = PathUtils.MakeProjectRelative(templatePath);
 
-			var settings = TemplateSettings.Load(templatePath);
+			settings = settings ?? TemplateSettings.Load(templatePath);
 			var generator = new UnityTemplateGenerator();
 			var templateName = Path.GetFileNameWithoutExtension(templatePath);
 			var templateDir = Path.GetDirectoryName(templatePath) ?? "Assets";
@@ -151,14 +190,43 @@ namespace GameDevWare.TextTransform
 					log.BeginInvoke(error, null, null);
 				}
 				FocusConsoleWindow();
-				return GenerationResult.TemplateCompilationError;
+				return TransformationResult.TemplateCompilationError;
 			}
+
 			if (Settings.Current.Verbose)
-				Debug.Log(string.Format("Pre-process T4 template '{0}' is complete successfully. Language: '{1}', References: '{2}', Reference location paths: {3}, Include paths: {4}, Output file: '{5}'.", templatePath, language, string.Join(", ", references ?? new string[0]),
+			{
+				Debug.Log(string.Format("Pre-process T4 template '{0}' is complete successfully. Language: '{1}', References: '{2}', Reference location paths: {3}, Include paths: {4}, Output file: '{5}'.",
+					templatePath, language, string.Join(", ", references ?? new string[0]),
 					string.Join(", ", generator.ReferencePaths.ToArray()), string.Join(", ", generator.IncludePaths.ToArray()), generatorOutputFile));
+			}
+
+			if (assemblyReferences != null)
+			{
+				generator.Refs.AddRange(assemblyReferences);
+			}
+
+			if (assemblyReferencesLookupPaths != null)
+			{
+				generator.ReferencePaths.AddRange(assemblyReferencesLookupPaths);
+			}
+
+			if (includeLookupPaths != null)
+			{
+				generator.IncludePaths.AddRange(includeLookupPaths);
+			}
+
+			if (parameters != null)
+			{
+				foreach (var kv in parameters)
+				{
+					generator.AddParameter("-", "-", kv.Key, kv.Value);
+					generator.AddParameter(null, null, kv.Key, kv.Value);
+				}
+			}
 
 			if (Settings.Current.Verbose)
 				Debug.Log(string.Format("Process T4 template '{0}'. Output File: '{1}'.", templatePath, outputFile));
+
 			if (generator.ProcessTemplate(templatePath, ref outputFile) == false)
 			{
 				Debug.LogWarning(string.Format("Failed to process template '{0}'.", templatePath));
@@ -168,7 +236,7 @@ namespace GameDevWare.TextTransform
 					log.BeginInvoke(error, null, null);
 				}
 				FocusConsoleWindow();
-				return GenerationResult.TemplateProcessingError;
+				return TransformationResult.TemplateProcessingError;
 			}
 			if (Settings.Current.Verbose)
 				Debug.Log(string.Format("Process T4 template '{0}' is complete successfully. Output file: '{1}'.", templatePath, outputFile));
@@ -176,17 +244,17 @@ namespace GameDevWare.TextTransform
 			var sourceFile = default(string);
 			switch ((TemplateSettings.OutputTypes)settings.OutputType)
 			{
-				case TemplateSettings.OutputTypes.Code:
+				case TemplateSettings.OutputTypes.Text:
 					sourceFile = outputFile;
 					break;
-				case TemplateSettings.OutputTypes.CodeGenerator:
+				case TemplateSettings.OutputTypes.TextGenerator:
 					sourceFile = generatorOutputFile;
 					break;
 				default:
 					Debug.LogWarning("Invalid 'OutputType' is specified in template's settings.");
-					return GenerationResult.UnknownOutputType;
+					return TransformationResult.UnknownOutputType;
 			}
-			var targetFile = settings.OutputPath;
+			var targetFile = outputPath ?? settings.OutputPath;
 			if (targetFile == null)
 				targetFile = Path.GetFullPath(Path.ChangeExtension(templatePath, Path.GetExtension(sourceFile)));
 			else
@@ -196,7 +264,7 @@ namespace GameDevWare.TextTransform
 			{
 				if (Settings.Current.Verbose)
 					Debug.Log(string.Format("Generated file is same as existing at location '{0}'.", targetFile));
-				return GenerationResult.NoChanges;
+				return TransformationResult.NoChanges;
 			}
 
 			var targetDir = Path.GetDirectoryName(targetFile);
@@ -207,10 +275,10 @@ namespace GameDevWare.TextTransform
 			File.Delete(outputFile);
 			File.Delete(generatorOutputFile);
 
-			return GenerationResult.Success;
+			return TransformationResult.Success;
 		}
 
-		public static void FocusConsoleWindow()
+		private static void FocusConsoleWindow()
 		{
 			var consoleWindowType = typeof(SceneView).Assembly.GetType("UnityEditor.ConsoleWindow", throwOnError: false);
 			if (consoleWindowType == null)

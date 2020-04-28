@@ -1,4 +1,7 @@
-add settings window at "Edit -> Preferences... -> T4"
-add option to exclude assemblies from T4 template compilation and processing
-add option to include additional assemblies into T4 compilation process
-add option to include/exclude paths from T4 compilation process
+breaking change: enum value TemplateSettings.OutputTypes.Code renamed to TemplateSettings.OutputTypes.Text
+breaking change: enum value TemplateSettings.OutputTypes.CodeGenerator renamed to TemplateSettings.OutputTypes.TextGenerator
+breaking change: enum GenerationResult to TransformationResult
+
+add UnityTemplateGenerator.RunForTemplate with additional parameters
+add XML documentation to most public members
+add parameters passing example

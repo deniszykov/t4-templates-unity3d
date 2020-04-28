@@ -242,18 +242,18 @@ namespace GameDevWare.TextTransform.Editors
 			{
 				switch (UnityTemplateGenerator.RunForTemplate(assetPath))
 				{
-					case GenerationResult.Success:
-					case GenerationResult.NoChanges:
+					case TransformationResult.Success:
+					case TransformationResult.NoChanges:
 						this.lastGenerationResult = "(Success)";
 						AssetChangesTrigger.DoDelayedAssetRefresh();
 						break;
-					case GenerationResult.UnknownOutputType:
+					case TransformationResult.UnknownOutputType:
 						this.lastGenerationResult = "(Unknown output type)";
 						break;
-					case GenerationResult.TemplateProcessingError:
+					case TransformationResult.TemplateProcessingError:
 						this.lastGenerationResult = "(Template processing error)";
 						break;
-					case GenerationResult.TemplateCompilationError:
+					case TransformationResult.TemplateCompilationError:
 						this.lastGenerationResult = "(Template compilation error)";
 						break;
 					default:

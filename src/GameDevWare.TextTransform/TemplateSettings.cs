@@ -26,26 +26,66 @@ using Object = UnityEngine.Object;
 
 namespace GameDevWare.TextTransform
 {
+	/// <summary>
+	/// T4 Template run settings.
+	/// </summary>
 	public sealed class TemplateSettings
 	{
+		/// <summary>
+		/// Run mode. Determine result of transformation.
+		/// </summary>
 		public enum OutputTypes
 		{
-			CodeGenerator,
-			Code
+			/// <summary>
+			/// Result is C# code of template which could output <see cref="Text"/> if ran.
+			/// </summary>
+			TextGenerator,
+			/// <summary>
+			/// Result is generated code/markup.
+			/// </summary>
+			Text
 		}
+
+		/// <summary>
+		/// Transformation triggers.
+		/// </summary>
 		[Flags]
 		public enum Triggers
 		{
+			/// <summary>
+			/// Each Unity's editor code compilation will trigger transformation.
+			/// </summary>
 			CodeCompilation = 0x1 << 0,
+			/// <summary>
+			/// Each change in watched assets will trigger transformation.
+			/// </summary>
 			AssetChanges = 0x2 << 0,
 		}
 
+		/// <summary>
+		/// Auto-transformation triggers.
+		/// </summary>
 		public int Trigger;
+		/// <summary>
+		/// Delay to auto-transformation run after trigger event occurs.
+		/// </summary>
 		public int TriggerDelay;
+		/// <summary>
+		/// Transformation result type. Generator or code/markup.
+		/// </summary>
 		public int OutputType;
+		/// <summary>
+		/// Path to place transformation result.
+		/// </summary>
 		public string OutputPath;
+		/// <summary>
+		/// Project relative paths to watched assets.
+		/// </summary>
 		public string[] WatchedAssets;
 
+		/// <summary>
+		/// Create default settings for template at <paramref name="templatePath"/>.
+		/// </summary>
 		public static TemplateSettings CreateDefault(string templatePath)
 		{
 			if (templatePath == null) throw new ArgumentNullException("templatePath");
@@ -53,10 +93,13 @@ namespace GameDevWare.TextTransform
 			var settings = new TemplateSettings();
 			settings.Trigger = (int)0;
 			settings.TriggerDelay = (int)500;
-			settings.OutputType = (int)OutputTypes.Code;
+			settings.OutputType = (int)OutputTypes.Text;
 			settings.WatchedAssets = new string[0];
 			return settings;
 		}
+		/// <summary>
+		/// Load settings for <paramref name="templateAsset"/>.
+		/// </summary>
 		public static TemplateSettings Load(UnityEngine.Object templateAsset)
 		{
 			if (templateAsset == null) throw new NullReferenceException("templateAsset");
@@ -64,6 +107,9 @@ namespace GameDevWare.TextTransform
 			var gameDataPath = AssetDatabase.GetAssetPath(templateAsset);
 			return Load(gameDataPath);
 		}
+		/// <summary>
+		/// Load settings for <paramref name="templatePath"/>.
+		/// </summary>
 		public static TemplateSettings Load(string templatePath)
 		{
 			if (templatePath == null) throw new NullReferenceException("templatePath");
@@ -90,6 +136,9 @@ namespace GameDevWare.TextTransform
 			return templateSettings;
 		}
 
+		/// <summary>
+		/// Save settings for <paramref name="templatePath"/>.
+		/// </summary>
 		public void Save(string templatePath)
 		{
 			if (templatePath == null) throw new ArgumentNullException("templatePath");
@@ -105,6 +154,10 @@ namespace GameDevWare.TextTransform
 			catch (Exception e) { Debug.LogError("Failed to save template's settings: " + e); }
 		}
 
+		/// <summary>
+		/// List all T4 templates in current project.
+		/// </summary>
+		/// <returns></returns>
 		public static List<string> ListTemplatesInProject()
 		{
 			var allTemplates = (from id in AssetDatabase.FindAssets("t:DefaultAsset").Union(AssetDatabase.FindAssets("t:TextAsset"))
@@ -114,12 +167,18 @@ namespace GameDevWare.TextTransform
 			return allTemplates;
 		}
 
+		/// <summary>
+		/// Determines if asset is T4 template.
+		/// </summary>
 		public static bool IsTemplateAsset(Object asset)
 		{
 			if (asset == null) throw new ArgumentNullException("asset");
 
 			return IsTemplateAsset(AssetDatabase.GetAssetPath(asset));
 		}
+		/// <summary>
+		/// Determines if asset is T4 template.
+		/// </summary>
 		public static bool IsTemplateAsset(string path)
 		{
 			if (path == null) throw new ArgumentNullException("path");
