@@ -56,6 +56,4 @@ executable name of tools has been changed to 'GameDevWare.TextTransform.exe' new
 Please send any questions at support@gamedevware.com
 
 ## License
-If you embed this package, you MUST provide a [link](https://assetstore.unity.com/packages/tools/utilities/t4-code-generation-63294) and warning about embedded package in the description of your package.
-
 [Asset Store Terms of Service and EULA](LICENSE.md)
