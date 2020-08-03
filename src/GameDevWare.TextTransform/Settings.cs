@@ -54,7 +54,7 @@ namespace GameDevWare.TextTransform
 			if (basePath == null || typeof(Settings).Assembly.GetName().Name != "GameDevWare.TextTransform")
 				basePath = Path.GetFullPath("Assets/Editor/GameDevWare.TextTransform");
 
-			SettingsPath = Path.Combine(basePath, "GameDevWare.Charon.Unity.Settings.json");
+			SettingsPath = Path.Combine(basePath, "GameDevWare.TextTransform.Settings.json");
 			
 			Current = Load();
 		}
@@ -64,7 +64,7 @@ namespace GameDevWare.TextTransform
 
 			var settings = default(Settings);
 			try { settings = JsonValue.Parse(File.ReadAllText(SettingsPath, DefaultEncoding)).As<Settings>(); }
-			catch (Exception readError) { Debug.LogWarning("Failed to read settings for Charon: " + readError.Message); }
+			catch (Exception readError) { Debug.LogWarning("Failed to read settings for T4 Transform: " + readError.Message); }
 
 			if (settings == null)
 			{

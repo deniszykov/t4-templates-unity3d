@@ -3,14 +3,14 @@
 	<PropertyGroup>
 		<TargetFramework>net35</TargetFramework>
 		<Authors>Denis Zykov</Authors>
-		<Version>1.0.13</Version>
+		<Version>2.0.1</Version>
 		<PackageId>GameDevWare.TextTransform.Tool</PackageId>
 		<Description>Text to Text Transformation Templates (T4) transfomation tool.</Description>
 		<Company>GameDevWare</Company>
 		<SignAssembly>true</SignAssembly>
 		<AssemblyOriginatorKeyFile>../GameDevWare.TextTransform/sn.snk</AssemblyOriginatorKeyFile>
 		<DelaySign>false</DelaySign>
-		<Copyright>(c) Denis Zykov, GameDevWare 2019</Copyright>
+		<Copyright>(c) Denis Zykov, GameDevWare 2020</Copyright>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<ApplicationIcon />
 		<OutputType>Exe</OutputType>

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>net35;net45</TargetFrameworks>
 		<Authors>Denis Zykov</Authors>
-		<Version>2.0.0</Version>
+		<Version>2.0.1</Version>
 		<PackageId>GameDevWare.TextTransform</PackageId>
 		<Description>Text to Text Transformation Templates (T4) transfomation library for Unity.</Description>
 		<Company>GameDevWare</Company>
@@ -15,7 +15,7 @@
 		<DocumentationFile>bin\$(Configuration)\$(TargetFramework)\GameDevWare.TextTransform.xml</DocumentationFile>
 		<PackageProjectUrl>https://github.com/deniszykov/t4-templates-unity3d</PackageProjectUrl>
 		<PackageLicenseUrl>https://raw.githubusercontent.com/deniszykov/t4-templates-unity3d/master/LICENSE.md</PackageLicenseUrl>
-		<Copyright>(c) Denis Zykov, GameDevWare 2019</Copyright>
+		<Copyright>(c) Denis Zykov, GameDevWare 2020</Copyright>
 		<RepositoryUrl>https://github.com/deniszykov/t4-templates-unity3d</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>t4 text transform unity</PackageTags>
@@ -66,10 +66,10 @@
 
 	<ItemGroup>
 		<Reference Include="UnityEditor">
-			<HintPath>..\..\..\..\..\apps\unity\Editor\Data\Managed\UnityEditor.dll</HintPath>
+			<HintPath>..\..\ref\UnityEditor.dll</HintPath>
 		</Reference>
 		<Reference Include="UnityEngine">
-			<HintPath>..\..\..\..\..\apps\unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
+			<HintPath>..\..\ref\UnityEngine.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

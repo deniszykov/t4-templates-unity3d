@@ -23,7 +23,7 @@ bin/
 obj/
 packages/
 deploy/
-Assembly*
+Assembly-CSharp*
 Library/
 Temp/
 Assets/StreamingAssets/

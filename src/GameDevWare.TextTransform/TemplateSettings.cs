@@ -117,18 +117,25 @@ namespace GameDevWare.TextTransform
 			var templateSettings = default(TemplateSettings);
 			try
 			{
-				var gameDataSettingsJson = AssetImporter.GetAtPath(templatePath).userData;
+				var assetImporter = AssetImporter.GetAtPath(templatePath);
+				var gameDataSettingsJson = assetImporter == null ? null : assetImporter.userData;
 				if (string.IsNullOrEmpty(gameDataSettingsJson) == false)
 					templateSettings = JsonObject.Parse(gameDataSettingsJson).As<TemplateSettings>();
 
 				if (templateSettings != null)
 				{
 					templateSettings.OutputPath = PathUtils.MakeProjectRelative(templateSettings.OutputPath);
+					templateSettings.WatchedAssets = templateSettings.WatchedAssets ?? new string[0];
+
 					if (templateSettings.WatchedAssets.Any(string.IsNullOrEmpty))
 						templateSettings.WatchedAssets = templateSettings.WatchedAssets.Where(s => !string.IsNullOrEmpty(s)).ToArray();
 				}
 			}
-			catch (Exception e) { Debug.LogError("Failed to load template's settings: " + e); }
+			catch (Exception loadError)
+			{
+				if (Settings.Current.Verbose)
+					Debug.LogError("Failed to load template's settings: " + loadError);
+			}
 
 			if (templateSettings == null)
 				templateSettings = CreateDefault(templatePath);
@@ -146,7 +153,7 @@ namespace GameDevWare.TextTransform
 			try
 			{
 				if (this.WatchedAssets == null) this.WatchedAssets = new string[0];
-				
+
 				var importer = AssetImporter.GetAtPath(templatePath);
 				importer.userData = JsonObject.From(this).Stringify();
 				importer.SaveAndReimport();
