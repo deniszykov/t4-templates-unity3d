@@ -120,7 +120,9 @@ namespace GameDevWare.TextTransform
 				var assetImporter = AssetImporter.GetAtPath(templatePath);
 				var gameDataSettingsJson = assetImporter == null ? null : assetImporter.userData;
 				if (string.IsNullOrEmpty(gameDataSettingsJson) == false)
+				{
 					templateSettings = JsonObject.Parse(gameDataSettingsJson).As<TemplateSettings>();
+				}
 
 				if (templateSettings != null)
 				{
@@ -128,7 +130,9 @@ namespace GameDevWare.TextTransform
 					templateSettings.WatchedAssets = templateSettings.WatchedAssets ?? new string[0];
 
 					if (templateSettings.WatchedAssets.Any(string.IsNullOrEmpty))
+					{
 						templateSettings.WatchedAssets = templateSettings.WatchedAssets.Where(s => !string.IsNullOrEmpty(s)).ToArray();
+					}
 				}
 			}
 			catch (Exception loadError)
@@ -138,7 +142,10 @@ namespace GameDevWare.TextTransform
 			}
 
 			if (templateSettings == null)
+			{
 				templateSettings = CreateDefault(templatePath);
+				templateSettings.Save(templatePath);
+			}
 
 			return templateSettings;
 		}
@@ -158,7 +165,10 @@ namespace GameDevWare.TextTransform
 				importer.userData = JsonObject.From(this).Stringify();
 				importer.SaveAndReimport();
 			}
-			catch (Exception e) { Debug.LogError("Failed to save template's settings: " + e); }
+			catch (Exception saveError)
+			{
+				Debug.LogError("Failed to save template's settings: " + saveError);
+			}
 		}
 
 		/// <summary>
@@ -190,7 +200,7 @@ namespace GameDevWare.TextTransform
 		{
 			if (path == null) throw new ArgumentNullException("path");
 
-			return path.EndsWith(".tt", StringComparison.OrdinalIgnoreCase);
+			return AssetImporter.GetAtPath(path) != null && path.EndsWith(".tt", StringComparison.OrdinalIgnoreCase);
 		}
 	}
 }
