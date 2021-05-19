@@ -61,10 +61,15 @@ namespace GameDevWare.TextTransform
 
 		private static Settings Load()
 		{
-
 			var settings = default(Settings);
-			try { settings = JsonValue.Parse(File.ReadAllText(SettingsPath, DefaultEncoding)).As<Settings>(); }
-			catch (Exception readError) { Debug.LogWarning("Failed to read settings for T4 Transform: " + readError.Message); }
+			try
+			{
+				settings = JsonValue.Parse(File.ReadAllText(SettingsPath, DefaultEncoding)).As<Settings>();
+			}
+			catch (Exception readError)
+			{
+				Debug.LogWarning("Failed to load settings for T4 Transform: " + readError.Message + ". A new file will be created with standard settings.");
+			}
 
 			if (settings == null)
 			{
@@ -99,7 +104,7 @@ namespace GameDevWare.TextTransform
 			}
 			catch (Exception e)
 			{
-				Debug.LogError(string.Format("Failed to save settings for Charon in file '{0}'.", SettingsPath));
+				Debug.LogError(string.Format("Failed to save settings for T4 Transform in file '{0}' due error.", SettingsPath));
 				Debug.LogError(e);
 			}
 		}
