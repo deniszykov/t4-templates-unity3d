@@ -7,3 +7,4 @@ add XML documentation to most public members
 add parameters passing example
 
 fix NRE in TemplateSettings and made additional checks for userData 
+fix changed message "Failed to load settings ..." to be less confusing.
