@@ -34,7 +34,7 @@ namespace GameDevWare.TextTransform.Editors
 			foreach (var assemblyName in GetAllAssemblies().OrderByDescending(v => v, AssemblyNameOnlyComparer.Default))
 			{
 				var isChecked = assemblyIncludeList.Contains(assemblyName);
-				if (EditorGUILayout.ToggleLeft(assemblyName.Name, isChecked) != isChecked)
+				if (EditorGUILayout.ToggleLeft(new GUIContent(assemblyName.Name, assemblyName.CodeBase), isChecked) != isChecked)
 				{
 					(isChecked ? assemblyIncludeList : assemblyExcludeList).Remove(assemblyName);
 					(isChecked ? assemblyExcludeList : assemblyIncludeList).Add(assemblyName);
