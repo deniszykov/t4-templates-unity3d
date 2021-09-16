@@ -43,7 +43,7 @@ namespace Microsoft.CodeDom.Providers.DotNetCompilerPlatform
 #if TOOL
 				default(string);
 #else
-				GameDevWare.TextTransform.UnityAppSettings.RoslynCompilerLocation;
+				GameDevWare.TextTransform.UnityTemplateCompilationSettings.RoslynCompilerLocation;
 #endif
 			if (String.IsNullOrEmpty(compilerFullPath))
 				compilerFullPath = Environment.GetEnvironmentVariable("ROSLYN_COMPILER_LOCATION");

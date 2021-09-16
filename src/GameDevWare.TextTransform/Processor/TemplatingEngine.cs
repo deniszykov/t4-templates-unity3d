@@ -363,9 +363,20 @@ namespace GameDevWare.TextTransform.Processor
 				settings.Namespace = typeof(TextTransformation).Namespace;
 
 			//resolve the CodeDOM provider
-			if (String.IsNullOrEmpty(settings.Language))
+			if (string.IsNullOrEmpty(settings.Language))
 			{
-				settings.Language = "C#/Unity";
+#if !TOOL
+				if (!string.IsNullOrEmpty(UnityTemplateCompilationSettings.RoslynCompilerLocation))
+				{
+					settings.Language = "C#/Unity";
+				}
+				else
+				{
+					settings.Language = "C#";
+				}
+#else
+				settings.Language = "C#";
+#endif
 			}
 			else if (settings.Language == "C#")
 			{

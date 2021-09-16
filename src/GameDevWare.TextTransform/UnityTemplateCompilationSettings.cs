@@ -4,11 +4,11 @@ using UnityEditor;
 
 namespace GameDevWare.TextTransform
 {
-	public static class UnityAppSettings
+	public static class UnityTemplateCompilationSettings
 	{
-		public static readonly string RoslynCompilerLocation;
+		public static string RoslynCompilerLocation;
 
-		static UnityAppSettings()
+		static UnityTemplateCompilationSettings()
 		{
 			try
 			{
