@@ -81,14 +81,18 @@ namespace GameDevWare.TextTransform
 
 			if (changedAssetsCopy == null) return;
 
+			
+			//if (Settings.Current.Verbose)
+			//	Debug.Log("Watched paths: " + string.Join(", ", templatePathByWatchedPaths.Keys.ToArray()));
+
 			var triggeredTemplatePaths = new HashSet<string>();
 			foreach (var changedAsset in changedAssetsCopy)
 			{
-				//if (Settings.Current.Verbose)
-				//	Debug.Log("Changed Asset: " + changedAsset);
-
 				if (!File.Exists(changedAsset))
 					continue;
+
+				//if (Settings.Current.Verbose)
+				//	Debug.Log("Changed Asset: " + changedAsset);
 
 				foreach (var watchedPath in templatePathByWatchedPaths.Keys)
 					if (changedAsset.StartsWith(watchedPath, StringComparison.Ordinal))
@@ -107,6 +111,9 @@ namespace GameDevWare.TextTransform
 		}
 		private static void CreateWatchers()
 		{
+			if (Settings.Current.Verbose)
+				Debug.Log("Recreating watchers.");
+
 			foreach (var templatePath in TemplateSettings.ListTemplatesInProject())
 			{
 				var settings = TemplateSettings.Load(templatePath);

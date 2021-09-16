@@ -127,12 +127,7 @@ namespace GameDevWare.TextTransform
 				if (templateSettings != null)
 				{
 					templateSettings.OutputPath = PathUtils.MakeProjectRelative(templateSettings.OutputPath);
-					templateSettings.WatchedAssets = templateSettings.WatchedAssets ?? new string[0];
-
-					if (templateSettings.WatchedAssets.Any(string.IsNullOrEmpty))
-					{
-						templateSettings.WatchedAssets = templateSettings.WatchedAssets.Where(s => !string.IsNullOrEmpty(s)).ToArray();
-					}
+					templateSettings.WatchedAssets = (templateSettings.WatchedAssets ?? new string[0]).Where(s => !string.IsNullOrEmpty(s)).Select(PathUtils.Normalize).ToArray();
 				}
 			}
 			catch (Exception loadError)
