@@ -47,7 +47,7 @@ namespace GameDevWare.TextTransform.Utils
 			else
 				path = null;
 
-			return Normalize(path);
+			return path != null ? Normalize(path) : null;
 		}
 		public static string MakeProjectAbsolute(string path)
 		{
