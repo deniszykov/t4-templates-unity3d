@@ -26,7 +26,9 @@ deploy/
 Assembly-CSharp*
 Library/
 Temp/
-Assets/StreamingAssets/
-Assets/Bundles/
+UserSettings/
 ProjectSettings/
-Assets/AssetStoreTools/
+src/GameDevWare.TextTransform.Unity.*/Assets/StreamingAssets
+src/GameDevWare.TextTransform.Unity.*/Assets/Resources/
+src/GameDevWare.TextTransform.Unity.*/Assets/Bundles/
+src/GameDevWare.TextTransform.Unity.*/Assets/AssetStoreTools/

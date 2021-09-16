@@ -1,3 +1,13 @@
+# 2.1.0
+add 'Preferences' button to all template inspector windows
+add path hint for assemblies in 'T4 Settings' window
+
+add Roslyn compiler support and new language target "C#/Unity" (default if none set)
+add ability to redefine Roslyn compiler location
+enforce using lastest C# version known to roslyn compiler
+change default target runtime and libraries to Unity Editor's current ones
+
+# 2.0.0
 breaking change: enum value TemplateSettings.OutputTypes.Code renamed to TemplateSettings.OutputTypes.Text
 breaking change: enum value TemplateSettings.OutputTypes.CodeGenerator renamed to TemplateSettings.OutputTypes.TextGenerator
 breaking change: enum GenerationResult to TransformationResult
@@ -6,5 +16,6 @@ add UnityTemplateGenerator.RunForTemplate with additional parameters
 add XML documentation to most public members
 add parameters passing example
 
+# 2.0.1
 fix NRE in TemplateSettings and made additional checks for userData 
 fix changed message "Failed to load settings ..." to be less confusing.

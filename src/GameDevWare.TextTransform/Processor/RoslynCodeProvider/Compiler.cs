@@ -321,10 +321,6 @@ namespace Microsoft.CodeDom.Providers.DotNetCompilerPlatform
 
 			string args = GetCompilationArgumentString(options) + " " + JoinStringArray(fileNames, " ");
 
-#if !TOOL
-		UnityEngine.Debug.Log(args);
-#endif
-
 			// Use a response file if the compiler supports it
 			string responseFileArgs = GetResponseFileCmdArgs(options, args);
 			string trueArgs = null;

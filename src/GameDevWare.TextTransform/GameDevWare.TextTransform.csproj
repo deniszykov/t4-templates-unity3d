@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net35;net45</TargetFrameworks>
 		<Authors>Denis Zykov</Authors>
-		<Version>2.0.1</Version>
+		<Version>2.1.0</Version>
 		<PackageId>GameDevWare.TextTransform</PackageId>
 		<Description>Text to Text Transformation Templates (T4) transfomation library for Unity.</Description>
 		<Company>GameDevWare</Company>

@@ -40,6 +40,17 @@ You can reference project's assemblies *Assembly-CSharp* and *Assembly-CSharp-fi
 <#@ assembly name="Assembly-CSharp" #>
 <#@ assembly name="Assembly-CSharp-firstpass" #>
 ```
+### Target Runtime
+The template always uses the current runtime and core libraries of Unity Editor. 
+
+### Language Version
+You could specify C# language version with `language=` directive.
+List of available language versions:
+* language="C#v3.5" - C# version 3.5.
+* language="C#" - C# up to version 6, depending on Unity Editor's version.
+* language="C#/Unity" - C# version based on Roslyn shipped with Unity Editor.
+* unspecified - It is currently the equivalent of "C#/Unity".
+
 
 [MSBuild Macros](https://msdn.microsoft.com/en-US/library/c02as0cs.aspx) are not available.
 
