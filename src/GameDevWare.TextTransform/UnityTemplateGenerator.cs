@@ -172,7 +172,7 @@ namespace GameDevWare.TextTransform
 			var templateDir = Path.GetDirectoryName(templatePath) ?? "Assets";
 			var templateNamespace = string.Join(".", templateDir.Split(new char[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries));
 			var generatorOutputDir = Path.Combine("Temp", "T4");
-			var outputFile = Path.Combine(generatorOutputDir, Path.GetFileNameWithoutExtension(templatePath) + "_" + Guid.NewGuid().ToString().Replace("-", "") + ".tmp");
+			var outputFile = Path.Combine(generatorOutputDir, Path.GetFileNameWithoutExtension(templatePath) + "_" + Guid.NewGuid().ToString().Replace("-", "") + ".txt");
 			var generatorOutputFile = Path.ChangeExtension(outputFile, ".gen.cs");
 
 			var language = default(string);
