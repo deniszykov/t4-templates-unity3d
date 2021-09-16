@@ -1,3 +1,7 @@
+# 2.1.1
+fixed asset watching trigger error in slash treatment. Now paths are normalized to OS default representation.
+changed default extension for generated files to '.txt'
+
 # 2.1.0
 add 'Preferences' button to all template inspector windows
 add path hint for assemblies in 'T4 Settings' window
