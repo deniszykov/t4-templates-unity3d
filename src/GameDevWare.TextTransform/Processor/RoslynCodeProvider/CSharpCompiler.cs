@@ -125,6 +125,8 @@ namespace Microsoft.CodeDom.Providers.DotNetCompilerPlatform
 			// Get UTF8 output from the compiler
 			allArgsBuilder.Append("/utf8output ");
 
+			allArgsBuilder.Append("-langversion:latest ");
+
 			var coreAssembly = typeof(object).Assembly.Location;
 #if NET45
 			string coreAssemblyFileName = parameters.CoreAssemblyFileName;

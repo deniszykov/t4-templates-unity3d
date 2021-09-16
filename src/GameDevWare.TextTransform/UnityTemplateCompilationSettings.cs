@@ -10,10 +10,11 @@ namespace GameDevWare.TextTransform
 
 		static UnityTemplateCompilationSettings()
 		{
+			var roslynCompilerDirectory = string.Empty;
 			try
 			{
 				var editorDirectory = Path.GetDirectoryName(EditorApplication.applicationPath);
-				var roslynCompilerDirectory = Path.Combine(editorDirectory, @"Data\Tools\Roslyn");
+				roslynCompilerDirectory = Path.Combine(editorDirectory, @"Data\Tools\Roslyn");
 				if (File.Exists(Path.Combine(roslynCompilerDirectory, "csc.exe")))
 				{
 					RoslynCompilerLocation = roslynCompilerDirectory;
@@ -21,7 +22,10 @@ namespace GameDevWare.TextTransform
 			}
 			catch
 			{
-				/* ignore */
+				if (Settings.Current.Verbose)
+				{
+					UnityEngine.Debug.LogWarning($"Failed to locate Roslyn compiler (csc.exe) at expected location '{roslynCompilerDirectory}'.");
+				}
 			}
 		}
 	}
