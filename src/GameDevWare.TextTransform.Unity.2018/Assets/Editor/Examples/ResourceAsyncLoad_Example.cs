@@ -16,13 +16,17 @@ namespace Assets.Editor.GameDevWare.TextTranform.Examples
 	{
 		private ResourceRequest[] loadRequests;
 
+		public TextAsset BillingMode { get; private set; }
+		public Texture2D save_2400px { get; private set; }
 
 		public float Progress { get { return this.loadRequests.Average(r => r.progress); } }
 		public bool IsDone { get { return this.loadRequests.All(r => r.isDone); } }
 
 		public MultipleResourceRequests()
 		{
-			this.loadRequests = new ResourceRequest[0];
+			this.loadRequests = new ResourceRequest[2];
+			this.loadRequests[0] = Resources.LoadAsync("BillingMode.json", typeof(TextAsset));
+			this.loadRequests[1] = Resources.LoadAsync("save-2400px.png", typeof(Texture2D));
 		}
 	}
 }
