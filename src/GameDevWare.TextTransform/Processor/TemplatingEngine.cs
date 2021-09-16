@@ -174,6 +174,9 @@ namespace GameDevWare.TextTransform.Processor
 				CompilerOptions = settings.CompilerOptions,
 				IncludeDebugInformation = settings.Debug,
 				GenerateInMemory = false,
+#if !NET35
+				CoreAssemblyFileName = settings.CoreAssemblyFileName
+#endif
 			};
 
 			foreach (var r in references)
@@ -360,7 +363,11 @@ namespace GameDevWare.TextTransform.Processor
 				settings.Namespace = typeof(TextTransformation).Namespace;
 
 			//resolve the CodeDOM provider
-			if (String.IsNullOrEmpty(settings.Language) || settings.Language == "C#")
+			if (String.IsNullOrEmpty(settings.Language))
+			{
+				settings.Language = "C#/Unity";
+			}
+			else if (settings.Language == "C#")
 			{
 				if (Environment.Version < new Version(4, 0))
 					settings.Language = "C#v3.5";
@@ -373,6 +380,10 @@ namespace GameDevWare.TextTransform.Processor
 				var providerOptions = new Dictionary<string, string>();
 				providerOptions.Add("CompilerVersion", "v3.5");
 				settings.Provider = new CSharpCodeProvider(providerOptions);
+			}
+			else if (settings.Language == "C#/Unity")
+			{
+				settings.Provider = new Microsoft.CodeDom.Providers.DotNetCompilerPlatform.CSharpCodeProvider();
 			}
 			else
 			{
@@ -1179,80 +1190,13 @@ namespace GameDevWare.TextTransform.Processor
 
 		#endregion
 
-		//HACK: Mono as of 2.10.2 doesn't implement GenerateCodeFromMember
-		static readonly bool useMonoHack = Type.GetType("Mono.Runtime") != null;
-
 		/// <summary>
 		///     An implementation of CodeDomProvider.GenerateCodeFromMember that works on Mono.
 		/// </summary>
 		public static void GenerateCodeFromMembers(CodeDomProvider provider, CodeGeneratorOptions options, StringWriter sw, IEnumerable<CodeTypeMember> members)
 		{
-			if (!useMonoHack)
-			{
-				foreach (var member in members)
-					provider.GenerateCodeFromMember(member, sw, options);
-				return;
-			}
-
-			var cgType = typeof(CodeGenerator);
-			var initializeCodeGenerator = GetInitializeCodeGeneratorAction(cgType);
-			var cgFieldGen = cgType.GetMethod("GenerateField", BindingFlags.NonPublic | BindingFlags.Instance);
-			var cgPropGen = cgType.GetMethod("GenerateProperty", BindingFlags.NonPublic | BindingFlags.Instance);
-			var cgMethGen = cgType.GetMethod("GenerateMethod", BindingFlags.NonPublic | BindingFlags.Instance);
-
-#pragma warning disable 0618
-			var generator = (CodeGenerator)provider.CreateGenerator();
-#pragma warning restore 0618
-			var dummy = new CodeTypeDeclaration("Foo");
-
 			foreach (var member in members)
-			{
-				var f = member as CodeMemberField;
-				if (f != null)
-				{
-					initializeCodeGenerator(generator, sw, options);
-					cgFieldGen.Invoke(generator, new object[] { f });
-					continue;
-				}
-				var p = member as CodeMemberProperty;
-				if (p != null)
-				{
-					initializeCodeGenerator(generator, sw, options);
-					cgPropGen.Invoke(generator, new object[] { p, dummy });
-					continue;
-				}
-				var m = member as CodeMemberMethod;
-				if (m != null)
-				{
-					initializeCodeGenerator(generator, sw, options);
-					cgMethGen.Invoke(generator, new object[] { m, dummy });
-					continue;
-				}
-			}
-		}
-
-		static Action<CodeGenerator, StringWriter, CodeGeneratorOptions> GetInitializeCodeGeneratorAction(Type cgType)
-		{
-			var cgInit = cgType.GetMethod("InitOutput", BindingFlags.NonPublic | BindingFlags.Instance);
-			if (cgInit != null)
-			{
-				return new Action<CodeGenerator, StringWriter, CodeGeneratorOptions>((generator, sw, options) => { cgInit.Invoke(generator, new object[] { sw, options }); });
-			}
-
-			var cgOptions = cgType.GetField("options", BindingFlags.NonPublic | BindingFlags.Instance);
-			var cgOutput = cgType.GetField("output", BindingFlags.NonPublic | BindingFlags.Instance);
-
-			if (cgOptions != null && cgOutput != null)
-			{
-				return new Action<CodeGenerator, StringWriter, CodeGeneratorOptions>((generator, sw, options) =>
-				{
-					var output = new IndentedTextWriter(sw);
-					cgOptions.SetValue(generator, options);
-					cgOutput.SetValue(generator, output);
-				});
-			}
-
-			throw new InvalidOperationException("Unable to initialize CodeGenerator.");
+				provider.GenerateCodeFromMember(member, sw, options);
 		}
 
 		public static string GenerateIndentedClassCode(CodeDomProvider provider, params CodeTypeMember[] members)

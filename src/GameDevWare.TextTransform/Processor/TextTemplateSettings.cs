@@ -38,6 +38,7 @@ namespace GameDevWare.TextTransform.Processor
 			this.Assemblies = new HashSet<string>();
 			this.CustomDirectives = new List<CustomDirective>();
 			this.DirectiveProcessors = new Dictionary<string, IDirectiveProcessor>();
+			this.CoreAssemblyFileName = typeof(int).Assembly.Location;
 		}
 
 		public bool HostSpecific { get; set; }
@@ -61,6 +62,7 @@ namespace GameDevWare.TextTransform.Processor
 		public bool RelativeLinePragmas { get; set; }
 		public bool NoLinePragmas { get; set; }
 		public bool InternalVisibility { get; set; }
+		public string CoreAssemblyFileName { get; set; }
 		public Type HostType { get; set; }
 	}
 

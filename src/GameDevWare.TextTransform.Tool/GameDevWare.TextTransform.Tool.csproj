@@ -17,6 +17,7 @@
 		<StartupObject />
 		<AssemblyName>GameDevWare.TextTransform</AssemblyName>
 		<RootNamespace>GameDevWare.TextTransform</RootNamespace>
+		<DefineConstants>$(DefineConstants);TOOL</DefineConstants>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
 		<DefineConstants>$(DefineConstants);NET45</DefineConstants>

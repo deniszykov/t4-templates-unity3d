@@ -93,6 +93,7 @@ namespace GameDevWare.TextTransform
 				}
 			}
 
+			this.ReferencePaths.Add(Path.GetDirectoryName(typeof(int).Assembly.Location));
 			this.ReferencePaths.Add(Path.GetDirectoryName(typeof(UnityTemplateGenerator).Assembly.Location));
 			this.ReferencePaths.Add(Path.GetDirectoryName(typeof(UnityEngine.Debug).Assembly.Location));
 			this.ReferencePaths.Add(Path.GetDirectoryName(typeof(UnityEditor.EditorApplication).Assembly.Location));
