@@ -86,7 +86,7 @@ namespace GameDevWare.TextTransform.Editors
 							}
 
 							inspectorWindow.Repaint();
-							
+
 							// restore original inspector
 							customEditor.SetFieldValue("m_InspectorType", originalInspectorType);
 							return;
@@ -193,6 +193,16 @@ namespace GameDevWare.TextTransform.Editors
 				this.lastAsset = asset;
 			}
 			GUI.enabled = true;
+
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.Space();
+			if (GUILayout.Button("Preferences...", EditorStyles.toolbarButton, GUILayout.Width(120), GUILayout.Height(18)))
+			{
+				var settingsService = typeof(UnityEditor.EditorApplication).Assembly.GetType("UnityEditor.SettingsService", throwOnError: false, ignoreCase: true);
+				settingsService.Invoke("OpenUserPreferences", "Preferences/T4");
+			}
+			EditorGUILayout.EndHorizontal();
+
 			GUILayout.Label(Path.GetFileName(assetPath), EditorStyles.boldLabel);
 			this.templateSettings.OutputType = (int)(TemplateSettings.OutputTypes)EditorGUILayout.EnumPopup("Output Type", (TemplateSettings.OutputTypes)this.templateSettings.OutputType);
 			var codeAsset = !string.IsNullOrEmpty(this.templateSettings.OutputPath) && File.Exists(this.templateSettings.OutputPath) ? AssetDatabase.LoadAssetAtPath(this.templateSettings.OutputPath, typeof(Object)) : null;
