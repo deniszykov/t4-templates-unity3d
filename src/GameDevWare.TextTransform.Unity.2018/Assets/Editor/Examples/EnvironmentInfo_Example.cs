@@ -14,12 +14,14 @@ namespace Assets.Editor.GameDevWare.TextTranform.Examples
 {
 	public static class BuildParameters
 	{
-		public static readonly DateTime Time = new DateTime(636913747167699169, DateTimeKind.Utc);
-		public static readonly string UnityVersion = "5.4.0f3";
+		public static readonly DateTime Time = new DateTime(637673867200022724, DateTimeKind.Utc);
+		public static readonly string UnityVersion = "2018.4.5f1";
 		public static readonly string UnityPlatform = "WindowsEditor";
-		public static readonly string OSVersion = "Microsoft Windows NT 10.0.17134.0";
-		public static readonly string CurrentDirectory = "D:/dev/unity/t4-templates/src/GameDevWare.TextTransform.Unity";
+		public static readonly string OSVersion = "Microsoft Windows NT 10.0.19041.0";
+		public static readonly string CurrentDirectory = "D:/dev/projects/T4Templates/src/GameDevWare.TextTransform.Unity.2018";
 		public static readonly string UserName = "denis";
+		public static readonly string RuntimeVersion = "4.0.30319.42000";
 		public static readonly bool Is64BitProcess = true;
+		public static readonly string EditorApplicationPath = @"D:/apps/2018.4.5f1/Editor/Unity.exe";
 	}
 }

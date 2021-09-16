@@ -19,6 +19,6 @@ UnityTemplateGenerator.RunForTemplate (
 don't forget to set 'hostspecific' to 'true' in ''
 
 
-HostResolvedParameter:  'HOST_RESOLVED_VALUE'
-DeclaredParameter: 'DECLARED_VALUE'
+HostResolvedParameter:  ''
+DeclaredParameter: ''
 */

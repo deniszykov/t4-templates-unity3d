@@ -16,19 +16,13 @@ namespace Assets.Editor.GameDevWare.TextTranform.Examples
 	{
 		private ResourceRequest[] loadRequests;
 
-		public Texture2D _1462438978_2400px { get; private set; }
-		public Texture2D save_2400px { get; private set; }
-		public Texture2D _1462438735_2400px { get; private set; }
 
 		public float Progress { get { return this.loadRequests.Average(r => r.progress); } }
 		public bool IsDone { get { return this.loadRequests.All(r => r.isDone); } }
 
 		public MultipleResourceRequests()
 		{
-			this.loadRequests = new ResourceRequest[3];
-			this.loadRequests[0] = Resources.LoadAsync("1462438978-2400px.png", typeof(Texture2D));
-			this.loadRequests[1] = Resources.LoadAsync("save-2400px.png", typeof(Texture2D));
-			this.loadRequests[2] = Resources.LoadAsync("1462438735-2400px.png", typeof(Texture2D));
+			this.loadRequests = new ResourceRequest[0];
 		}
 	}
 }

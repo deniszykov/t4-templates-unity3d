@@ -1,4 +1,4 @@
-﻿<#@ template debug="false" hostspecific="true" language="C#v3.5" #>
+﻿<#@ template debug="false" hostspecific="true" #>
 <#@ parameter name="DeclaredParameter" type="System.String" #>
 <#@ import namespace="UnityEngine" #>
 <#@ import namespace="UnityEditor" #>
@@ -24,6 +24,6 @@ UnityTemplateGenerator.RunForTemplate (
 don't forget to set 'hostspecific' to 'true' in '<#@ template hostspecific="true" #>'
 
 
-HostResolvedParameter:  '<#= this.Host.ResolveParameterValue("-", "-", "HostResolvedParameter") #>'
-DeclaredParameter: '<#= this.DeclaredParameter #>'
+HostResolvedParameter:  '<#= this.Host.ResolveParameterValue("-", "-", "HostResolvedParameter") ?? string.Empty #>'
+DeclaredParameter: '<#= this.DeclaredParameter ?? string.Empty #>'
 */

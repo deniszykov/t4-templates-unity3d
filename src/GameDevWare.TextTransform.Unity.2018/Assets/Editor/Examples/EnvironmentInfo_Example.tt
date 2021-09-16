@@ -1,4 +1,4 @@
-﻿<#@ template debug="false" hostspecific="true" language="C#v3.5" #>
+﻿<#@ template debug="false" hostspecific="true" #>
 <#@ import namespace="UnityEngine" #>
 <#@ import namespace="UnityEditor" #>
 <#@ output extension=".cs" #>
@@ -22,8 +22,10 @@ namespace Assets.Editor.GameDevWare.TextTranform.Examples
 		public static readonly string UnityVersion = "<#= Application.unityVersion #>";
 		public static readonly string UnityPlatform = "<#= Application.platform.ToString() #>";
 		public static readonly string OSVersion = "<#= Environment.OSVersion.ToString() #>";
-		public static readonly string CurrentDirectory = "<#= Environment.CurrentDirectory.Replace(@"\", @"/") #>";
+		public static readonly string CurrentDirectory = "<#= Environment.CurrentDirectory?.Replace(@"\", @"/") ?? default #>";
 		public static readonly string UserName = "<#= Environment.UserName #>";
+		public static readonly string RuntimeVersion = "<#= Environment.Version #>";
 		public static readonly bool Is64BitProcess = <#= (IntPtr.Size == 8).ToString().ToLower() #>;
+		public static readonly string EditorApplicationPath = @"<#= UnityEditor.EditorApplication.applicationPath #>";
 	}
 }
