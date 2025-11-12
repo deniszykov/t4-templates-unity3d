@@ -1,0 +1,14 @@
+﻿{
+	"name": "gamedevware-text-transform-editor",
+	"rootNamespace": "GameDevWare.TextTransform",
+	"includePlatforms": [
+		"Editor"
+	],
+	"excludePlatforms": [],
+	"allowUnsafeCode": false,
+	"overrideReferences": false,
+	"precompiledReferences": [],
+	"autoReferenced": true,
+	"defineConstraints": [],
+	"noEngineReferences": false
+}

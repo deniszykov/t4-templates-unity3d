@@ -17,17 +17,17 @@ _ReSharper*
 *.exe
 *.dll
 
+.idea
 .vs
 media/
 bin/
 obj/
-packages/
 deploy/
 Assembly-CSharp*
 Library/
 Temp/
 UserSettings/
 ProjectSettings/
-src/GameDevWare.TextTransform.Unity.*/Assets/StreamingAssets
-src/GameDevWare.TextTransform.Unity.*/Assets/Bundles/
-src/GameDevWare.TextTransform.Unity.*/Assets/AssetStoreTools/
+src/GameDevWare.TextTransform.Unity*/Assets/StreamingAssets
+src/GameDevWare.TextTransform.Unity*/Assets/Bundles/
+com.unity.asset-store-tools

@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.26228.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameDevWare.TextTransform", "GameDevWare.TextTransform\GameDevWare.TextTransform.csproj", "{485C9711-2A63-6FB5-985B-2615CE239055}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameDevWare.TextTransform.Tool", "GameDevWare.TextTransform.Tool\GameDevWare.TextTransform.Tool.csproj", "{6AAA9C59-E0C8-42D9-8690-3B8A3B8B3C3D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{485C9711-2A63-6FB5-985B-2615CE239055}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{485C9711-2A63-6FB5-985B-2615CE239055}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{485C9711-2A63-6FB5-985B-2615CE239055}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6AAA9C59-E0C8-42D9-8690-3B8A3B8B3C3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6AAA9C59-E0C8-42D9-8690-3B8A3B8B3C3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6AAA9C59-E0C8-42D9-8690-3B8A3B8B3C3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6AAA9C59-E0C8-42D9-8690-3B8A3B8B3C3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

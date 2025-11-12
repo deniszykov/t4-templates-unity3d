@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gamedevware-text-transform-editor", "gamedevware-text-transform-editor.csproj", "{5ae46dc9-6e9b-fa50-be8c-40b8753587c7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "asset-store-tools-editor", "asset-store-tools-editor.csproj", "{c064e420-164f-f658-5ac7-96a7b5cb1bd9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{d6672bc9-50b9-90da-8d59-4932712eb6e7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.Player.csproj", "{57e041c9-eb5d-300b-559c-1a7b88eca491}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{210d5ca3-4e4b-3d5f-6d45-9ff90f96260d}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5ae46dc9-6e9b-fa50-be8c-40b8753587c7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ae46dc9-6e9b-fa50-be8c-40b8753587c7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{c064e420-164f-f658-5ac7-96a7b5cb1bd9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{c064e420-164f-f658-5ac7-96a7b5cb1bd9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{d6672bc9-50b9-90da-8d59-4932712eb6e7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{d6672bc9-50b9-90da-8d59-4932712eb6e7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57e041c9-eb5d-300b-559c-1a7b88eca491}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57e041c9-eb5d-300b-559c-1a7b88eca491}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{210d5ca3-4e4b-3d5f-6d45-9ff90f96260d}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{210d5ca3-4e4b-3d5f-6d45-9ff90f96260d}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

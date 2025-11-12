@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 336d5260480a48e489da533a8fe8b827
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 9a6991b5a4ab4c7eb2ff7df2c8c47a7d, type: 3}
+  generationTriggers: 0
+  triggerDelay: 504
+  generationOutput: 0
+  outputPath: 
+  watchedAssets:
+  - Assets/Examples/FileList_Example1.json
