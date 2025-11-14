@@ -12,5 +12,5 @@
 	},
 	"documentationUrl": "https://github.com/deniszykov/t4-templates-unity3d",
 	"keywords": ["t4", "Code Generation", "Tool", "Editor", "Scripting", "Templates", "Text Templating"],
-	"license": "Unity"
+	"license": "MIT"
 }
