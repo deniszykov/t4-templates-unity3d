@@ -47,21 +47,12 @@ The template always uses the current runtime and core libraries of Unity Editor.
 You could specify C# language version with `language=` directive.
 List of available language versions:
 * language="C#v3.5" - C# version 3.5.
-* language="C#" - C# up to version 6, depending on Unity Editor's version.
-* language="C#/Unity" - C# version based on Roslyn shipped with Unity Editor.
-* unspecified - It is currently the equivalent of "C#/Unity".
-
+* language="C#" - C# up to version 7, depending on Unity Editor's version.
+* unspecified - It is currently the equivalent of "C#".
 
 [MSBuild Macros](https://msdn.microsoft.com/en-US/library/c02as0cs.aspx) are not available.
 
 You can run template generation from your code with **UnityTemplateGenerator.RunForTemplate(templatePath)** call.
-
-## Version 2.0.0
-there is some breaking changes due renaming in this version
-
-## Version 1.0.7
-fixed missing 's' in project name 'TextTran_S_form', files, namespaces, folders has been renamed.
-executable name of tools has been changed to 'GameDevWare.TextTransform.exe' new NuGet package will be published
 
 ## Contacts
 Please send any questions at support@gamedevware.com
