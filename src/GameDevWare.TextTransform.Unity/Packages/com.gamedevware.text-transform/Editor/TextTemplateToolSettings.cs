@@ -70,7 +70,7 @@ namespace GameDevWare.TextTransform.Editor
 		{
 			var basePath = Path.GetDirectoryName(typeof(TextTemplateToolSettings).Assembly.Location);
 			if (basePath == null || typeof(TextTemplateToolSettings).Assembly.GetName().Name != "GameDevWare.TextTransform")
-				basePath = Path.GetFullPath("Assets/Editor/GameDevWare.TextTransform");
+				basePath = Path.GetFullPath("Assets/Editor/GameDevWare.TextTransform", PathUtils.ProjectPath);
 
 			SettingsPath = Path.Combine(basePath, "GameDevWare.TextTransform.Settings.json");
 

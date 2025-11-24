@@ -44,7 +44,7 @@ namespace GameDevWare.TextTransform.Editor
 					continue;
 				}
 
-				if ((textTemplateImporter.generationTriggers & TextTemplateImporter.GenerationTriggers.CodeCompilation) == 0)
+				if ((textTemplateImporter.generationTriggers & GenerationTriggers.CodeCompilation) == 0)
 				{
 					continue;
 				}

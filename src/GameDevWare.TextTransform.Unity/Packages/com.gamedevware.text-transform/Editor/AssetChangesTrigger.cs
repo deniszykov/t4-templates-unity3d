@@ -87,16 +87,22 @@ namespace GameDevWare.TextTransform.Editor
 			var triggeredTemplatePaths = new HashSet<string>();
 			foreach (var changedAsset in changedAssetsCopy)
 			{
-				if (!File.Exists(changedAsset))
+				var changedAssetFullPath = Path.GetFullPath(changedAsset, PathUtils.ProjectPath);
+				if (!File.Exists(changedAssetFullPath))
 					continue;
 
 				//if (Settings.Current.Verbose)
-				//	Debug.Log("Changed Asset: " + changedAsset);
+				//	Debug.Log("Changed Asset: " + changedAssetFullPath);
 
 				foreach (var watchedPath in TemplatePathByWatchedPaths.Keys)
-					if (changedAsset.StartsWith(watchedPath, StringComparison.Ordinal))
-						foreach (var templatePath in TemplatePathByWatchedPaths[watchedPath])
-							triggeredTemplatePaths.Add(templatePath);
+				{
+					if (!changedAsset.StartsWith(watchedPath, StringComparison.Ordinal)) continue;
+
+					foreach (var templatePath in TemplatePathByWatchedPaths[watchedPath])
+					{
+						triggeredTemplatePaths.Add(templatePath);
+					}
+				}
 			}
 
 			foreach (var templatePath in triggeredTemplatePaths)
@@ -122,12 +128,14 @@ namespace GameDevWare.TextTransform.Editor
 				{
 					continue;
 				}
-				if ((textTemplateImporter.generationTriggers & TextTemplateImporter.GenerationTriggers.AssetChanges) == 0 || textTemplateImporter.watchedAssets == null)
+
+				if ((textTemplateImporter.generationTriggers & GenerationTriggers.AssetChanges) == 0)
+				{
 					continue;
 
-				foreach (var watchedAssetPath in textTemplateImporter.watchedAssets)
+				foreach (var watchedAssetPath in watchedAssets.Select(PathUtils.Normalize))
 				{
-					var watchedDirectory = Path.GetDirectoryName(Path.GetFullPath(watchedAssetPath));
+					var watchedDirectory = Path.GetDirectoryName(Path.GetFullPath(watchedAssetPath, PathUtils.ProjectPath));
 					if (watchedDirectory == null)
 						continue;
 

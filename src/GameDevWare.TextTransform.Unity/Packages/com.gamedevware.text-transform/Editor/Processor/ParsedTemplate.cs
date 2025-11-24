@@ -28,6 +28,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using GameDevWare.TextTransform.Editor.Utils;
 
 namespace GameDevWare.TextTransform.Editor.Processor
 {
@@ -213,7 +214,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			{
 				var possible = Path.Combine(relativeToDirectory, fileName);
 				if (File.Exists(possible))
-					fileName = Path.GetFullPath(possible);
+					fileName = Path.GetFullPath(possible, PathUtils.ProjectPath);
 			}
 
 			string content, resolvedName;

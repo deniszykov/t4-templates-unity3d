@@ -26,6 +26,7 @@
 
 using System;
 using System.IO;
+using GameDevWare.TextTransform.Editor.Utils;
 
 namespace GameDevWare.TextTransform.Editor.Processor
 {
@@ -51,14 +52,14 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		static string GetFullPath(string path)
 		{
 			if (path == null)
-				throw new ArgumentNullException("path");
+				throw new ArgumentNullException(nameof(path));
 			if (!isWindows || path.IndexOf('*') == -1)
-				return Path.GetFullPath(path);
+				return Path.GetFullPath(path, PathUtils.ProjectPath);
 			else
 			{
 				// On Windows, GetFullPath doesn't work if the path contains wildcards.
 				path = path.Replace("*", wildcardMarker);
-				path = Path.GetFullPath(path);
+				path = Path.GetFullPath(path, PathUtils.ProjectPath);
 				return path.Replace(wildcardMarker, "*");
 			}
 		}

@@ -2,15 +2,15 @@
 	Copyright (c) 2016 Denis Zykov, GameDevWare.com
 
 	This a part of "T4 Templates" Unity Asset - https://www.assetstore.unity3d.com/#!/content/63294
-	
-	THIS SOFTWARE IS DISTRIBUTED "AS-IS" WITHOUT ANY WARRANTIES, CONDITIONS AND 
-	REPRESENTATIONS WHETHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE 
-	IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY, MERCHANTABLE QUALITY, 
-	FITNESS FOR A PARTICULAR PURPOSE, DURABILITY, NON-INFRINGEMENT, PERFORMANCE 
+
+	THIS SOFTWARE IS DISTRIBUTED "AS-IS" WITHOUT ANY WARRANTIES, CONDITIONS AND
+	REPRESENTATIONS WHETHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION THE
+	IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY, MERCHANTABLE QUALITY,
+	FITNESS FOR A PARTICULAR PURPOSE, DURABILITY, NON-INFRINGEMENT, PERFORMANCE
 	AND THOSE ARISING BY STATUTE OR FROM CUSTOM OR USAGE OF TRADE OR COURSE OF DEALING.
-	
-	This source code is distributed via Unity Asset Store, 
-	to use it in your project you should accept Terms of Service and EULA 
+
+	This source code is distributed via Unity Asset Store,
+	to use it in your project you should accept Terms of Service and EULA
 	https://unity3d.com/ru/legal/as_terms
 */
 
@@ -28,12 +28,14 @@ namespace GameDevWare.TextTransform.Editor.Utils
 	{
 		private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
 		private static readonly string DirectorySeparator= Path.DirectorySeparatorChar.ToString();
+		public static readonly string ProjectPath = Path.GetFullPath(Path.GetDirectoryName(Application.dataPath) ?? Environment.CurrentDirectory);
 
 		public static string MakeProjectRelative(string path)
 		{
 			if (string.IsNullOrEmpty(path)) return null;
-			var fullPath = Path.GetFullPath(Environment.CurrentDirectory).Replace("\\", "/");
-			path = Path.GetFullPath(path).Replace("\\", "/");
+
+			var fullPath = ProjectPath.Replace("\\", "/");
+			path = Path.GetFullPath(path, ProjectPath).Replace("\\", "/");
 
 			if (path[path.Length - 1] == Path.DirectorySeparatorChar || path[path.Length - 1] == Path.DirectorySeparatorChar)
 				path = path.Substring(0, path.Length - 1);
@@ -53,14 +55,14 @@ namespace GameDevWare.TextTransform.Editor.Utils
 		{
 			if (path == null) throw new ArgumentNullException(nameof(path));
 
-			return Normalize(Path.GetFullPath(path));
+			return Normalize(Path.GetFullPath(path, ProjectPath));
 		}
 
 
 		public static string ComputeMd5Hash(string path, int tries = 5)
 		{
-			if (path == null) throw new ArgumentNullException("path");
-			if (tries <= 0) throw new ArgumentOutOfRangeException("tries");
+			if (path == null) throw new ArgumentNullException(nameof(path));
+			if (tries <= 0) throw new ArgumentOutOfRangeException(nameof(tries));
 
 			foreach (var attempt in Enumerable.Range(1, tries))
 			{

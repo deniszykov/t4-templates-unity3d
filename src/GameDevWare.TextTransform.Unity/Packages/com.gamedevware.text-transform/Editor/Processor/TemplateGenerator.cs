@@ -93,7 +93,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		public CompiledTemplate CompileTemplate(string content)
 		{
 			if (String.IsNullOrEmpty(content))
-				throw new ArgumentNullException("content");
+				throw new ArgumentNullException(nameof(content));
 
 			this.errors.Clear();
 			this.encoding = Encoding.UTF8;
@@ -114,9 +114,9 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		public bool ProcessTemplate(string inputFile, ref string outputFile)
 		{
 			if (String.IsNullOrEmpty(inputFile))
-				throw new ArgumentNullException("inputFile");
+				throw new ArgumentNullException(nameof(inputFile));
 			if (String.IsNullOrEmpty(outputFile))
-				throw new ArgumentNullException("outputFile");
+				throw new ArgumentNullException(nameof(outputFile));
 
 			string content;
 			try
@@ -166,9 +166,9 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			references = null;
 
 			if (string.IsNullOrEmpty(inputFile))
-				throw new ArgumentNullException("inputFile");
+				throw new ArgumentNullException(nameof(inputFile));
 			if (string.IsNullOrEmpty(outputFile))
-				throw new ArgumentNullException("outputFile");
+				throw new ArgumentNullException(nameof(outputFile));
 
 			string content;
 			try

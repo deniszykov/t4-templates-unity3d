@@ -31,37 +31,6 @@ namespace GameDevWare.TextTransform.Editor
 	public abstract class TextTemplateImporter : ScriptedImporter
 	{
 		/// <summary>
-		/// Run mode. Determine result of transformation.
-		/// </summary>
-		public enum GenerationOutput
-		{
-			/// <summary>
-			/// Result is generated code/markup.
-			/// </summary>
-			Text,
-			/// <summary>
-			/// Result is C# code of template which could output <see cref="Text"/> if ran.
-			/// </summary>
-			TextGenerator,
-		}
-
-		/// <summary>
-		/// Transformation triggers.
-		/// </summary>
-		[Flags]
-		public enum GenerationTriggers
-		{
-			/// <summary>
-			/// Each Unity's editor code compilation will trigger transformation.
-			/// </summary>
-			CodeCompilation = 0x1 << 0,
-			/// <summary>
-			/// Each change in watched assets will trigger transformation.
-			/// </summary>
-			AssetChanges = 0x2 << 0,
-		}
-
-		/// <summary>
 		/// Auto-transformation triggers.
 		/// </summary>
 		public GenerationTriggers generationTriggers;

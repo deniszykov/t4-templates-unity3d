@@ -249,10 +249,10 @@ namespace GameDevWare.TextTransform.Editor
 			var sourceFile = default(string);
 			switch (importer.generationOutput)
 			{
-				case TextTemplateImporter.GenerationOutput.Text:
+				case GenerationOutput.Text:
 					sourceFile = outputFile;
 					break;
-				case TextTemplateImporter.GenerationOutput.TextGenerator:
+				case GenerationOutput.TextGenerator:
 					sourceFile = generatorOutputFile;
 					break;
 				default:
@@ -261,9 +261,9 @@ namespace GameDevWare.TextTransform.Editor
 			}
 			var targetFile = outputPath ?? importer.outputPath;
 			if (string.IsNullOrEmpty(targetFile))
-				targetFile = Path.GetFullPath(Path.ChangeExtension(templatePath, Path.GetExtension(sourceFile)));
+				targetFile = Path.GetFullPath(Path.ChangeExtension(templatePath, Path.GetExtension(sourceFile)), PathUtils.ProjectPath);
 			else
-				targetFile = Path.GetFullPath(targetFile);
+				targetFile = Path.GetFullPath(targetFile, PathUtils.ProjectPath);
 
 			if (File.Exists(targetFile) && PathUtils.ComputeMd5Hash(targetFile) == PathUtils.ComputeMd5Hash(sourceFile))
 			{

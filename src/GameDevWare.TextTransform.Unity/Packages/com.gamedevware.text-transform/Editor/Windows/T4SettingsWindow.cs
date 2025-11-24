@@ -317,7 +317,7 @@ namespace GameDevWare.TextTransform.Editor.Windows
 		{
 			await Task.Yield();
 
-			var tempFiles = new TempFileCollection(Path.GetFullPath("Temp"));
+			var tempFiles = new TempFileCollection(Path.GetFullPath("Temp", PathUtils.ProjectPath));
 			var outputName = tempFiles.AddExtension("out");
 			var errorName = tempFiles.AddExtension("error");
 			try

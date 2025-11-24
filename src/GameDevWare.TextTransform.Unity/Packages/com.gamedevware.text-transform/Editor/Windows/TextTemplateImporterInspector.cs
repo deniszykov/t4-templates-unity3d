@@ -39,15 +39,19 @@ namespace GameDevWare.TextTransform.Editor.Windows
 			this.ApplyRevertGUI();
 		}
 
+		// ReSharper disable once FunctionComplexityOverflow
 		private void InspectorGUI(ScriptedImporterEditor editor, UnityObject assetTarget)
 		{
 			editor.serializedObject.Update();
-			var textTemplateImporter = (TextTemplateImporter)editor.target;
+			var generationOutputProperty = editor.serializedObject.FindProperty(nameof(T4TemplateImporter.generationOutput));
+			var outputPathProperty = editor.serializedObject.FindProperty(nameof(T4TemplateImporter.outputPath));
+			var generationTriggersProperty = editor.serializedObject.FindProperty(nameof(T4TemplateImporter.generationTriggers));
+			var triggerDelayProperty = editor.serializedObject.FindProperty(nameof(T4TemplateImporter.triggerDelay));
+			var watchedAssetsProperty = editor.serializedObject.FindProperty(nameof(T4TemplateImporter.watchedAssets));
+
 			var assetPath = AssetDatabase.GetAssetPath(assetTarget);
-			if (!textTemplateImporter)
-			{
-				return;
-			}
+
+			this.serializedObject.Update();
 
 			GUI.enabled = true;
 
@@ -82,39 +86,62 @@ namespace GameDevWare.TextTransform.Editor.Windows
 			EditorGUILayout.EndHorizontal();
 
 			GUILayout.Label(Path.GetFileName(assetPath), EditorStyles.boldLabel);
-			textTemplateImporter.generationOutput = (TextTemplateImporter.GenerationOutput)EditorGUILayout.EnumPopup("Output Type", textTemplateImporter.generationOutput);
-			var codeAsset = !string.IsNullOrEmpty(textTemplateImporter.outputPath) && File.Exists(textTemplateImporter.outputPath) ? AssetDatabase.LoadAssetAtPath(textTemplateImporter.outputPath, typeof(UnityObject)) : null;
-			if (codeAsset != null)
-				textTemplateImporter.outputPath = AssetDatabase.GetAssetPath(EditorGUILayout.ObjectField("Output Path", codeAsset, typeof(UnityObject), false));
-			else
-				textTemplateImporter.outputPath = EditorGUILayout.TextField("Output Path", textTemplateImporter.outputPath);
-			textTemplateImporter.generationTriggers = (TextTemplateImporter.GenerationTriggers)EditorGUILayout.EnumFlagsField("Auto-Gen Triggers", textTemplateImporter.generationTriggers);
-			textTemplateImporter.triggerDelay = EditorGUILayout.IntField("Auto-Gen Delay (Ms)", textTemplateImporter.triggerDelay);
 
-			if ((textTemplateImporter.generationTriggers & TextTemplateImporter.GenerationTriggers.AssetChanges) != 0)
+			EditorGUILayout.PropertyField(generationOutputProperty, new GUIContent("Output Type"));
+
+			var outputPath = outputPathProperty.stringValue;
+			var codeAsset = !string.IsNullOrEmpty(outputPath) && File.Exists(outputPath) ? AssetDatabase.LoadAssetAtPath(outputPath, typeof(UnityObject)) : null;
+			if (codeAsset != null)
+			{
+				outputPathProperty.stringValue = AssetDatabase.GetAssetPath(EditorGUILayout.ObjectField("Output Path", codeAsset, typeof(UnityObject), false));
+			}
+			else
+			{
+				EditorGUILayout.PropertyField(outputPathProperty, new GUIContent("Output Path"));
+			}
+			EditorGUILayout.Space();
+			EditorGUILayout.PropertyField(triggerDelayProperty, new GUIContent("Auto-Gen Delay (Ms)"));
+
+			var generationTrigger = (GenerationTriggers) generationTriggersProperty.enumValueFlag;
+			generationTriggersProperty.intValue = (int)(GenerationTriggers)EditorGUILayout.EnumFlagsField("Auto-Gen Triggers", generationTrigger);
+
+			if ((generationTrigger & GenerationTriggers.AssetChanges) != 0)
 			{
 				EditorGUILayout.Space();
 				GUILayout.Label("Assets to Watch", EditorStyles.boldLabel);
-				for (var i = 0; i < textTemplateImporter.watchedAssets.Length; i++)
+				for (var i = 0; i < watchedAssetsProperty.arraySize; i++)
 				{
-					var watchedAssetPath = textTemplateImporter.watchedAssets[i];
+					var watchedAssetProperty = watchedAssetsProperty.GetArrayElementAtIndex(i);
+					var watchedAssetPath = watchedAssetProperty.stringValue;
 					var assetExists = !string.IsNullOrEmpty(watchedAssetPath) && (File.Exists(watchedAssetPath) || Directory.Exists(watchedAssetPath));
 					var watchedAsset = assetExists ? AssetDatabase.LoadMainAssetAtPath(watchedAssetPath) : null;
 					if (watchedAsset != null)
-						textTemplateImporter.watchedAssets[i] = AssetDatabase.GetAssetPath(EditorGUILayout.ObjectField(watchedAsset.GetType().Name, watchedAsset, typeof(UnityObject), false));
+						watchedAssetProperty.stringValue = AssetDatabase.GetAssetPath(EditorGUILayout.ObjectField(watchedAsset.GetType().Name, watchedAsset, typeof(UnityObject), false));
 					else
-						textTemplateImporter.watchedAssets[i] = EditorGUILayout.TextField("Path", watchedAssetPath);
+						watchedAssetProperty.stringValue = EditorGUILayout.TextField("Path", watchedAssetPath);
 				}
 				EditorGUILayout.Space();
+
 				this.newAssetToWatch = EditorGUILayout.ObjectField("<New>", this.newAssetToWatch, typeof(UnityObject), false);
-				if (Event.current.type == (EventType)7 && this.newAssetToWatch != null)
+				if (Event.current.type == (EventType)7 /*repaint*/)
 				{
-					var watchedAssets = new HashSet<string>(textTemplateImporter.watchedAssets);
-					watchedAssets.Remove("");
-					watchedAssets.Add(AssetDatabase.GetAssetPath(this.newAssetToWatch));
-					textTemplateImporter.watchedAssets = watchedAssets.ToArray();
-					this.newAssetToWatch = null;
-					GUI.changed = true;
+					if (this.newAssetToWatch != null)
+					{
+						watchedAssetsProperty.InsertArrayElementAtIndex(watchedAssetsProperty.arraySize);
+						var newWatchedAssetProperty = watchedAssetsProperty.GetArrayElementAtIndex(watchedAssetsProperty.arraySize - 1);
+						newWatchedAssetProperty.stringValue = AssetDatabase.GetAssetPath(this.newAssetToWatch);
+
+						this.newAssetToWatch = null;
+						GUI.changed = true;
+					}
+
+					for (var i = 0; i < watchedAssetsProperty.arraySize; i++)
+					{
+						var watchedAssetProperty = watchedAssetsProperty.GetArrayElementAtIndex(i);
+						if (!string.IsNullOrEmpty(watchedAssetProperty.stringValue)) continue;
+
+						watchedAssetsProperty.DeleteArrayElementAtIndex(i);
+					}
 				}
 			}
 
@@ -160,12 +187,8 @@ namespace GameDevWare.TextTransform.Editor.Windows
 			EditorGUILayout.EndHorizontal();
 			GUI.enabled = true;
 
-			if (GUI.changed)
-			{
-				if ((textTemplateImporter.generationTriggers & TextTemplateImporter.GenerationTriggers.AssetChanges) != 0)
-					AssetChangesTrigger.ReloadWatchList();
-				EditorUtility.SetDirty(textTemplateImporter);
-			}
+			// Apply the changes to the serialized object
+			this.serializedObject.ApplyModifiedProperties();
 		}
 	}
 }

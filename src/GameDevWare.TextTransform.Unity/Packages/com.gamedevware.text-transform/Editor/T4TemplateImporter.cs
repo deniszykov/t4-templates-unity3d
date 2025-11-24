@@ -1,4 +1,5 @@
 using System.IO;
+using GameDevWare.TextTransform.Editor.Utils;
 using UnityEditor.AssetImporters;
 using UnityEngine;
 
@@ -17,18 +18,20 @@ namespace GameDevWare.TextTransform.Editor
 				return;
 			}
 
-			var gameDataPath = ctx.assetPath ?? "";
-			if (string.IsNullOrEmpty(gameDataPath) || !File.Exists(gameDataPath))
+			var textTemplatePath = Path.GetFullPath(ctx.assetPath ?? "", PathUtils.ProjectPath);
+			if (string.IsNullOrEmpty(textTemplatePath) || !File.Exists(textTemplatePath))
 			{
 				return;
 			}
 
-			var text = File.ReadAllText(gameDataPath);
+			var text = File.ReadAllText(textTemplatePath);
 			var textAsset = new TextAsset(text);
 
 			// Add the TextAsset to the import context
 			ctx.AddObjectToAsset("main", textAsset);
 			ctx.SetMainObject(textAsset);
+
+			AssetChangesTrigger.ReloadWatchList();
 		}
 	}
 }
