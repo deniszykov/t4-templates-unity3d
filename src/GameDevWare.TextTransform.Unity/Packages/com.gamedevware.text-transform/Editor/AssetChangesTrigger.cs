@@ -132,6 +132,12 @@ namespace GameDevWare.TextTransform.Editor
 				if ((textTemplateImporter.generationTriggers & GenerationTriggers.AssetChanges) == 0)
 				{
 					continue;
+				}
+
+				var watchedAssets = new HashSet<string>(textTemplateImporter.watchedAssets ?? Array.Empty<string>())
+				{
+					templatePath
+				};
 
 				foreach (var watchedAssetPath in watchedAssets.Select(PathUtils.Normalize))
 				{
