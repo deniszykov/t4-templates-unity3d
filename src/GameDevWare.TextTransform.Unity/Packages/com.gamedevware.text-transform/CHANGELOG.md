@@ -1,6 +1,11 @@
 # Release Notes
 
-## [2.1.2] - Current
+## [2.1.3]
+
+- The `Asset Changed` generation trigger now always includes the template `.tt` file to track as an asset.
+- Fixed a bug where generation triggers would not work due to incorrect file path comparisons.
+
+## [2.1.2]
 ### Major Changes
 - **Refactored** to use `ScriptImporter` and modern Unity API
 - **Packaging**: Created Unity package format instead of DLL and published to OpenUPM
