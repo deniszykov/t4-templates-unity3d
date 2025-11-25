@@ -22,37 +22,36 @@ using UnityEditor;
 using UnityEditor.AssetImporters;
 using Object = UnityEngine.Object;
 
-
 namespace GameDevWare.TextTransform.Editor
 {
 	/// <summary>
-	/// T4 Template importer with it's settings.
+	///     T4 Template importer with it's settings.
 	/// </summary>
 	public abstract class TextTemplateImporter : ScriptedImporter
 	{
 		/// <summary>
-		/// Auto-transformation triggers.
+		///     Auto-transformation triggers.
 		/// </summary>
 		public GenerationTriggers generationTriggers;
 		/// <summary>
-		/// Delay to auto-transformation run after trigger event occurs.
+		///     Delay to auto-transformation run after trigger event occurs.
 		/// </summary>
 		public int triggerDelay;
 		/// <summary>
-		/// Transformation result type. Generator or code/markup.
+		///     Transformation result type. Generator or code/markup.
 		/// </summary>
 		public GenerationOutput generationOutput;
 		/// <summary>
-		/// Path to place transformation result.
+		///     Path to place transformation result.
 		/// </summary>
 		public string outputPath;
 		/// <summary>
-		/// Project relative paths to watched assets.
+		///     Project relative paths to watched assets.
 		/// </summary>
 		public string[] watchedAssets;
 
 		/// <summary>
-		/// List all T4 templates in current project.
+		///     List all T4 templates in current project.
 		/// </summary>
 		/// <returns></returns>
 		public static List<string> ListTemplatesInProject()
@@ -67,24 +66,18 @@ namespace GameDevWare.TextTransform.Editor
 		public static bool TryLoad(string templatePath, out TextTemplateImporter textTemplateImporter)
 		{
 			textTemplateImporter = GetAtPath(templatePath) as TextTemplateImporter;
-			if (textTemplateImporter != null)
-			{
-				textTemplateImporter.Validate();
-			}
+			if (textTemplateImporter != null) textTemplateImporter.Validate();
 			return textTemplateImporter != null;
 		}
 
 		public void Validate()
 		{
-			if (this.triggerDelay < 500)
-			{
-				this.triggerDelay = (int)500;
-			}
+			if (this.triggerDelay < 500) this.triggerDelay = 500;
 			this.watchedAssets ??= new string[0];
 		}
 
 		/// <summary>
-		/// Determines if asset is T4 template.
+		///     Determines if asset is T4 template.
 		/// </summary>
 		public static bool IsTemplateAsset(Object asset)
 		{
@@ -93,13 +86,14 @@ namespace GameDevWare.TextTransform.Editor
 			return IsTemplateAsset(AssetDatabase.GetAssetPath(asset));
 		}
 		/// <summary>
-		/// Determines if asset is T4 template.
+		///     Determines if asset is T4 template.
 		/// </summary>
 		public static bool IsTemplateAsset(string path)
 		{
 			if (path == null) throw new ArgumentNullException(nameof(path));
 
-			return AssetImporter.GetAtPath(path) != null && path.EndsWith(".tt", StringComparison.OrdinalIgnoreCase);
+			return (path.EndsWith(".tt", StringComparison.OrdinalIgnoreCase) || path.EndsWith(".t4", StringComparison.OrdinalIgnoreCase)) &&
+				GetAtPath(path) != null;
 		}
 	}
 }
