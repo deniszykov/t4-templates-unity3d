@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Reflection;
 
 namespace GameDevWare.TextTransform.Editor.Processor
 {
@@ -34,13 +35,14 @@ namespace GameDevWare.TextTransform.Editor.Processor
 	[Serializable]
 	public class CrossAppDomainAssemblyResolver
 	{
-		private readonly ParentDomainLookup parent = new ParentDomainLookup();
+		private readonly ParentDomainLookup parent = new();
 
-		public System.Reflection.Assembly Resolve(object sender, ResolveEventArgs args)
+		public Assembly Resolve(object sender, ResolveEventArgs args)
 		{
 			var location = this.parent.GetAssemblyPath(args.Name);
 			if (location != null)
-				return System.Reflection.Assembly.LoadFrom(location);
+				return Assembly.LoadFrom(location);
+
 			return null;
 		}
 
@@ -48,9 +50,10 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		{
 			public string GetAssemblyPath(string name)
 			{
-				var assem = System.Reflection.Assembly.Load(name);
+				var assem = Assembly.Load(name);
 				if (assem != null)
 					return assem.Location;
+
 				return null;
 			}
 		}

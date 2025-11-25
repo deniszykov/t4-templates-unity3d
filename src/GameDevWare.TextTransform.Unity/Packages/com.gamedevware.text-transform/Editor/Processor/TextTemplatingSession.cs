@@ -31,13 +31,13 @@ using System.Runtime.Serialization;
 namespace GameDevWare.TextTransform.Editor.Processor
 {
 	[Serializable]
-	public sealed class TextTemplatingSession : Dictionary<string, Object>, ITextTemplatingSession, ISerializable
+	public sealed class TextTemplatingSession : Dictionary<string, object>, ITextTemplatingSession, ISerializable
 	{
 		public TextTemplatingSession() : this(Guid.NewGuid())
 		{
 		}
 
-		TextTemplatingSession(SerializationInfo info, StreamingContext context)
+		private TextTemplatingSession(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 			this.Id = (Guid)info.GetValue("Id", typeof(Guid));
@@ -49,17 +49,6 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		}
 
 		public Guid Id { get; private set; }
-
-		public override int GetHashCode()
-		{
-			return this.Id.GetHashCode();
-		}
-
-		public override bool Equals(object obj)
-		{
-			var o = obj as TextTemplatingSession;
-			return o != null && o.Equals(this);
-		}
 
 		public bool Equals(Guid other)
 		{
@@ -75,6 +64,17 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		{
 			base.GetObjectData(info, context);
 			info.AddValue("Id", this.Id);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.Id.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			var o = obj as TextTemplatingSession;
+			return o != null && o.Equals(this);
 		}
 	}
 }

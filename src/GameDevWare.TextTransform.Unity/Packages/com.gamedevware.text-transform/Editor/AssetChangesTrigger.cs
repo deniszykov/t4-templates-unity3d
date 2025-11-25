@@ -27,9 +27,9 @@ namespace GameDevWare.TextTransform.Editor
 	[InitializeOnLoad, Serializable]
 	internal class AssetChangesTrigger : AssetPostprocessor
 	{
-		private static readonly Dictionary<string, FileSystemWatcher> Watchers = new Dictionary<string, FileSystemWatcher>(StringComparer.Ordinal);
-		private static readonly Dictionary<string, List<string>> TemplatePathByWatchedPaths = new Dictionary<string, List<string>>();
-		private static readonly HashSet<string> ChangedAssets = new HashSet<string>(StringComparer.Ordinal);
+		private static readonly Dictionary<string, FileSystemWatcher> Watchers = new(StringComparer.Ordinal);
+		private static readonly Dictionary<string, List<string>> TemplatePathByWatchedPaths = new(StringComparer.Ordinal);
+		private static readonly HashSet<string> ChangedAssets = new(StringComparer.Ordinal);
 		private static bool reloadWatchList = true;
 		private static int doDelayedAssetRefresh = -1;
 
@@ -38,11 +38,53 @@ namespace GameDevWare.TextTransform.Editor
 			EditorApplication.update += Update;
 		}
 
+		// ReSharper disable once UnusedMember.Local
+		private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
+		{
+			lock (ChangedAssets)
+			{
+				if (importedAssets != null)
+				{
+					foreach (var asset in importedAssets)
+					{
+						ChangedAssets.Add(PathUtils.MakeProjectRelative(asset));
+					}
+				}
+
+				if (deletedAssets != null)
+				{
+					foreach (var asset in deletedAssets)
+					{
+						ChangedAssets.Add(PathUtils.MakeProjectRelative(asset));
+					}
+				}
+
+				if (movedAssets != null)
+				{
+					foreach (var asset in movedAssets)
+					{
+						ChangedAssets.Add(PathUtils.MakeProjectRelative(asset));
+					}
+				}
+
+				if (movedFromAssetPaths != null)
+				{
+					foreach (var asset in movedFromAssetPaths)
+					{
+						ChangedAssets.Add(PathUtils.MakeProjectRelative(asset));
+					}
+				}
+			}
+		}
+
 		public static void ReloadWatchList()
 		{
 			reloadWatchList = true;
 			foreach (var watcher in Watchers.Values)
+			{
 				watcher.Dispose();
+			}
+
 			TemplatePathByWatchedPaths.Clear();
 			Watchers.Clear();
 		}
@@ -80,19 +122,10 @@ namespace GameDevWare.TextTransform.Editor
 
 			if (changedAssetsCopy == null) return;
 
-
-			//if (Settings.Current.Verbose)
-			//	Debug.Log("Watched paths: " + string.Join(", ", templatePathByWatchedPaths.Keys.ToArray()));
-
-			var triggeredTemplatePaths = new HashSet<string>();
-			foreach (var changedAsset in changedAssetsCopy)
+			var triggeredTemplatePaths = new HashSet<string>(StringComparer.Ordinal);
+			foreach (var changedAsset in changedAssetsCopy.Select(PathUtils.Normalize))
 			{
-				var changedAssetFullPath = Path.GetFullPath(changedAsset, PathUtils.ProjectPath);
-				if (!File.Exists(changedAssetFullPath))
-					continue;
-
-				//if (Settings.Current.Verbose)
-				//	Debug.Log("Changed Asset: " + changedAssetFullPath);
+				if (!File.Exists(Path.GetFullPath(changedAsset, PathUtils.ProjectPath))) continue;
 
 				foreach (var watchedPath in TemplatePathByWatchedPaths.Keys)
 				{
@@ -110,32 +143,26 @@ namespace GameDevWare.TextTransform.Editor
 				if (TextTemplateToolSettings.Current.verbose)
 					Debug.Log($"Asset modification is triggered T4 template's generator at '{templatePath}'.");
 
-				if (!TextTemplateImporter.TryLoad(templatePath, out var textTemplateImporter))
-				{
-					continue;
-				}
+				if (!TextTemplateImporter.TryLoad(templatePath, out var textTemplateImporter)) continue;
+
 				UnityTemplateGenerator.RunForTemplateWithDelay(templatePath, TimeSpan.FromMilliseconds(textTemplateImporter.triggerDelay));
 			}
 		}
 		private static void CreateWatchers()
 		{
-			if (TextTemplateToolSettings.Current.verbose)
-				Debug.Log("Recreating watchers.");
+			if (TextTemplateToolSettings.Current.verbose) Debug.Log("Recreating text template asset watchers.");
 
 			foreach (var templatePath in TextTemplateImporter.ListTemplatesInProject())
 			{
 				if (!TextTemplateImporter.TryLoad(templatePath, out var textTemplateImporter))
 				{
+					if (TextTemplateToolSettings.Current.verbose) Debug.Log($"Found Text Template file with invalid ScriptedImporter at {templatePath}.");
 					continue;
 				}
 
-				if ((textTemplateImporter.generationTriggers & GenerationTriggers.AssetChanges) == 0)
-				{
-					continue;
-				}
+				if ((textTemplateImporter.generationTriggers & GenerationTriggers.AssetChanges) == 0) continue;
 
-				var watchedAssets = new HashSet<string>(textTemplateImporter.watchedAssets ?? Array.Empty<string>())
-				{
+				var watchedAssets = new HashSet<string>(textTemplateImporter.watchedAssets ?? Array.Empty<string>()) {
 					templatePath
 				};
 
@@ -145,18 +172,18 @@ namespace GameDevWare.TextTransform.Editor
 					if (watchedDirectory == null)
 						continue;
 
+					if (TextTemplateToolSettings.Current.verbose) Debug.Log($"Adding asset '{watchedAssetPath}' to watched assets list for Text Templates.");
+
 					if (!TemplatePathByWatchedPaths.TryGetValue(watchedAssetPath, out var templatePathList))
 						TemplatePathByWatchedPaths.Add(watchedAssetPath, templatePathList = new List<string> { templatePath });
 					else
 						templatePathList.Add(templatePath);
 
-					if (Watchers.ContainsKey(watchedDirectory) || !Directory.Exists(watchedDirectory))
-						continue;
+					if (Watchers.ContainsKey(watchedDirectory) || !Directory.Exists(watchedDirectory)) continue;
 
 					try
 					{
-						var watcher = new FileSystemWatcher(watchedDirectory)
-						{
+						var watcher = new FileSystemWatcher(watchedDirectory) {
 							NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.Size,
 							Filter = Path.GetFileName(watchedDirectory)
 						};
@@ -174,29 +201,6 @@ namespace GameDevWare.TextTransform.Editor
 						Debug.LogError("Failed to create FileSystemWatcher for asset " + watchedAssetPath + ": " + e);
 					}
 				}
-			}
-		}
-
-		// ReSharper disable once UnusedMember.Local
-		private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
-		{
-			lock (ChangedAssets)
-			{
-				if (importedAssets != null)
-					foreach (var asset in importedAssets)
-						ChangedAssets.Add(PathUtils.MakeProjectRelative(asset));
-
-				if (deletedAssets != null)
-					foreach (var asset in deletedAssets)
-						ChangedAssets.Add(PathUtils.MakeProjectRelative(asset));
-
-				if (movedAssets != null)
-					foreach (var asset in movedAssets)
-						ChangedAssets.Add(PathUtils.MakeProjectRelative(asset));
-
-				if (movedFromAssetPaths != null)
-					foreach (var asset in movedFromAssetPaths)
-						ChangedAssets.Add(PathUtils.MakeProjectRelative(asset));
 			}
 		}
 		public static void DoDelayedAssetRefresh()

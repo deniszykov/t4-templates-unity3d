@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System;
+using System.Globalization;
 
 namespace GameDevWare.TextTransform.Editor.Processor
 {
@@ -32,7 +33,13 @@ namespace GameDevWare.TextTransform.Editor.Processor
 	{
 		private static readonly object[] formatProviderAsParameterArray;
 
-		private static IFormatProvider formatProvider = System.Globalization.CultureInfo.InvariantCulture;
+		private static IFormatProvider formatProvider = CultureInfo.InvariantCulture;
+
+		public static IFormatProvider FormatProvider
+		{
+			get => (IFormatProvider)formatProviderAsParameterArray[0];
+			set => formatProviderAsParameterArray[0] = formatProvider = value;
+		}
 
 		static ToStringHelper()
 		{
@@ -53,16 +60,11 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				return str;
 
 			//TODO: implement a cache of types and DynamicMethods
-			var mi = objectToConvert.GetType().GetMethod("ToString", new Type[] { typeof(IFormatProvider) });
+			var mi = objectToConvert.GetType().GetMethod("ToString", new[] { typeof(IFormatProvider) });
 			if (mi != null)
 				return (string)mi.Invoke(objectToConvert, formatProviderAsParameterArray);
-			return objectToConvert.ToString();
-		}
 
-		public static IFormatProvider FormatProvider
-		{
-			get { return (IFormatProvider)formatProviderAsParameterArray[0]; }
-			set { formatProviderAsParameterArray[0] = formatProvider = value; }
+			return objectToConvert.ToString();
 		}
 	}
 }

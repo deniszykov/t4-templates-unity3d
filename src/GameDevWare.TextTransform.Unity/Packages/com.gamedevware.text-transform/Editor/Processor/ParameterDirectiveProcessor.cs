@@ -33,11 +33,13 @@ namespace GameDevWare.TextTransform.Editor.Processor
 {
 	public sealed class ParameterDirectiveProcessor : DirectiveProcessor, IRecognizeHostSpecific
 	{
-		private CodeDomProvider provider;
+		private readonly List<CodeTypeMember> members = new();
+		private readonly List<CodeStatement> postStatements = new();
 
 		private bool hostSpecific;
-		private readonly List<CodeStatement> postStatements = new List<CodeStatement>();
-		private readonly List<CodeTypeMember> members = new List<CodeTypeMember>();
+		private CodeDomProvider provider;
+
+		public bool RequiresProcessingRunIsHostSpecific => false;
 
 		public override void StartProcessingRun(CodeDomProvider languageProvider, string templateContents, CompilerErrorCollection errors)
 		{
@@ -87,7 +89,10 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			using (var sw = new StringWriter())
 			{
 				foreach (var statement in statements)
+				{
 					this.provider.GenerateCodeFromStatement(statement, sw, options);
+				}
+
 				return sw.ToString();
 			}
 		}
@@ -116,8 +121,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			var thisRef = new CodeThisReferenceExpression();
 			var fieldRef = new CodeFieldReferenceExpression(thisRef, fieldName);
 
-			var property = new CodeMemberProperty()
-			{
+			var property = new CodeMemberProperty {
 				Name = name,
 				Attributes = MemberAttributes.Public | MemberAttributes.Final,
 				HasGet = true,
@@ -143,16 +147,17 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			var checkCastThenAssignVal = new CodeConditionStatement(
 				new CodeMethodInvokeExpression(
 					new CodeTypeOfExpression(typeRef), "IsAssignableFrom", new CodeMethodInvokeExpression(valRef, "GetType")),
-				new CodeStatement[]
-				{
+				new CodeStatement[] {
 					new CodeAssignStatement(fieldRef, new CodeCastExpression(typeRef, valRef)),
-					new CodeAssignStatement(acquiredVariableRef, new CodePrimitiveExpression(true)),
+					new CodeAssignStatement(acquiredVariableRef, new CodePrimitiveExpression(true))
 				},
-				new CodeStatement[]
-				{
+				new CodeStatement[] {
 					new CodeExpressionStatement(new CodeMethodInvokeExpression(thisRef, "Error",
-						new CodePrimitiveExpression("The type '" + type + "' of the parameter '" + name +
-													"' did not match the type passed to the template"))),
+						new CodePrimitiveExpression("The type '" +
+							type +
+							"' of the parameter '" +
+							name +
+							"' did not match the type passed to the template")))
 				});
 
 			//tries to gets the value from the session
@@ -205,11 +210,6 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		void IRecognizeHostSpecific.SetProcessingRunIsHostSpecific(bool hostSpecific)
 		{
 			this.hostSpecific = hostSpecific;
-		}
-
-		public bool RequiresProcessingRunIsHostSpecific
-		{
-			get { return false; }
 		}
 	}
 }

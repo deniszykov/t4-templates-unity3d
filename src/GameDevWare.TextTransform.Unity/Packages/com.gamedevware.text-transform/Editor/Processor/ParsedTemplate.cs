@@ -34,26 +34,16 @@ namespace GameDevWare.TextTransform.Editor.Processor
 {
 	public class ParsedTemplate
 	{
-		private readonly List<ISegment> segments = new List<ISegment>();
-		private readonly List<ISegment> importedHelperSegments = new List<ISegment>();
-		private readonly CompilerErrorCollection errors = new CompilerErrorCollection();
+		private readonly List<ISegment> importedHelperSegments = new();
 		private readonly string rootFileName;
 
-		public ParsedTemplate(string rootFileName)
-		{
-			this.rootFileName = rootFileName;
-		}
-
-		public List<ISegment> RawSegments
-		{
-			get { return this.segments; }
-		}
+		public List<ISegment> RawSegments { get; } = new();
 
 		public IEnumerable<Directive> Directives
 		{
 			get
 			{
-				foreach (var seg in this.segments)
+				foreach (var seg in this.RawSegments)
 				{
 					var dir = seg as Directive;
 					if (dir != null)
@@ -66,7 +56,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		{
 			get
 			{
-				foreach (var seg in this.segments)
+				foreach (var seg in this.RawSegments)
 				{
 					var ts = seg as TemplateSegment;
 					if (ts != null)
@@ -75,9 +65,11 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			}
 		}
 
-		public CompilerErrorCollection Errors
+		public CompilerErrorCollection Errors { get; } = new();
+
+		public ParsedTemplate(string rootFileName)
 		{
-			get { return this.errors; }
+			this.rootFileName = rootFileName;
 		}
 
 		public static ParsedTemplate FromText(string content, ITextTemplatingEngineHost host)
@@ -91,6 +83,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			{
 				template.LogError(ex.Message, ex.Location);
 			}
+
 			return template;
 		}
 
@@ -120,20 +113,20 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				switch (tokeniser.State)
 				{
 					case State.Block:
-						if (!String.IsNullOrEmpty(tokeniser.Value))
+						if (!string.IsNullOrEmpty(tokeniser.Value))
 							seg = new TemplateSegment(SegmentType.Block, tokeniser.Value, tokeniser.Location);
 						break;
 					case State.Content:
-						if (!String.IsNullOrEmpty(tokeniser.Value))
+						if (!string.IsNullOrEmpty(tokeniser.Value))
 							seg = new TemplateSegment(SegmentType.Content, tokeniser.Value, tokeniser.Location);
 						break;
 					case State.Expression:
-						if (!String.IsNullOrEmpty(tokeniser.Value))
+						if (!string.IsNullOrEmpty(tokeniser.Value))
 							seg = new TemplateSegment(SegmentType.Expression, tokeniser.Value, tokeniser.Location);
 						break;
 					case State.Helper:
 						addToImportedHelpers = isImport;
-						if (!String.IsNullOrEmpty(tokeniser.Value))
+						if (!string.IsNullOrEmpty(tokeniser.Value))
 							seg = new TemplateSegment(SegmentType.Helper, tokeniser.Value, tokeniser.Location);
 						break;
 					case State.Directive:
@@ -149,10 +142,11 @@ namespace GameDevWare.TextTransform.Editor.Processor
 										directive = new Directive(tokeniser.Value, tokeniser.Location);
 										directive.TagStartLocation = tokeniser.TagStartLocation;
 										if (!parseIncludes || !string.Equals(directive.Name, "include", StringComparison.OrdinalIgnoreCase))
-											this.segments.Add(directive);
+											this.RawSegments.Add(directive);
 									}
 									else
 										attName = tokeniser.Value;
+
 									break;
 								case State.DirectiveValue:
 									if (attName != null && directive != null)
@@ -176,6 +170,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 									break;
 							}
 						}
+
 						if (parseIncludes && directive != null && string.Equals(directive.Name, "include", StringComparison.OrdinalIgnoreCase))
 							this.Import(host, directive, Path.GetDirectoryName(tokeniser.Location.FileName));
 						break;
@@ -186,6 +181,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 					default:
 						throw new InvalidOperationException();
 				}
+
 				if (seg != null)
 				{
 					seg.TagStartLocation = tokeniser.TagStartLocation;
@@ -193,9 +189,10 @@ namespace GameDevWare.TextTransform.Editor.Processor
 					if (addToImportedHelpers)
 						this.importedHelperSegments.Add(seg);
 					else
-						this.segments.Add(seg);
+						this.RawSegments.Add(seg);
 				}
 			}
+
 			if (!isImport)
 				this.AppendAnyImportedHelperSegments();
 		}
@@ -226,7 +223,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 
 		private void AppendAnyImportedHelperSegments()
 		{
-			this.segments.AddRange(this.importedHelperSegments);
+			this.RawSegments.AddRange(this.importedHelperSegments);
 			this.importedHelperSegments.Clear();
 		}
 
@@ -241,11 +238,10 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				err.FileName = location.FileName ?? string.Empty;
 			}
 			else
-			{
 				err.FileName = this.rootFileName ?? string.Empty;
-			}
+
 			err.IsWarning = isWarning;
-			this.errors.Add(err);
+			this.Errors.Add(err);
 		}
 
 		public void LogError(string message)
@@ -278,22 +274,26 @@ namespace GameDevWare.TextTransform.Editor.Processor
 
 	public class TemplateSegment : ISegment
 	{
+		public SegmentType Type { get; private set; }
+		public string Text { get; private set; }
+		public Location TagStartLocation { get; set; }
+		public Location StartLocation { get; }
+		public Location EndLocation { get; set; }
 		public TemplateSegment(SegmentType type, string text, Location start)
 		{
 			this.Type = type;
 			this.StartLocation = start;
 			this.Text = text;
 		}
-
-		public SegmentType Type { get; private set; }
-		public string Text { get; private set; }
-		public Location TagStartLocation { get; set; }
-		public Location StartLocation { get; private set; }
-		public Location EndLocation { get; set; }
 	}
 
 	public class Directive : ISegment
 	{
+		public string Name { get; }
+		public Dictionary<string, string> Attributes { get; }
+		public Location TagStartLocation { get; set; }
+		public Location StartLocation { get; }
+		public Location EndLocation { get; set; }
 		public Directive(string name, Location start)
 		{
 			this.Name = name;
@@ -301,17 +301,12 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			this.StartLocation = start;
 		}
 
-		public string Name { get; private set; }
-		public Dictionary<string, string> Attributes { get; private set; }
-		public Location TagStartLocation { get; set; }
-		public Location StartLocation { get; private set; }
-		public Location EndLocation { get; set; }
-
 		public string Extract(string key)
 		{
 			string value;
 			if (!this.Attributes.TryGetValue(key, out value))
 				return null;
+
 			this.Attributes.Remove(key);
 			return value;
 		}
@@ -334,14 +329,11 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			this.Line = line;
 		}
 
-		public int Line { get; private set; }
-		public int Column { get; private set; }
-		public string FileName { get; private set; }
+		public int Line { get; }
+		public int Column { get; }
+		public string FileName { get; }
 
-		public static Location Empty
-		{
-			get { return new Location(null, -1, -1); }
-		}
+		public static Location Empty => new(null, -1, -1);
 
 		public Location AddLine()
 		{

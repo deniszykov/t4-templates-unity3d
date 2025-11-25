@@ -4,17 +4,17 @@
 	This is part of "Charon: Game Data Editor" Unity Plugin.
 
 	Charon Game Data Editor Unity Plugin is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see http://www.gnu.org/licenses.
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see http://www.gnu.org/licenses.
 */
 
 using System;
@@ -50,10 +50,6 @@ namespace GameDevWare.TextTransform.Editor
 		public static readonly Encoding DefaultEncoding = Encoding.UTF8;
 		public static readonly TextTemplateToolSettings Current;
 
-		private ReadOnlyCollection<AssemblyName> excludeAssemblyNames;
-		private ReadOnlyCollection<string> includeFullPaths;
-		private ReadOnlyCollection<string> excludeFullPaths;
-
 		[FormerlySerializedAs("IncludePaths")]
 		public string[] includePaths;
 		[FormerlySerializedAs("ExcludePaths")]
@@ -65,6 +61,10 @@ namespace GameDevWare.TextTransform.Editor
 		public string roslynCompilerPath;
 		public string dotnetToolPath;
 		public TemplateCompiler templateCompiler;
+
+		private ReadOnlyCollection<AssemblyName> excludeAssemblyNames;
+		private ReadOnlyCollection<string> excludeFullPaths;
+		private ReadOnlyCollection<string> includeFullPaths;
 
 		static TextTemplateToolSettings()
 		{
@@ -95,26 +95,26 @@ namespace GameDevWare.TextTransform.Editor
 
 			if (settings == null)
 			{
-				settings = new TextTemplateToolSettings
-				{
+				settings = new TextTemplateToolSettings {
 					includePaths = new string[0],
 					excludePaths = new string[0],
-					excludeAssemblies = new string[] { typeof(int).Assembly.GetName().FullName },
+					excludeAssemblies = new[] { typeof(int).Assembly.GetName().FullName },
 					verbose = false
 				};
 
 				try
 				{
-					var json = JsonUtility.ToJson(settings, prettyPrint: true);
+					var json = JsonUtility.ToJson(settings, true);
 					var directory = Path.GetDirectoryName(SettingsPath);
-					if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-					{
-						Directory.CreateDirectory(directory);
-					}
+					if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
 					File.WriteAllText(SettingsPath, json, DefaultEncoding);
 				}
-				catch { /* ignore */ }
+				catch
+				{
+					/* ignore */
+				}
 			}
+
 			settings.Validate();
 
 			return settings;
@@ -126,17 +126,11 @@ namespace GameDevWare.TextTransform.Editor
 
 			try
 			{
-				var json = JsonUtility.ToJson(this, prettyPrint: true);
+				var json = JsonUtility.ToJson(this, true);
 				var directory = Path.GetDirectoryName(SettingsPath);
-				if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-				{
-					Directory.CreateDirectory(directory);
-				}
+				if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
-				if (File.Exists(SettingsPath) && File.ReadAllText(SettingsPath, DefaultEncoding) == json)
-				{
-					return; // not changed
-				}
+				if (File.Exists(SettingsPath) && File.ReadAllText(SettingsPath, DefaultEncoding) == json) return; // not changed
 
 				File.WriteAllText(SettingsPath, json, DefaultEncoding);
 			}
@@ -151,14 +145,9 @@ namespace GameDevWare.TextTransform.Editor
 		{
 			var editorDirectory = Path.GetDirectoryName(EditorApplication.applicationPath) ?? EditorApplication.applicationPath;
 			var compilerFullPath = Path.Combine(editorDirectory, @"Data\Tools\Roslyn\csc.exe");
-			if (File.Exists(compilerFullPath))
-			{
-				return compilerFullPath;
-			}
-			else
-			{
-				return null;
-			}
+			if (File.Exists(compilerFullPath)) return compilerFullPath;
+
+			return null;
 		}
 
 		private void Validate()
@@ -175,10 +164,7 @@ namespace GameDevWare.TextTransform.Editor
 
 		public ReadOnlyCollection<AssemblyName> GetExcludeAssemblyNames()
 		{
-			if (this.excludeAssemblyNames != null)
-			{
-				return this.excludeAssemblyNames;
-			}
+			if (this.excludeAssemblyNames != null) return this.excludeAssemblyNames;
 
 			var assemblyNames = new List<AssemblyName>();
 			foreach (var assemblyNameString in this.excludeAssemblies ?? Enumerable.Empty<string>())
@@ -196,24 +182,19 @@ namespace GameDevWare.TextTransform.Editor
 					}
 				}
 			}
+
 			return this.excludeAssemblyNames = assemblyNames.AsReadOnly();
 		}
 		public ReadOnlyCollection<string> GetExcludePaths()
 		{
-			if (this.excludeFullPaths != null)
-			{
-				return this.excludeFullPaths;
-			}
+			if (this.excludeFullPaths != null) return this.excludeFullPaths;
 
 			this.excludeFullPaths = new ReadOnlyCollection<string>(Array.ConvertAll(this.excludePaths, PathUtils.MakeProjectAbsolute));
 			return this.excludeFullPaths;
 		}
 		public ReadOnlyCollection<string> GetIncludePaths()
 		{
-			if (this.includeFullPaths != null)
-			{
-				return this.includeFullPaths;
-			}
+			if (this.includeFullPaths != null) return this.includeFullPaths;
 
 			this.includeFullPaths = new ReadOnlyCollection<string>(Array.ConvertAll(this.includePaths, PathUtils.MakeProjectAbsolute));
 			return this.includeFullPaths;
@@ -224,7 +205,5 @@ namespace GameDevWare.TextTransform.Editor
 			return
 				$"Include Paths: {string.Join(", ", this.includePaths)}, Exclude Paths: {string.Join(", ", this.excludePaths)}, Exclude Assemblies: {string.Join(", ", this.excludeAssemblies)}, Verbose: {this.verbose}";
 		}
-
 	}
 }
-

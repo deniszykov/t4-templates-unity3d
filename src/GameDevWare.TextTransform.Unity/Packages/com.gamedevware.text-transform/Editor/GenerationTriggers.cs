@@ -3,18 +3,18 @@
 namespace GameDevWare.TextTransform.Editor
 {
 	/// <summary>
-	/// Transformation triggers.
+	///     Transformation triggers.
 	/// </summary>
 	[Flags]
 	public enum GenerationTriggers
 	{
 		None = 0,
 		/// <summary>
-		/// Each Unity's editor code compilation will trigger transformation.
+		///     Each Unity's editor code compilation will trigger transformation.
 		/// </summary>
 		CodeCompilation = 1 << 0,
 		/// <summary>
-		/// Each change in watched assets will trigger transformation.
+		///     Each change in watched assets will trigger transformation.
 		/// </summary>
 		AssetChanges = 1 << 1,
 

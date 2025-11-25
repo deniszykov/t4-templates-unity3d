@@ -14,24 +14,24 @@ namespace GameDevWare.TextTransform.Editor.Windows
 {
 	public static class T4SettingsWindow
 	{
-		private static Vector2 scrollPosition;
+		private static HashSet<AssemblyName> assemblyExcludeList;
 
 		private static HashSet<AssemblyName> assemblyIncludeList;
-		private static HashSet<AssemblyName> assemblyExcludeList;
-		private static HashSet<string> includePaths;
 		private static HashSet<string> excludePaths;
-		private static Task<string> testResult;
-		private static bool showTestResult;
-		private static bool showReferencedAssemblies;
+		private static HashSet<string> includePaths;
 
 		private static int loadedAssemblyCount;
+		private static Vector2 scrollPosition;
+		private static bool showReferencedAssemblies;
+		private static bool showTestResult;
+		private static Task<string> testResult;
 
 		[SettingsProvider]
 		public static SettingsProvider CreateCharonSettingsProvider()
 		{
-			var provider = new SettingsProvider("Project/T4", SettingsScope.Project)
-			{
+			var provider = new SettingsProvider("Project/T4", SettingsScope.Project) {
 				label = "T4",
+
 				// Create the SettingsProvider and initialize its drawing (IMGUI) function in place:
 				guiHandler = PreferencesGUI,
 
@@ -51,9 +51,11 @@ namespace GameDevWare.TextTransform.Editor.Windows
 			// padding
 			GUILayout.BeginVertical();
 			GUILayout.Space(20);
-			GUILayout.BeginHorizontal();;
+			GUILayout.BeginHorizontal();
+			;
 			GUILayout.Space(20);
 			GUILayout.BeginVertical();
+
 			//
 
 			GUILayout.Space(5);
@@ -62,7 +64,8 @@ namespace GameDevWare.TextTransform.Editor.Windows
 
 			// template compiler type
 			GUILayout.Label("Template Compiler:", EditorStyles.boldLabel);
-			TextTemplateToolSettings.Current.templateCompiler = (TextTemplateToolSettings.TemplateCompiler)EditorGUILayout.EnumPopup(TextTemplateToolSettings.Current.templateCompiler);
+			TextTemplateToolSettings.Current.templateCompiler =
+				(TextTemplateToolSettings.TemplateCompiler)EditorGUILayout.EnumPopup(TextTemplateToolSettings.Current.templateCompiler);
 			GUILayout.Space(5);
 
 			switch (TextTemplateToolSettings.Current.templateCompiler)
@@ -72,9 +75,7 @@ namespace GameDevWare.TextTransform.Editor.Windows
 					GUILayout.BeginHorizontal();
 					TextTemplateToolSettings.Current.dotnetToolPath = EditorGUILayout.TextField(TextTemplateToolSettings.Current.dotnetToolPath);
 					if (GUILayout.Button("Check", EditorStyles.toolbarButton, GUILayout.Width(60), GUILayout.Height(18)))
-					{
 						testResult = RunToolAsync($"\"{TextTemplateToolSettings.Current.dotnetToolPath}\" --info ");
-					}
 					GUILayout.EndHorizontal();
 					GUILayout.Space(5);
 					break;
@@ -83,9 +84,7 @@ namespace GameDevWare.TextTransform.Editor.Windows
 					GUILayout.BeginHorizontal();
 					TextTemplateToolSettings.Current.roslynCompilerPath = EditorGUILayout.TextField(TextTemplateToolSettings.Current.roslynCompilerPath);
 					if (GUILayout.Button("Check", EditorStyles.toolbarButton, GUILayout.Width(60), GUILayout.Height(18)))
-					{
 						testResult = RunToolAsync($"\"{TextTemplateToolSettings.Current.roslynCompilerPath}\" -help ");
-					}
 					GUILayout.EndHorizontal();
 					GUILayout.Space(5);
 					break;
@@ -97,13 +96,9 @@ namespace GameDevWare.TextTransform.Editor.Windows
 			{
 				GUILayout.Space(10);
 				if (testResult.Exception != null)
-				{
 					EditorGUILayout.HelpBox(LimitText(testResult.Exception.Message, 300), MessageType.Error);
-				}
 				else
-				{
 					EditorGUILayout.HelpBox(LimitText(testResult.Result, 300), MessageType.Info);
-				}
 				GUILayout.Space(10);
 			}
 
@@ -111,9 +106,7 @@ namespace GameDevWare.TextTransform.Editor.Windows
 			GUILayout.Label("Referenced Assemblies:", EditorStyles.boldLabel);
 
 			if (!showReferencedAssemblies && GUILayout.Button("Show", EditorStyles.toolbarButton, GUILayout.Width(60), GUILayout.Height(18)))
-			{
 				showReferencedAssemblies = true;
-			}
 			if (showReferencedAssemblies)
 			{
 				scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
@@ -133,21 +126,20 @@ namespace GameDevWare.TextTransform.Editor.Windows
 				GUILayout.Space(5);
 				EditorGUILayout.BeginHorizontal();
 				GUILayout.Space(5);
-				if (GUILayout.Button("Hide", EditorStyles.toolbarButton, GUILayout.Width(120), GUILayout.Height(18)))
-				{
-					showReferencedAssemblies = false;
-				}
+				if (GUILayout.Button("Hide", EditorStyles.toolbarButton, GUILayout.Width(120), GUILayout.Height(18))) showReferencedAssemblies = false;
 				if (GUILayout.Button("Exclude All", EditorStyles.toolbarButton, GUILayout.Width(120), GUILayout.Height(18)))
 				{
 					assemblyIncludeList.Clear();
 					allAssemblyNames.ForEach(assemblyName => assemblyExcludeList.Add(assemblyName));
 				}
+
 				GUILayout.Space(5);
 				if (GUILayout.Button("Include All", EditorStyles.toolbarButton, GUILayout.Width(120), GUILayout.Height(18)))
 				{
 					assemblyExcludeList.Clear();
 					allAssemblyNames.ForEach(assemblyName => assemblyIncludeList.Add(assemblyName));
 				}
+
 				EditorGUILayout.EndHorizontal();
 				GUILayout.Space(10);
 			}
@@ -160,30 +152,24 @@ namespace GameDevWare.TextTransform.Editor.Windows
 			var includePathToAdd = default(string);
 			foreach (var path in GetIncludePaths())
 			{
-				if (!EditorGUILayout.ToggleLeft(path, true))
-				{
-					includePathToRemove = path;
-				}
+				if (!EditorGUILayout.ToggleLeft(path, true)) includePathToRemove = path;
 			}
+
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.Space(5);
 			if (GUILayout.Button("Include File...", EditorStyles.toolbarButton, GUILayout.Width(120), GUILayout.Height(18)))
 			{
 				var selectedFile = EditorUtility.OpenFilePanel("Include File...", null, "dll");
-				if (!string.IsNullOrEmpty(selectedFile))
-				{
-					includePathToAdd = PathUtils.MakeProjectRelative(selectedFile);
-				}
+				if (!string.IsNullOrEmpty(selectedFile)) includePathToAdd = PathUtils.MakeProjectRelative(selectedFile);
 			}
+
 			GUILayout.Space(5);
 			if (GUILayout.Button("Include Directory...", EditorStyles.toolbarButton, GUILayout.Width(120), GUILayout.Height(18)))
 			{
 				var selectedDirectory = EditorUtility.OpenFolderPanel("Include Directory...", null, null);
-				if (!string.IsNullOrEmpty(selectedDirectory))
-				{
-					includePathToAdd = PathUtils.MakeProjectRelative(selectedDirectory);
-				}
+				if (!string.IsNullOrEmpty(selectedDirectory)) includePathToAdd = PathUtils.MakeProjectRelative(selectedDirectory);
 			}
+
 			EditorGUILayout.EndHorizontal();
 			GUILayout.Space(10);
 
@@ -193,58 +179,37 @@ namespace GameDevWare.TextTransform.Editor.Windows
 			var excludePathToAdd = default(string);
 			foreach (var path in GetExcludePaths())
 			{
-				if (!EditorGUILayout.ToggleLeft(path, true))
-				{
-					excludePathToRemove = path;
-				}
+				if (!EditorGUILayout.ToggleLeft(path, true)) excludePathToRemove = path;
 			}
+
 			EditorGUILayout.BeginHorizontal();
 			GUILayout.Space(5);
 			if (GUILayout.Button("Exclude File...", EditorStyles.toolbarButton, GUILayout.Width(120), GUILayout.Height(18)))
 			{
 				var selectedFile = EditorUtility.OpenFilePanel("Exclude File...", null, "dll");
-				if (!string.IsNullOrEmpty(selectedFile))
-				{
-					excludePathToAdd = PathUtils.MakeProjectRelative(selectedFile);
-				}
+				if (!string.IsNullOrEmpty(selectedFile)) excludePathToAdd = PathUtils.MakeProjectRelative(selectedFile);
 			}
+
 			GUILayout.Space(5);
 			if (GUILayout.Button("Exclude Directory...", EditorStyles.toolbarButton, GUILayout.Width(120), GUILayout.Height(18)))
 			{
 				var selectedDirectory = EditorUtility.OpenFolderPanel("Exclude Directory...", null, null);
-				if (!string.IsNullOrEmpty(selectedDirectory))
-				{
-					excludePathToAdd = PathUtils.MakeProjectRelative(selectedDirectory);
-				}
+				if (!string.IsNullOrEmpty(selectedDirectory)) excludePathToAdd = PathUtils.MakeProjectRelative(selectedDirectory);
 			}
+
 			EditorGUILayout.EndHorizontal();
 			GUILayout.Space(5);
 
-			if (!string.IsNullOrEmpty(includePathToAdd) && includePaths.Add(includePathToAdd))
-			{
-				GUI.changed = true;
-			}
-			if (!string.IsNullOrEmpty(includePathToRemove) && includePaths.Remove(includePathToRemove))
-			{
-				GUI.changed = true;
-			}
-			if (!string.IsNullOrEmpty(excludePathToAdd) && excludePaths.Add(excludePathToAdd))
-			{
-				GUI.changed = true;
-			}
-			if (!string.IsNullOrEmpty(excludePathToRemove) && excludePaths.Remove(excludePathToRemove))
-			{
-				GUI.changed = true;
-			}
+			if (!string.IsNullOrEmpty(includePathToAdd) && includePaths.Add(includePathToAdd)) GUI.changed = true;
+			if (!string.IsNullOrEmpty(includePathToRemove) && includePaths.Remove(includePathToRemove)) GUI.changed = true;
+			if (!string.IsNullOrEmpty(excludePathToAdd) && excludePaths.Add(excludePathToAdd)) GUI.changed = true;
+			if (!string.IsNullOrEmpty(excludePathToRemove) && excludePaths.Remove(excludePathToRemove)) GUI.changed = true;
 
 			if (GUI.changed)
 			{
 				TextTemplateToolSettings.Current.includePaths = includePaths.ToArray();
 				TextTemplateToolSettings.Current.excludePaths = excludePaths.ToArray();
-				if (assemblyExcludeList != null)
-				{
-					TextTemplateToolSettings.Current.excludeAssemblies = assemblyExcludeList.Select(n => n.FullName).ToArray();
-				}
+				if (assemblyExcludeList != null) TextTemplateToolSettings.Current.excludeAssemblies = assemblyExcludeList.Select(n => n.FullName).ToArray();
 				TextTemplateToolSettings.Current.Save();
 			}
 
@@ -254,6 +219,7 @@ namespace GameDevWare.TextTransform.Editor.Windows
 			GUILayout.EndHorizontal();
 			GUILayout.Space(20);
 			GUILayout.EndVertical();
+
 			//
 		}
 
@@ -261,9 +227,7 @@ namespace GameDevWare.TextTransform.Editor.Windows
 		{
 			var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 			if (loadedAssemblyCount == currentAssemblies.Length && assemblyIncludeList != null && assemblyExcludeList != null)
-			{
 				return assemblyExcludeList.Concat(assemblyIncludeList);
-			}
 
 			assemblyExcludeList = new HashSet<AssemblyName>(AssemblyNameOnlyComparer.Default);
 			assemblyIncludeList = new HashSet<AssemblyName>(AssemblyNameOnlyComparer.Default);
@@ -272,11 +236,16 @@ namespace GameDevWare.TextTransform.Editor.Windows
 				try
 				{
 					if (assembly.ReflectionOnly) continue;
+
 					var assemblyLocation = assembly.Location;
 					if (string.IsNullOrEmpty(assemblyLocation)) continue;
 					if (!File.Exists(assemblyLocation)) continue;
 				}
-				catch { /* ignore */ }
+				catch
+				{
+					/* ignore */
+				}
+
 				assemblyIncludeList.Add(assembly.GetName());
 			}
 
@@ -292,19 +261,15 @@ namespace GameDevWare.TextTransform.Editor.Windows
 		}
 		private static IEnumerable<string> GetIncludePaths()
 		{
-			if (includePaths != null)
-			{
-				return includePaths;
-			}
+			if (includePaths != null) return includePaths;
+
 			includePaths = new HashSet<string>(TextTemplateToolSettings.Current.includePaths);
 			return includePaths;
 		}
 		private static IEnumerable<string> GetExcludePaths()
 		{
-			if (excludePaths != null)
-			{
-				return excludePaths;
-			}
+			if (excludePaths != null) return excludePaths;
+
 			excludePaths = new HashSet<string>(TextTemplateToolSettings.Current.excludePaths);
 			return excludePaths;
 		}
@@ -348,14 +313,9 @@ namespace GameDevWare.TextTransform.Editor.Windows
 
 		private static string LimitText(string message, int maxLength)
 		{
-			if (message.Length > maxLength)
-			{
-				return message.Substring(0, maxLength);
-			}
-			else
-			{
-				return message;
-			}
+			if (message.Length > maxLength) return message.Substring(0, maxLength);
+
+			return message;
 		}
 	}
 }

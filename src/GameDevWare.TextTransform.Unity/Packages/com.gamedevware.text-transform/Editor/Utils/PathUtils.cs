@@ -26,8 +26,8 @@ namespace GameDevWare.TextTransform.Editor.Utils
 {
 	internal static class PathUtils
 	{
+		private static readonly string DirectorySeparator = Path.DirectorySeparatorChar.ToString();
 		private static readonly char[] InvalidFileNameChars = Path.GetInvalidFileNameChars();
-		private static readonly string DirectorySeparator= Path.DirectorySeparatorChar.ToString();
 		public static readonly string ProjectPath = Path.GetFullPath(Path.GetDirectoryName(Application.dataPath) ?? Environment.CurrentDirectory);
 
 		public static string MakeProjectRelative(string path)
@@ -58,7 +58,6 @@ namespace GameDevWare.TextTransform.Editor.Utils
 			return Normalize(Path.GetFullPath(path, ProjectPath));
 		}
 
-
 		public static string ComputeMd5Hash(string path, int tries = 5)
 		{
 			if (path == null) throw new ArgumentNullException(nameof(path));
@@ -82,6 +81,7 @@ namespace GameDevWare.TextTransform.Editor.Utils
 					if (attempt == tries)
 						throw;
 				}
+
 				Thread.Sleep(100);
 			}
 
@@ -95,6 +95,7 @@ namespace GameDevWare.TextTransform.Editor.Utils
 				if (Array.IndexOf(InvalidFileNameChars, fileName[c]) != -1)
 					fileName[c] = '_';
 			}
+
 			return fileName.ToString();
 		}
 		public static string Normalize(string path)

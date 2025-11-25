@@ -28,6 +28,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -35,12 +36,17 @@ namespace GameDevWare.TextTransform.Editor.Processor
 {
 	public sealed class CompiledTemplate : MarshalByRefObject, IDisposable
 	{
+		private readonly string[] assemblyFiles;
+		private readonly CultureInfo culture;
 		private ITextTemplatingEngineHost host;
 		private object textTransformation;
-		private readonly CultureInfo culture;
-		private readonly string[] assemblyFiles;
 
-		public CompiledTemplate(ITextTemplatingEngineHost host, CompilerResults results, string fullName, CultureInfo culture,
+		public CompiledTemplate
+		(
+			ITextTemplatingEngineHost host,
+			CompilerResults results,
+			string fullName,
+			CultureInfo culture,
 			string[] assemblyFiles)
 		{
 			AppDomain.CurrentDomain.AssemblyResolve += this.ResolveReferencedAssemblies;
@@ -53,12 +59,12 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		private void Load(CompilerResults results, string fullName)
 		{
 			if (results.NativeCompilerReturnValue != 0)
-			{
-				throw new InvalidOperationException($"Compiler with non-zero code {results.NativeCompilerReturnValue}. Output: {string.Join(", ", results.Output.Cast<string>())}");
-			}
+				throw new InvalidOperationException(
+					$"Compiler with non-zero code {results.NativeCompilerReturnValue}. Output: {string.Join(", ", results.Output.Cast<string>())}");
 
 			var assembly = results.CompiledAssembly;
 			var transformType = assembly.GetType(fullName);
+
 			//MS Templating Engine does not look on the type itself,
 			//it checks only that required methods are exists in the compiled type
 			this.textTransformation = Activator.CreateInstance(transformType);
@@ -66,10 +72,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			//set the host property if it exists
 			Type hostType = null;
 			var gen = this.host as TemplateGenerator;
-			if (gen != null)
-			{
-				hostType = gen.SpecificHostType;
-			}
+			if (gen != null) hostType = gen.SpecificHostType;
 			var hostProp = transformType.GetProperty("Host", hostType ?? typeof(ITextTemplatingEngineHost));
 			if (hostProp != null && hostProp.CanWrite)
 				hostProp.SetValue(this.textTransformation, this.host, null);
@@ -90,11 +93,9 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			var errorProp = ttType.GetProperty("Errors", BindingFlags.Instance | BindingFlags.NonPublic);
 			if (errorProp == null)
 				throw new ArgumentException("Template must have 'Errors' property");
-			var errorMethod = ttType.GetMethod("Error", new Type[] { typeof(string) });
-			if (errorMethod == null)
-			{
-				throw new ArgumentException("Template must have 'Error(string message)' method");
-			}
+
+			var errorMethod = ttType.GetMethod("Error", new[] { typeof(string) });
+			if (errorMethod == null) throw new ArgumentException("Template must have 'Error(string message)' method");
 
 			var errors = (CompilerErrorCollection)errorProp.GetValue(this.textTransformation, null);
 			errors.Clear();
@@ -111,14 +112,11 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			var transformMethod = ttType.GetMethod("TransformText");
 
 			if (initMethod == null)
-			{
 				errorMethod.Invoke(this.textTransformation, new object[] { "Error running transform: no method Initialize()" });
-			}
 			else if (transformMethod == null)
-			{
 				errorMethod.Invoke(this.textTransformation, new object[] { "Error running transform: no method TransformText()" });
-			}
 			else
+			{
 				try
 				{
 					initMethod.Invoke(this.textTransformation, null);
@@ -128,6 +126,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				{
 					errorMethod.Invoke(this.textTransformation, new object[] { "Error running transform: " + ex });
 				}
+			}
 
 			this.host.LogErrors(errors);
 
@@ -140,12 +139,12 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			var asmName = new AssemblyName(args.Name);
 			foreach (var asmFile in this.assemblyFiles)
 			{
-				if (asmName.Name == System.IO.Path.GetFileNameWithoutExtension(asmFile))
+				if (asmName.Name == Path.GetFileNameWithoutExtension(asmFile))
 					return Assembly.LoadFrom(asmFile);
 			}
 
 			var path = this.host.ResolveAssemblyReference(asmName.Name + ".dll");
-			if (System.IO.File.Exists(path))
+			if (File.Exists(path))
 				return Assembly.LoadFrom(path);
 
 			return null;

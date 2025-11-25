@@ -25,22 +25,15 @@
 // THE SOFTWARE.
 
 using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace GameDevWare.TextTransform.Editor.Processor
 {
 	public class TextTemplateSettings
 	{
-		public TextTemplateSettings()
-		{
-			this.Imports = new HashSet<string>();
-			this.Assemblies = new HashSet<string>();
-			this.CustomDirectives = new List<CustomDirective>();
-			this.DirectiveProcessors = new Dictionary<string, IDirectiveProcessor>();
-			this.CoreAssemblyFileName = typeof(int).Assembly.Location;
-		}
-
 		public bool HostSpecific { get; set; }
 		public bool HostPropertyOnBase { get; set; }
 		public bool Debug { get; set; }
@@ -49,12 +42,12 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		public string Namespace { get; set; }
 		public HashSet<string> Imports { get; private set; }
 		public HashSet<string> Assemblies { get; private set; }
-		public System.CodeDom.Compiler.CodeDomProvider Provider { get; set; }
+		public CodeDomProvider Provider { get; set; }
 		public string Language { get; set; }
 		public string CompilerOptions { get; set; }
 		public Encoding Encoding { get; set; }
 		public string Extension { get; set; }
-		public System.Globalization.CultureInfo Culture { get; set; }
+		public CultureInfo Culture { get; set; }
 		public List<CustomDirective> CustomDirectives { get; private set; }
 		public Dictionary<string, IDirectiveProcessor> DirectiveProcessors { get; private set; }
 		public bool IncludePreprocessingHelpers { get; set; }
@@ -64,17 +57,24 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		public bool InternalVisibility { get; set; }
 		public string CoreAssemblyFileName { get; set; }
 		public Type HostType { get; set; }
+		public TextTemplateSettings()
+		{
+			this.Imports = new HashSet<string>();
+			this.Assemblies = new HashSet<string>();
+			this.CustomDirectives = new List<CustomDirective>();
+			this.DirectiveProcessors = new Dictionary<string, IDirectiveProcessor>();
+			this.CoreAssemblyFileName = typeof(int).Assembly.Location;
+		}
 	}
 
 	public class CustomDirective
 	{
+		public string ProcessorName { get; set; }
+		public Directive Directive { get; set; }
 		public CustomDirective(string processorName, Directive directive)
 		{
 			this.ProcessorName = processorName;
 			this.Directive = directive;
 		}
-
-		public string ProcessorName { get; set; }
-		public Directive Directive { get; set; }
 	}
 }

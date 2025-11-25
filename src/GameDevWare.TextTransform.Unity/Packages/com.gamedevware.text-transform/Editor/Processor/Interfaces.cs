@@ -36,20 +36,29 @@ namespace GameDevWare.TextTransform.Editor.Processor
 {
 	public interface IRecognizeHostSpecific
 	{
-		void SetProcessingRunIsHostSpecific(bool hostSpecific);
 		bool RequiresProcessingRunIsHostSpecific { get; }
+		void SetProcessingRunIsHostSpecific(bool hostSpecific);
 	}
 
 	public interface ITextTemplatingEngine
 	{
 		string ProcessTemplate(string content, ITextTemplatingEngineHost host);
 
-		string PreprocessTemplate(string content, ITextTemplatingEngineHost host, string className,
-			string classNamespace, out string language, out string[] references);
+		string PreprocessTemplate
+		(
+			string content,
+			ITextTemplatingEngineHost host,
+			string className,
+			string classNamespace,
+			out string language,
+			out string[] references);
 	}
 
 	public interface ITextTemplatingEngineHost
 	{
+		IList<string> StandardAssemblyReferences { get; }
+		IList<string> StandardImports { get; }
+		string TemplateFile { get; }
 		object GetHostOption(string optionName);
 		bool LoadIncludeText(string requestFileName, out string content, out string location);
 		void LogErrors(CompilerErrorCollection errors);
@@ -60,24 +69,24 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		string ResolvePath(string path);
 		void SetFileExtension(string extension);
 		void SetOutputEncoding(Encoding encoding, bool fromOutputDirective);
-		IList<string> StandardAssemblyReferences { get; }
-		IList<string> StandardImports { get; }
-		string TemplateFile { get; }
 	}
 
 	public interface ITextTemplatingSession :
-		IEquatable<ITextTemplatingSession>, IEquatable<Guid>, IDictionary<string, Object>,
-		ICollection<KeyValuePair<string, Object>>,
-		IEnumerable<KeyValuePair<string, Object>>,
-		IEnumerable, ISerializable
+		IEquatable<ITextTemplatingSession>,
+		IEquatable<Guid>,
+		IDictionary<string, object>,
+		ICollection<KeyValuePair<string, object>>,
+		IEnumerable<KeyValuePair<string, object>>,
+		IEnumerable,
+		ISerializable
 	{
 		Guid Id { get; }
 	}
 
 	public interface ITextTemplatingSessionHost
 	{
-		ITextTemplatingSession CreateSession();
 		ITextTemplatingSession Session { get; set; }
+		ITextTemplatingSession CreateSession();
 	}
 
 	public interface IDirectiveProcessor

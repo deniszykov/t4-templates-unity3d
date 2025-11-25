@@ -27,90 +27,54 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace GameDevWare.TextTransform.Editor.Processor
 {
 	public class TemplatingAppDomainRecycler
 	{
-		private const int DEFAULT_TIMEOUT_MS = 2 * 60 * 1000;
-		private const int DEFAULT_MAX_USES = 20;
-
-		private readonly string name;
-		private readonly object lockObj = new object();
-
-		private RecyclableAppDomain domain;
-
-		public TemplatingAppDomainRecycler(string name)
-		{
-			this.name = name;
-		}
-
-		public TemplatingAppDomainRecycler.Handle GetHandle()
-		{
-			lock (this.lockObj)
-			{
-				if (this.domain == null || this.domain.Domain == null || this.domain.UnusedHandles == 0)
-				{
-					this.domain = new RecyclableAppDomain(this.name);
-				}
-				return this.domain.GetHandle();
-			}
-		}
-
 		internal class RecyclableAppDomain
 		{
+			private DomainAssemblyLoader assemblyMap;
+
 			//TODO: implement timeout based recycling
 			//DateTime lastUsed;
 
-			private AppDomain domain;
-			private DomainAssemblyLoader assemblyMap;
+			public int UnusedHandles { get; private set; } = DEFAULT_MAX_USES;
 
-			private int liveHandles;
-			private int unusedHandles = DEFAULT_MAX_USES;
+			public int LiveHandles { get; private set; }
+
+			public AppDomain Domain { get; private set; }
 
 			public RecyclableAppDomain(string name)
 			{
-				var info = new AppDomainSetup()
-				{
+				var info = new AppDomainSetup {
 					//appbase needs to allow loading this assembly, for remoting
-					ApplicationBase = System.IO.Path.GetDirectoryName(typeof(TemplatingAppDomainRecycler).Assembly.Location),
+					ApplicationBase = Path.GetDirectoryName(typeof(TemplatingAppDomainRecycler).Assembly.Location),
 					DisallowBindingRedirects = false,
 					DisallowCodeDownload = true,
 					DisallowApplicationBaseProbing = false,
-					ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile,
+					ConfigurationFile = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile
 				};
-				this.domain = AppDomain.CreateDomain(name, null, info);
+				this.Domain = AppDomain.CreateDomain(name, null, info);
 				var t = typeof(DomainAssemblyLoader);
 				AppDomain.CurrentDomain.AssemblyResolve += this.CurrentDomain_AssemblyResolve;
-				this.assemblyMap = (DomainAssemblyLoader)this.domain.CreateInstanceFromAndUnwrap(t.Assembly.Location, t.FullName);
+				this.assemblyMap = (DomainAssemblyLoader)this.Domain.CreateInstanceFromAndUnwrap(t.Assembly.Location, t.FullName);
 				AppDomain.CurrentDomain.AssemblyResolve -= this.CurrentDomain_AssemblyResolve;
-				this.domain.AssemblyResolve += this.assemblyMap.Resolve; // new DomainAssemblyLoader(assemblyMap).Resolve;
+				this.Domain.AssemblyResolve += this.assemblyMap.Resolve; // new DomainAssemblyLoader(assemblyMap).Resolve;
 			}
 
-			private System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+			private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
 			{
 				var a = typeof(RecyclableAppDomain).Assembly;
 				if (args.Name == a.FullName)
 					return a;
+
 				return null;
 			}
 
-			public int UnusedHandles
-			{
-				get { return this.unusedHandles; }
-			}
-
-			public int LiveHandles
-			{
-				get { return this.liveHandles; }
-			}
-
-			public AppDomain Domain
-			{
-				get { return this.domain; }
-			}
-
-			public void AddAssembly(System.Reflection.Assembly assembly)
+			public void AddAssembly(Assembly assembly)
 			{
 				this.assemblyMap.Add(assembly.FullName, assembly.Location);
 			}
@@ -119,13 +83,12 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			{
 				lock (this)
 				{
-					if (this.unusedHandles <= 0)
-					{
-						throw new InvalidOperationException("No handles left");
-					}
-					this.unusedHandles--;
-					this.liveHandles++;
+					if (this.UnusedHandles <= 0) throw new InvalidOperationException("No handles left");
+
+					this.UnusedHandles--;
+					this.LiveHandles++;
 				}
+
 				return new Handle(this);
 			}
 
@@ -134,29 +97,27 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				int lh;
 				lock (this)
 				{
-					this.liveHandles--;
-					lh = this.liveHandles;
+					this.LiveHandles--;
+					lh = this.LiveHandles;
 				}
+
 				//We must unload domain every time after using it for generation
 				//Otherwise we could not load new version of the project-generated 
 				//assemblies into it. So remove checking for unusedHandles == 0
-				if (lh == 0)
-				{
-					this.UnloadDomain();
-				}
+				if (lh == 0) this.UnloadDomain();
 			}
 
 			private void UnloadDomain()
 			{
-				AppDomain.Unload(this.domain);
-				this.domain = null;
+				AppDomain.Unload(this.Domain);
+				this.Domain = null;
 				this.assemblyMap = null;
 				GC.SuppressFinalize(this);
 			}
 
 			~RecyclableAppDomain()
 			{
-				if (this.liveHandles != 0)
+				if (this.LiveHandles != 0)
 					Console.WriteLine("WARNING: recyclable AppDomain's handles were not all disposed");
 			}
 		}
@@ -165,50 +126,47 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		{
 			private RecyclableAppDomain parent;
 
+			public AppDomain Domain => this.parent.Domain;
+
 			internal Handle(RecyclableAppDomain parent)
 			{
 				this.parent = parent;
 			}
 
-			public AppDomain Domain
+			public void AddAssembly(Assembly assembly)
 			{
-				get { return this.parent.Domain; }
+				this.parent.AddAssembly(assembly);
 			}
 
 			public void Dispose()
 			{
 				if (this.parent == null)
 					return;
+
 				var p = this.parent;
 				lock (this)
 				{
 					if (this.parent == null)
 						return;
+
 					this.parent = null;
 				}
-				p.ReleaseHandle();
-			}
 
-			public void AddAssembly(System.Reflection.Assembly assembly)
-			{
-				this.parent.AddAssembly(assembly);
+				p.ReleaseHandle();
 			}
 		}
 
 		[Serializable]
 		private class DomainAssemblyLoader : MarshalByRefObject
 		{
-			private readonly Dictionary<string, string> map = new Dictionary<string, string>();
+			private readonly Dictionary<string, string> map = new();
 
-			public DomainAssemblyLoader()
-			{
-			}
-
-			public System.Reflection.Assembly Resolve(object sender, ResolveEventArgs args)
+			public Assembly Resolve(object sender, ResolveEventArgs args)
 			{
 				var assemblyFile = this.ResolveAssembly(args.Name);
 				if (assemblyFile != null)
-					return System.Reflection.Assembly.LoadFrom(assemblyFile);
+					return Assembly.LoadFrom(assemblyFile);
+
 				return null;
 			}
 
@@ -217,6 +175,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				string result;
 				if (this.map.TryGetValue(name, out result))
 					return result;
+
 				return null;
 			}
 
@@ -229,6 +188,28 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			public override object InitializeLifetimeService()
 			{
 				return null;
+			}
+		}
+
+		private const int DEFAULT_MAX_USES = 20;
+		private const int DEFAULT_TIMEOUT_MS = 2 * 60 * 1000;
+		private readonly object lockObj = new();
+
+		private readonly string name;
+
+		private RecyclableAppDomain domain;
+
+		public TemplatingAppDomainRecycler(string name)
+		{
+			this.name = name;
+		}
+
+		public Handle GetHandle()
+		{
+			lock (this.lockObj)
+			{
+				if (this.domain == null || this.domain.Domain == null || this.domain.UnusedHandles == 0) this.domain = new RecyclableAppDomain(this.name);
+				return this.domain.GetHandle();
 			}
 		}
 	}

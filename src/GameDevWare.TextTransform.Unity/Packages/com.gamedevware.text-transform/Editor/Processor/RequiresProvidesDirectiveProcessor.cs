@@ -33,37 +33,52 @@ namespace GameDevWare.TextTransform.Editor.Processor
 {
 	public abstract class RequiresProvidesDirectiveProcessor : DirectiveProcessor
 	{
+		private readonly StringBuilder codeBuffer = new();
+		private readonly StringBuilder postInitBuffer = new();
+		private readonly StringBuilder preInitBuffer = new();
 		private bool isInProcessingRun;
-		private ITextTemplatingEngineHost host;
-		private readonly StringBuilder preInitBuffer = new StringBuilder();
-		private readonly StringBuilder postInitBuffer = new StringBuilder();
-		private readonly StringBuilder codeBuffer = new StringBuilder();
 		private CodeDomProvider languageProvider;
+		protected abstract string FriendlyName { get; }
 
-		protected RequiresProvidesDirectiveProcessor()
-		{
-		}
+		protected ITextTemplatingEngineHost Host { get; private set; }
 
 		public override void Initialize(ITextTemplatingEngineHost host)
 		{
 			base.Initialize(host);
-			this.host = host;
+			this.Host = host;
 		}
 
 		protected abstract void InitializeProvidesDictionary(string directiveName, IDictionary<string, string> providesDictionary);
 		protected abstract void InitializeRequiresDictionary(string directiveName, IDictionary<string, string> requiresDictionary);
-		protected abstract string FriendlyName { get; }
 
-		protected abstract void GeneratePostInitializationCode(string directiveName, StringBuilder codeBuffer, CodeDomProvider languageProvider,
-			IDictionary<string, string> requiresArguments, IDictionary<string, string> providesArguments);
+		protected abstract void GeneratePostInitializationCode
+		(
+			string directiveName,
+			StringBuilder codeBuffer,
+			CodeDomProvider languageProvider,
+			IDictionary<string, string> requiresArguments,
+			IDictionary<string, string> providesArguments);
 
-		protected abstract void GeneratePreInitializationCode(string directiveName, StringBuilder codeBuffer, CodeDomProvider languageProvider,
-			IDictionary<string, string> requiresArguments, IDictionary<string, string> providesArguments);
+		protected abstract void GeneratePreInitializationCode
+		(
+			string directiveName,
+			StringBuilder codeBuffer,
+			CodeDomProvider languageProvider,
+			IDictionary<string, string> requiresArguments,
+			IDictionary<string, string> providesArguments);
 
-		protected abstract void GenerateTransformCode(string directiveName, StringBuilder codeBuffer, CodeDomProvider languageProvider,
-			IDictionary<string, string> requiresArguments, IDictionary<string, string> providesArguments);
+		protected abstract void GenerateTransformCode
+		(
+			string directiveName,
+			StringBuilder codeBuffer,
+			CodeDomProvider languageProvider,
+			IDictionary<string, string> requiresArguments,
+			IDictionary<string, string> providesArguments);
 
-		protected virtual void PostProcessArguments(string directiveName, IDictionary<string, string> requiresArguments,
+		protected virtual void PostProcessArguments
+		(
+			string directiveName,
+			IDictionary<string, string> requiresArguments,
 			IDictionary<string, string> providesArguments)
 		{
 		}
@@ -169,7 +184,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 
 			foreach (var req in requiresDictionary)
 			{
-				var val = this.host.ResolveParameterValue(id, this.FriendlyName, req.Key);
+				var val = this.Host.ResolveParameterValue(id, this.FriendlyName, req.Key);
 				if (val != null)
 					requiresDictionary[req.Key] = val;
 				else if (req.Value == null)
@@ -178,7 +193,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 
 			foreach (var req in providesDictionary)
 			{
-				var val = this.host.ResolveParameterValue(id, this.FriendlyName, req.Key);
+				var val = this.Host.ResolveParameterValue(id, this.FriendlyName, req.Key);
 				if (val != null)
 					providesDictionary[req.Key] = val;
 			}
@@ -190,15 +205,14 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			this.GenerateTransformCode(directiveName, this.codeBuffer, this.languageProvider, requiresDictionary, providesDictionary);
 		}
 
-		protected virtual string ProvideUniqueId(string directiveName, IDictionary<string, string> arguments,
-			IDictionary<string, string> requiresArguments, IDictionary<string, string> providesArguments)
+		protected virtual string ProvideUniqueId
+		(
+			string directiveName,
+			IDictionary<string, string> arguments,
+			IDictionary<string, string> requiresArguments,
+			IDictionary<string, string> providesArguments)
 		{
 			return directiveName;
-		}
-
-		protected ITextTemplatingEngineHost Host
-		{
-			get { return this.host; }
 		}
 	}
 }

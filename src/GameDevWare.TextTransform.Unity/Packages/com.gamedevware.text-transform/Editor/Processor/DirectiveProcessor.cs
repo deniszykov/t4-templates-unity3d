@@ -35,9 +35,9 @@ namespace GameDevWare.TextTransform.Editor.Processor
 	{
 		private CompilerErrorCollection errors;
 
-		protected DirectiveProcessor()
-		{
-		}
+		CompilerErrorCollection IDirectiveProcessor.Errors => this.errors;
+
+		bool IDirectiveProcessor.RequiresProcessingRunIsHostSpecific => false;
 
 		public virtual void Initialize(ITextTemplatingEngineHost host)
 		{
@@ -49,6 +49,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		{
 			if (languageProvider == null)
 				throw new ArgumentNullException("languageProvider");
+
 			this.errors = errors;
 		}
 
@@ -66,18 +67,8 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			return null;
 		}
 
-		CompilerErrorCollection IDirectiveProcessor.Errors
-		{
-			get { return this.errors; }
-		}
-
 		void IDirectiveProcessor.SetProcessingRunIsHostSpecific(bool hostSpecific)
 		{
-		}
-
-		bool IDirectiveProcessor.RequiresProcessingRunIsHostSpecific
-		{
-			get { return false; }
 		}
 	}
 }

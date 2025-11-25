@@ -32,6 +32,10 @@ namespace GameDevWare.TextTransform.Editor.Processor
 {
 	public static class FileUtil
 	{
+		private static readonly bool isWindows = Path.DirectorySeparatorChar == '\\';
+
+		private static readonly string wildcardMarker = "_" + Guid.NewGuid() + "_";
+
 		//from MonoDevelop.Core.FileService, copied here so Mono.TextTemplating can be used w/o MD dependency
 		public static string AbsoluteToRelativePath(string baseDirectoryPath, string absPath)
 		{
@@ -49,22 +53,18 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			return relativePath;
 		}
 
-		static string GetFullPath(string path)
+		private static string GetFullPath(string path)
 		{
 			if (path == null)
 				throw new ArgumentNullException(nameof(path));
+
 			if (!isWindows || path.IndexOf('*') == -1)
 				return Path.GetFullPath(path, PathUtils.ProjectPath);
-			else
-			{
-				// On Windows, GetFullPath doesn't work if the path contains wildcards.
-				path = path.Replace("*", wildcardMarker);
-				path = Path.GetFullPath(path, PathUtils.ProjectPath);
-				return path.Replace(wildcardMarker, "*");
-			}
-		}
 
-		static readonly string wildcardMarker = "_" + Guid.NewGuid() + "_";
-		static readonly bool isWindows = Path.DirectorySeparatorChar == '\\';
+			// On Windows, GetFullPath doesn't work if the path contains wildcards.
+			path = path.Replace("*", wildcardMarker);
+			path = Path.GetFullPath(path, PathUtils.ProjectPath);
+			return path.Replace(wildcardMarker, "*");
+		}
 	}
 }

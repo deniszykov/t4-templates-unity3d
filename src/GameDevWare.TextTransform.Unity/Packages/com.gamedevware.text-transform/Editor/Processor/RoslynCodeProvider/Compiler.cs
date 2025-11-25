@@ -18,146 +18,11 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 {
 	internal abstract class Compiler : ICodeCompiler
 	{
-		private readonly CodeDomProvider codeDomProvider;
-		protected readonly IProviderOptions ProviderOptions;
-		private string compilerFullPath = null;
 		private const string CLR_PROFILING_SETTING = "COR_ENABLE_PROFILING";
 		private const string DISABLE_PROFILING = "0";
-
-		public Compiler(CodeDomProvider codeDomProvider, IProviderOptions providerOptions)
-		{
-			this.codeDomProvider = codeDomProvider;
-			this.ProviderOptions = providerOptions;
-		}
-
-		public CompilerResults CompileAssemblyFromDom(CompilerParameters options, CodeCompileUnit compilationUnit)
-		{
-			if (options == null)
-			{
-				throw new ArgumentNullException(nameof(options));
-			}
-
-			if (compilationUnit == null)
-			{
-				throw new ArgumentNullException(nameof(compilationUnit));
-			}
-
-			return this.CompileAssemblyFromDomBatch(options, new CodeCompileUnit[] { compilationUnit });
-		}
-
-		public CompilerResults CompileAssemblyFromDomBatch(CompilerParameters options, CodeCompileUnit[] compilationUnits)
-		{
-			if (options == null)
-			{
-				throw new ArgumentNullException(nameof(options));
-			}
-
-			if (compilationUnits == null)
-			{
-				throw new ArgumentNullException(nameof(compilationUnits));
-			}
-
-			try
-			{
-				var sources = compilationUnits.Select(c =>
-				{
-					using (var writer = new StringWriter())
-					{
-						this.codeDomProvider.GenerateCodeFromCompileUnit(c, writer, new CodeGeneratorOptions());
-						return writer.ToString();
-					}
-				});
-
-				return this.FromSourceBatch(options, sources.ToArray());
-			}
-			finally
-			{
-				options.TempFiles.Delete();
-			}
-		}
-
-		public CompilerResults CompileAssemblyFromFile(CompilerParameters options, string fileName)
-		{
-			if (options == null)
-			{
-				throw new ArgumentNullException(nameof(options));
-			}
-
-			if (fileName == null)
-			{
-				throw new ArgumentNullException(nameof(fileName));
-			}
-
-			return this.CompileAssemblyFromFileBatch(options, new string[] { fileName });
-		}
-
-		public CompilerResults CompileAssemblyFromFileBatch(CompilerParameters options, string[] fileNames)
-		{
-			if (options == null)
-			{
-				throw new ArgumentNullException(nameof(options));
-			}
-
-			if (fileNames == null)
-			{
-				throw new ArgumentNullException(nameof(fileNames));
-			}
-
-			try
-			{
-				// Try opening the files to make sure they exists.  This will throw an exception
-				// if it doesn't
-				foreach (var fileName in fileNames)
-				{
-					using (var str = File.OpenRead(fileName))
-					{
-					}
-				}
-
-				return this.FromFileBatch(options, fileNames);
-			}
-			finally
-			{
-				options.TempFiles.Delete();
-			}
-		}
-
-		public CompilerResults CompileAssemblyFromSource(CompilerParameters options, string source)
-		{
-			if (options == null)
-			{
-				throw new ArgumentNullException(nameof(options));
-			}
-
-			if (source == null)
-			{
-				throw new ArgumentNullException(nameof(source));
-			}
-
-			return this.CompileAssemblyFromSourceBatch(options, new string[] { source });
-		}
-
-		public CompilerResults CompileAssemblyFromSourceBatch(CompilerParameters options, string[] sources)
-		{
-			if (options == null)
-			{
-				throw new ArgumentNullException(nameof(options));
-			}
-
-			if (sources == null)
-			{
-				throw new ArgumentNullException(nameof(sources));
-			}
-
-			try
-			{
-				return this.FromSourceBatch(options, sources);
-			}
-			finally
-			{
-				options.TempFiles.Delete();
-			}
-		}
+		private readonly CodeDomProvider codeDomProvider;
+		protected readonly IProviderOptions ProviderOptions;
+		private string compilerFullPath;
 
 		protected abstract string FileExtension { get; }
 
@@ -180,11 +45,17 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 			}
 		}
 
+		protected abstract string FullPathsOption { get; }
+
+		public Compiler(CodeDomProvider codeDomProvider, IProviderOptions providerOptions)
+		{
+			this.codeDomProvider = codeDomProvider;
+			this.ProviderOptions = providerOptions;
+		}
+
 		protected abstract void ProcessCompilerOutputLine(CompilerResults results, string line);
 
 		protected abstract string CmdArgsFromParameters(CompilerParameters options);
-
-		protected abstract string FullPathsOption { get; }
 
 		protected virtual void FixUpCompilerParameters(CompilerParameters options)
 		{
@@ -215,15 +86,9 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 
 		private CompilerResults FromSourceBatch(CompilerParameters options, string[] sources)
 		{
-			if (options == null)
-			{
-				throw new ArgumentNullException(nameof(options));
-			}
+			if (options == null) throw new ArgumentNullException(nameof(options));
 
-			if (sources == null)
-			{
-				throw new ArgumentNullException(nameof(sources));
-			}
+			if (sources == null) throw new ArgumentNullException(nameof(sources));
 
 			new SecurityPermission(SecurityPermissionFlag.UnmanagedCode).Demand();
 
@@ -231,54 +96,41 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 			CompilerResults results = null;
 
 			// the extra try-catch is here to mitigate exception filter injection attacks.
-			try
+			for (var i = 0; i < sources.Length; i++)
 			{
-				for (int i = 0; i < sources.Length; i++)
+				var name = options.TempFiles.AddExtension(i + this.FileExtension);
+				var temp = new FileStream(name, FileMode.Create, FileAccess.Write, FileShare.Read);
+				try
 				{
-					string name = options.TempFiles.AddExtension(i + this.FileExtension);
-					var temp = new FileStream(name, FileMode.Create, FileAccess.Write, FileShare.Read);
-					try
+					using (var sw = new StreamWriter(temp, Encoding.UTF8))
 					{
-						using (var sw = new StreamWriter(temp, Encoding.UTF8))
-						{
-							sw.Write(sources[i]);
-							sw.Flush();
-						}
+						sw.Write(sources[i]);
+						sw.Flush();
 					}
-					finally
-					{
-						temp.Close();
-					}
-
-					filenames[i] = name;
+				}
+				finally
+				{
+					temp.Close();
 				}
 
-				results = this.FromFileBatch(options, filenames);
+				filenames[i] = name;
 			}
-			catch
-			{
-				throw;
-			}
+
+			results = this.FromFileBatch(options, filenames);
 
 			return results;
 		}
 
 		private CompilerResults FromFileBatch(CompilerParameters options, string[] fileNames)
 		{
-			if (options == null)
-			{
-				throw new ArgumentNullException(nameof(options));
-			}
+			if (options == null) throw new ArgumentNullException(nameof(options));
 
-			if (fileNames == null)
-			{
-				throw new ArgumentNullException(nameof(fileNames));
-			}
+			if (fileNames == null) throw new ArgumentNullException(nameof(fileNames));
 
 			new SecurityPermission(SecurityPermissionFlag.UnmanagedCode).Demand();
 
 			string outputFile = null;
-			int retValue = 0;
+			var retValue = 0;
 			var results = new CompilerResults(options.TempFiles);
 			var perm1 = new SecurityPermission(SecurityPermissionFlag.ControlEvidence);
 			perm1.Assert();
@@ -293,10 +145,10 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 				SecurityPermission.RevertAssert();
 			}
 
-			bool createdEmptyAssembly = false;
+			var createdEmptyAssembly = false;
 			if (options.OutputAssembly == null || options.OutputAssembly.Length == 0)
 			{
-				string extension = (options.GenerateExecutable) ? "exe" : "dll";
+				var extension = options.GenerateExecutable ? "exe" : "dll";
 				options.OutputAssembly = results.TempFiles.AddExtension(extension, !options.GenerateInMemory);
 
 				// Create an empty assembly.  This is so that the file will have permissions that
@@ -311,18 +163,14 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 			// Don't delete pdbs when debug=false but they have specified pdbonly.
 			if (options.CompilerOptions != null &&
 				-1 != CultureInfo.InvariantCulture.CompareInfo.IndexOf(options.CompilerOptions, "/debug:pdbonly", CompareOptions.IgnoreCase))
-			{
 				results.TempFiles.AddExtension(pdbname, true);
-			}
 			else
-			{
 				results.TempFiles.AddExtension(pdbname);
-			}
 
-			string args = this.GetCompilationArgumentString(options) + " " + JoinStringArray(fileNames, " ");
+			var args = this.GetCompilationArgumentString(options) + " " + JoinStringArray(fileNames, " ");
 
 			// Use a response file if the compiler supports it
-			string responseFileArgs = this.GetResponseFileCmdArgs(options, args);
+			var responseFileArgs = this.GetResponseFileCmdArgs(options, args);
 			string trueArgs = null;
 			if (responseFileArgs != null)
 			{
@@ -332,9 +180,7 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 
 			// Appending TTL to the command line arguments.
 			if (this.ProviderOptions.CompilerServerTimeToLive > 0)
-			{
 				args = string.Format("/shared /keepalive:\"{0}\" {1}", this.ProviderOptions.CompilerServerTimeToLive, args);
-			}
 
 			this.Compile(options,
 				this.CompilerName,
@@ -348,9 +194,9 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 			if (retValue != 0 || options.WarningLevel > 0)
 			{
 				// The output of the compiler is in UTF8
-				string[] lines = ReadAllLines(outputFile, Encoding.UTF8, FileShare.ReadWrite);
-				bool replacedArgs = false;
-				foreach (string line in lines)
+				var lines = ReadAllLines(outputFile, Encoding.UTF8, FileShare.ReadWrite);
+				var replacedArgs = false;
+				foreach (var line in lines)
 				{
 					if (!replacedArgs && trueArgs != null && line.Contains(args))
 					{
@@ -362,18 +208,13 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 						results.Output.Add(outputLine);
 					}
 					else
-					{
 						results.Output.Add(line);
-					}
 
 					this.ProcessCompilerOutputLine(results, line);
 				}
 
 				// Delete the empty assembly if we created one
-				if (retValue != 0 && createdEmptyAssembly)
-				{
-					File.Delete(options.OutputAssembly);
-				}
+				if (retValue != 0 && createdEmptyAssembly) File.Delete(options.OutputAssembly);
 			}
 
 			if (retValue != 0 || results.Errors.HasErrors || !options.GenerateInMemory)
@@ -383,19 +224,16 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 			}
 
 			// Read assembly into memory:
-			byte[] assemblyBuff = File.ReadAllBytes(options.OutputAssembly);
+			var assemblyBuff = File.ReadAllBytes(options.OutputAssembly);
 
 			// Read symbol file into memory and ignore any errors that may be encountered:
 			// (This functionality was added in NetFx 4.5, errors must be ignored to ensure compatibility)
 			byte[] symbolsBuff = null;
 			try
 			{
-				string symbFileName = options.TempFiles.BasePath + "." + pdbname;
+				var symbFileName = options.TempFiles.BasePath + "." + pdbname;
 
-				if (File.Exists(symbFileName))
-				{
-					symbolsBuff = File.ReadAllBytes(symbFileName);
-				}
+				if (File.Exists(symbFileName)) symbolsBuff = File.ReadAllBytes(symbFileName);
 			}
 			catch
 			{
@@ -414,12 +252,12 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 			impersonation.Undo();
 		}
 
-		private static string[] ReadAllLines(String file, Encoding encoding, FileShare share)
+		private static string[] ReadAllLines(string file, Encoding encoding, FileShare share)
 		{
 			using (var stream = File.Open(file, FileMode.Open, FileAccess.Read, share))
 			{
-				String line;
-				var lines = new List<String>();
+				string line;
+				var lines = new List<string>();
 
 				using (var sr = new StreamReader(stream, encoding))
 				{
@@ -442,10 +280,10 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 			ref int nativeReturnValue)
 		{
 			string errorFile = null;
-			string cmdLine = "\"" + compilerFullPath + "\" " + arguments;
+			var cmdLine = "\"" + compilerFullPath + "\" " + arguments;
 			outputFile = options.TempFiles.AddExtension("out");
 
-			bool profilingSettingIsUpdated = false;
+			var profilingSettingIsUpdated = false;
 			string originalClrProfilingSetting = null;
 
 			nativeReturnValue = Executor.ExecWaitWithCapture(
@@ -455,15 +293,12 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 				ref outputFile,
 				ref errorFile);
 
-			if (profilingSettingIsUpdated)
-			{
-				Environment.SetEnvironmentVariable(CLR_PROFILING_SETTING, originalClrProfilingSetting, EnvironmentVariableTarget.Process);
-			}
+			if (profilingSettingIsUpdated) Environment.SetEnvironmentVariable(CLR_PROFILING_SETTING, originalClrProfilingSetting, EnvironmentVariableTarget.Process);
 		}
 
 		private string GetResponseFileCmdArgs(CompilerParameters options, string cmdArgs)
 		{
-			string responseFileName = options.TempFiles.AddExtension("cmdline");
+			var responseFileName = options.TempFiles.AddExtension("cmdline");
 			var responseFileStream = new FileStream(responseFileName, FileMode.Create, FileAccess.Write, FileShare.Read);
 			try
 			{
@@ -484,18 +319,12 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 
 		private static string JoinStringArray(string[] sa, string separator)
 		{
-			if (sa == null || sa.Length == 0)
-			{
-				return String.Empty;
-			}
+			if (sa == null || sa.Length == 0) return string.Empty;
 
-			if (sa.Length == 1)
-			{
-				return "\"" + sa[0] + "\"";
-			}
+			if (sa.Length == 1) return "\"" + sa[0] + "\"";
 
 			var sb = new StringBuilder();
-			for (int i = 0; i < sa.Length - 1; i++)
+			for (var i = 0; i < sa.Length - 1; i++)
 			{
 				sb.Append("\"");
 				sb.Append(sa[i]);
@@ -508,6 +337,99 @@ namespace GameDevWare.TextTransform.Editor.Processor.RoslynCodeProvider
 			sb.Append("\"");
 
 			return sb.ToString();
+		}
+
+		public CompilerResults CompileAssemblyFromDom(CompilerParameters options, CodeCompileUnit compilationUnit)
+		{
+			if (options == null) throw new ArgumentNullException(nameof(options));
+
+			if (compilationUnit == null) throw new ArgumentNullException(nameof(compilationUnit));
+
+			return this.CompileAssemblyFromDomBatch(options, new[] { compilationUnit });
+		}
+
+		public CompilerResults CompileAssemblyFromDomBatch(CompilerParameters options, CodeCompileUnit[] compilationUnits)
+		{
+			if (options == null) throw new ArgumentNullException(nameof(options));
+
+			if (compilationUnits == null) throw new ArgumentNullException(nameof(compilationUnits));
+
+			try
+			{
+				var sources = compilationUnits.Select(c =>
+				{
+					using (var writer = new StringWriter())
+					{
+						this.codeDomProvider.GenerateCodeFromCompileUnit(c, writer, new CodeGeneratorOptions());
+						return writer.ToString();
+					}
+				});
+
+				return this.FromSourceBatch(options, sources.ToArray());
+			}
+			finally
+			{
+				options.TempFiles.Delete();
+			}
+		}
+
+		public CompilerResults CompileAssemblyFromFile(CompilerParameters options, string fileName)
+		{
+			if (options == null) throw new ArgumentNullException(nameof(options));
+
+			if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+
+			return this.CompileAssemblyFromFileBatch(options, new[] { fileName });
+		}
+
+		public CompilerResults CompileAssemblyFromFileBatch(CompilerParameters options, string[] fileNames)
+		{
+			if (options == null) throw new ArgumentNullException(nameof(options));
+
+			if (fileNames == null) throw new ArgumentNullException(nameof(fileNames));
+
+			try
+			{
+				// Try opening the files to make sure they exists.  This will throw an exception
+				// if it doesn't
+				foreach (var fileName in fileNames)
+				{
+					using (var str = File.OpenRead(fileName))
+					{
+					}
+				}
+
+				return this.FromFileBatch(options, fileNames);
+			}
+			finally
+			{
+				options.TempFiles.Delete();
+			}
+		}
+
+		public CompilerResults CompileAssemblyFromSource(CompilerParameters options, string source)
+		{
+			if (options == null) throw new ArgumentNullException(nameof(options));
+
+			if (source == null) throw new ArgumentNullException(nameof(source));
+
+			return this.CompileAssemblyFromSourceBatch(options, new[] { source });
+		}
+
+		public CompilerResults CompileAssemblyFromSourceBatch(CompilerParameters options, string[] sources)
+		{
+			if (options == null) throw new ArgumentNullException(nameof(options));
+
+			if (sources == null) throw new ArgumentNullException(nameof(sources));
+
+			try
+			{
+				return this.FromSourceBatch(options, sources);
+			}
+			finally
+			{
+				options.TempFiles.Delete();
+			}
 		}
 	}
 }

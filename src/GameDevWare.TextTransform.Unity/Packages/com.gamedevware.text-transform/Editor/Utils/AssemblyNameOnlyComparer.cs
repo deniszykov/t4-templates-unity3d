@@ -6,7 +6,7 @@ namespace GameDevWare.TextTransform.Editor.Windows
 {
 	internal class AssemblyNameOnlyComparer : IComparer<AssemblyName>, IEqualityComparer<AssemblyName>
 	{
-		public static readonly AssemblyNameOnlyComparer Default = new AssemblyNameOnlyComparer();
+		public static readonly AssemblyNameOnlyComparer Default = new();
 
 		public int Compare(AssemblyName x, AssemblyName y)
 		{
@@ -17,7 +17,7 @@ namespace GameDevWare.TextTransform.Editor.Windows
 			if (ReferenceEquals(y, null))
 				return 1;
 
-			return StringComparer.Ordinal.Compare(x.Name,y.Name);
+			return StringComparer.Ordinal.Compare(x.Name, y.Name);
 		}
 
 		public bool Equals(AssemblyName x, AssemblyName y)

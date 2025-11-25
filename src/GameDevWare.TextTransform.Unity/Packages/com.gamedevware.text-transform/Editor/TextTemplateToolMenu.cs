@@ -16,7 +16,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -30,12 +29,12 @@ namespace GameDevWare.TextTransform.Editor
 		{
 			TextTemplateToolSettings.Current.verbose = !TextTemplateToolSettings.Current.verbose;
 			TextTemplateToolSettings.Current.Save();
-			UnityEditor.Menu.SetChecked("Tools/T4/Verbose Logs", TextTemplateToolSettings.Current.verbose);
+			Menu.SetChecked("Tools/T4/Verbose Logs", TextTemplateToolSettings.Current.verbose);
 		}
 		[MenuItem("Tools/T4/Verbose Logs", true, 20)]
 		private static bool SwitchVerboseLogsCheck()
 		{
-			UnityEditor.Menu.SetChecked("Tools/T4/Verbose Logs", TextTemplateToolSettings.Current.verbose);
+			Menu.SetChecked("Tools/T4/Verbose Logs", TextTemplateToolSettings.Current.verbose);
 			return true;
 		}
 
@@ -49,6 +48,7 @@ namespace GameDevWare.TextTransform.Editor
 				var result = UnityTemplateGenerator.RunForTemplate(templatePath);
 				Debug.Log($"Transformation for '{assetName}' asset is completed. Result: {result}");
 			}
+
 			AssetChangesTrigger.DoDelayedAssetRefresh();
 		}
 		[MenuItem("Tools/T4/Transform All Assets", true, 1)]

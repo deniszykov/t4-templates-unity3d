@@ -9,20 +9,17 @@ namespace GameDevWare.TextTransform.Editor
 	public class T4TemplateImporter : TextTemplateImporter
 	{
 		/// <inheritdoc />
-		public override void OnImportAsset(AssetImportContext ctx) => ImportAsset(ctx);
+		public override void OnImportAsset(AssetImportContext ctx)
+		{
+			ImportAsset(ctx);
+		}
 
 		public static void ImportAsset(AssetImportContext ctx)
 		{
-			if (ctx.mainObject is TextAsset)
-			{
-				return;
-			}
+			if (ctx.mainObject is TextAsset) return;
 
 			var textTemplatePath = Path.GetFullPath(ctx.assetPath ?? "", PathUtils.ProjectPath);
-			if (string.IsNullOrEmpty(textTemplatePath) || !File.Exists(textTemplatePath))
-			{
-				return;
-			}
+			if (string.IsNullOrEmpty(textTemplatePath) || !File.Exists(textTemplatePath)) return;
 
 			var text = File.ReadAllText(textTemplatePath);
 			var textAsset = new TextAsset(text);

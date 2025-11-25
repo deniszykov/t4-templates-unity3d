@@ -28,6 +28,7 @@ using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -39,73 +40,6 @@ namespace GameDevWare.TextTransform.Editor.Processor
 {
 	public class TemplatingEngine : MarshalByRefObject, ITextTemplatingEngine
 	{
-		public string ProcessTemplate(string content, ITextTemplatingEngineHost host)
-		{
-			var tpl = this.CompileTemplate(content, host);
-			try
-			{
-				if (tpl != null)
-					return tpl.Process();
-				return null;
-			}
-			finally
-			{
-				if (tpl != null)
-					tpl.Dispose();
-			}
-		}
-
-		public string PreprocessTemplate(string content, ITextTemplatingEngineHost host, string className,
-			string classNamespace, out string language, out string[] references)
-		{
-			if (content == null)
-				throw new ArgumentNullException("content");
-			if (host == null)
-				throw new ArgumentNullException("host");
-			if (className == null)
-				throw new ArgumentNullException("className");
-			if (classNamespace == null)
-				throw new ArgumentNullException("classNamespace");
-
-			language = null;
-			references = null;
-
-			var pt = ParsedTemplate.FromText(content, host);
-			if (pt.Errors.HasErrors)
-			{
-				host.LogErrors(pt.Errors);
-				return null;
-			}
-
-			var settings = GetSettings(host, pt);
-			if (pt.Errors.HasErrors)
-			{
-				host.LogErrors(pt.Errors);
-				return null;
-			}
-			settings.Name = className;
-			settings.Namespace = classNamespace;
-			settings.IncludePreprocessingHelpers = string.IsNullOrEmpty(settings.Inherits);
-			settings.IsPreprocessed = true;
-			language = settings.Language;
-
-			var ccu = GenerateCompileUnit(host, content, pt, settings);
-			references = ProcessReferences(host, pt, settings).ToArray();
-
-			host.LogErrors(pt.Errors);
-			if (pt.Errors.HasErrors)
-			{
-				return null;
-			}
-
-			var options = new CodeGeneratorOptions();
-			using (var sw = new StringWriter())
-			{
-				settings.Provider.GenerateCodeFromCompileUnit(ccu, sw, options);
-				return sw.ToString();
-			}
-		}
-
 		public CompiledTemplate CompileTemplate(string content, ITextTemplatingEngineHost host)
 		{
 			if (content == null)
@@ -127,10 +61,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				return null;
 			}
 
-			if (!string.IsNullOrEmpty(settings.Extension))
-			{
-				host.SetFileExtension(settings.Extension);
-			}
+			if (!string.IsNullOrEmpty(settings.Extension)) host.SetFileExtension(settings.Extension);
 			if (settings.Encoding != null)
 			{
 				//FIXME: when is this called with false?
@@ -164,13 +95,13 @@ namespace GameDevWare.TextTransform.Editor.Processor
 					null, null);
 				return (CompiledTemplate)obj;
 			}
+
 			return new CompiledTemplate(host, results, templateClassFullName, settings.Culture, references.ToArray());
 		}
 
-		static CompilerResults GenerateCode(IEnumerable<string> references, TextTemplateSettings settings, CodeCompileUnit ccu)
+		private static CompilerResults GenerateCode(IEnumerable<string> references, TextTemplateSettings settings, CodeCompileUnit ccu)
 		{
-			var pars = new CompilerParameters
-			{
+			var pars = new CompilerParameters {
 				GenerateExecutable = false,
 				CompilerOptions = settings.CompilerOptions,
 				IncludeDebugInformation = settings.Debug,
@@ -181,7 +112,9 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			};
 
 			foreach (var r in references)
+			{
 				pars.ReferencedAssemblies.Add(r);
+			}
 
 			if (settings.Debug)
 				pars.TempFiles.KeepFiles = true;
@@ -189,7 +122,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			return settings.Provider.CompileAssemblyFromDom(pars, ccu);
 		}
 
-		static HashSet<string> ProcessReferences(ITextTemplatingEngineHost host, ParsedTemplate pt, TextTemplateSettings settings)
+		private static HashSet<string> ProcessReferences(ITextTemplatingEngineHost host, ParsedTemplate pt, TextTemplateSettings settings)
 		{
 			var resolved = new HashSet<string>();
 
@@ -200,15 +133,14 @@ namespace GameDevWare.TextTransform.Editor.Processor
 
 				var resolvedAssem = host.ResolveAssemblyReference(assem);
 				if (!string.IsNullOrEmpty(resolvedAssem))
-				{
 					resolved.Add(resolvedAssem);
-				}
 				else
 				{
 					pt.LogError("Could not resolve assembly reference '" + assem + "'");
 					return null;
 				}
 			}
+
 			return resolved;
 		}
 
@@ -235,12 +167,13 @@ namespace GameDevWare.TextTransform.Editor.Processor
 						val = dt.Extract("culture");
 						if (val != null)
 						{
-							var culture = System.Globalization.CultureInfo.GetCultureInfo(val);
+							var culture = CultureInfo.GetCultureInfo(val);
 							if (culture == null)
 								pt.LogWarning("Could not find culture '" + val + "'", dt.StartLocation);
 							else
 								settings.Culture = culture;
 						}
+
 						val = dt.Extract("hostspecific");
 						if (val != null)
 						{
@@ -250,30 +183,17 @@ namespace GameDevWare.TextTransform.Editor.Processor
 								settings.HostSpecific = true;
 							}
 							else
-							{
 								settings.HostSpecific = string.Compare(val, "true", StringComparison.OrdinalIgnoreCase) == 0;
-							}
 						}
+
 						val = dt.Extract("CompilerOptions");
-						if (val != null)
-						{
-							settings.CompilerOptions = val;
-						}
+						if (val != null) settings.CompilerOptions = val;
 						val = dt.Extract("relativeLinePragmas");
-						if (val != null)
-						{
-							relativeLinePragmas = string.Compare(val, "true", StringComparison.OrdinalIgnoreCase) == 0;
-						}
+						if (val != null) relativeLinePragmas = string.Compare(val, "true", StringComparison.OrdinalIgnoreCase) == 0;
 						val = dt.Extract("linePragmas");
-						if (val != null)
-						{
-							settings.NoLinePragmas = string.Compare(val, "false", StringComparison.OrdinalIgnoreCase) == 0;
-						}
+						if (val != null) settings.NoLinePragmas = string.Compare(val, "false", StringComparison.OrdinalIgnoreCase) == 0;
 						val = dt.Extract("visibility");
-						if (val != null)
-						{
-							settings.InternalVisibility = string.Compare(val, "internal", StringComparison.OrdinalIgnoreCase) == 0;
-						}
+						if (val != null) settings.InternalVisibility = string.Compare(val, "internal", StringComparison.OrdinalIgnoreCase) == 0;
 						break;
 
 					case "assembly":
@@ -314,6 +234,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 						AddDirective(settings, host, processorName, dt);
 						continue;
 				}
+
 				ComplainExcessAttributes(dt, pt);
 			}
 
@@ -322,13 +243,9 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			{
 				settings.HostType = gen.SpecificHostType;
 				if (settings.HostType != null)
-				{
 					settings.Assemblies.Add(settings.HostType.Assembly.Location);
-				}
 				else
-				{
 					settings.HostType = typeof(ITextTemplatingEngineHost);
-				}
 				foreach (var processor in gen.GetAdditionalDirectiveProcessors())
 				{
 					settings.DirectiveProcessors[processor.GetType().FullName] = processor;
@@ -341,9 +258,10 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				kv.Value.Initialize(host);
 
 				IRecognizeHostSpecific hs;
-				if (settings.HostSpecific || (
-					!((IDirectiveProcessor)kv.Value).RequiresProcessingRunIsHostSpecific &&
-					((hs = kv.Value as IRecognizeHostSpecific) == null || !hs.RequiresProcessingRunIsHostSpecific)))
+				if (settings.HostSpecific ||
+					(
+						!kv.Value.RequiresProcessingRunIsHostSpecific &&
+						((hs = kv.Value as IRecognizeHostSpecific) == null || !hs.RequiresProcessingRunIsHostSpecific)))
 					continue;
 
 				settings.HostSpecific = true;
@@ -352,7 +270,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 
 			foreach (var kv in settings.DirectiveProcessors)
 			{
-				((IDirectiveProcessor)kv.Value).SetProcessingRunIsHostSpecific(settings.HostSpecific);
+				kv.Value.SetProcessingRunIsHostSpecific(settings.HostSpecific);
 				var hs = kv.Value as IRecognizeHostSpecific;
 				if (hs != null)
 					hs.SetProcessingRunIsHostSpecific(settings.HostSpecific);
@@ -365,9 +283,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 
 			//resolve the CodeDOM provider
 			if (string.IsNullOrEmpty(settings.Language))
-			{
-					settings.Language = "C#";
-			}
+				settings.Language = "C#";
 			else if (settings.Language == "C#")
 			{
 				if (Environment.Version < new Version(4, 0))
@@ -385,13 +301,11 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			}
 			else if (settings.Language == "C#" && !string.IsNullOrEmpty(roslynCompilerPath))
 			{
-				var providerOptions = new ProviderOptions(roslynCompilerPath, compilerServerTimeToLive: 10);
+				var providerOptions = new ProviderOptions(roslynCompilerPath, 10);
 				settings.Provider = new RoslynCodeProvider.CSharpCodeProvider(providerOptions);
 			}
 			else
-			{
 				settings.Provider = CodeDomProvider.CreateProvider(settings.Language);
-			}
 
 			if (settings.Provider == null)
 			{
@@ -408,6 +322,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		{
 			if (provider is CSharpCodeProvider)
 				return IndentSnippetText(text, indent);
+
 			return text;
 		}
 
@@ -428,19 +343,15 @@ namespace GameDevWare.TextTransform.Editor.Processor
 							break;
 					}
 				}
-				else if (c != '\n')
-				{
-					continue;
-				}
+				else if (c != '\n') continue;
+
 				i++;
 				var len = i - lastNewline;
-				if (len > 0)
-				{
-					builder.Append(text, lastNewline, i - lastNewline);
-				}
+				if (len > 0) builder.Append(text, lastNewline, i - lastNewline);
 				builder.Append(indent);
 				lastNewline = i;
 			}
+
 			if (lastNewline > 0)
 				builder.Append(text, lastNewline, text.Length - lastNewline);
 			else
@@ -448,7 +359,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			return builder.ToString();
 		}
 
-		static void AddDirective(TextTemplateSettings settings, ITextTemplatingEngineHost host, string processorName, Directive directive)
+		private static void AddDirective(TextTemplateSettings settings, ITextTemplatingEngineHost host, string processorName, Directive directive)
 		{
 			IDirectiveProcessor processor;
 			if (!settings.DirectiveProcessors.TryGetValue(processorName, out processor))
@@ -463,32 +374,32 @@ namespace GameDevWare.TextTransform.Editor.Processor
 						processor = (IDirectiveProcessor)Activator.CreateInstance(processorType);
 						break;
 				}
+
 				if (!processor.IsDirectiveSupported(directive.Name))
 					throw new InvalidOperationException("Directive processor '" + processorName + "' does not support directive '" + directive.Name + "'");
 
 				settings.DirectiveProcessors[processorName] = processor;
 			}
+
 			settings.CustomDirectives.Add(new CustomDirective(processorName, directive));
 		}
 
-		static bool ComplainExcessAttributes(Directive dt, ParsedTemplate pt)
+		private static bool ComplainExcessAttributes(Directive dt, ParsedTemplate pt)
 		{
 			if (dt.Attributes.Count == 0)
 				return false;
+
 			var sb = new StringBuilder("Unknown attributes ");
 			var first = true;
 			foreach (var key in dt.Attributes.Keys)
 			{
 				if (!first)
-				{
 					sb.Append(", ");
-				}
 				else
-				{
 					first = false;
-				}
 				sb.Append(key);
 			}
+
 			sb.Append(" found in ");
 			sb.Append(dt.Name);
 			sb.Append(" directive.");
@@ -496,7 +407,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			return false;
 		}
 
-		static void ProcessDirectives(string content, ParsedTemplate pt, TextTemplateSettings settings)
+		private static void ProcessDirectives(string content, ParsedTemplate pt, TextTemplateSettings settings)
 		{
 			foreach (var processor in settings.DirectiveProcessors.Values)
 			{
@@ -534,35 +445,27 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			ccu.Namespaces.Add(namespac);
 
 			foreach (var ns in settings.Imports.Union(host.StandardImports))
+			{
 				namespac.Imports.Add(new CodeNamespaceImport(ns));
+			}
 
 			//prep the type
 			var type = new CodeTypeDeclaration(settings.Name);
 			type.IsPartial = true;
-			if (settings.InternalVisibility)
-			{
-				type.TypeAttributes = (type.TypeAttributes & ~TypeAttributes.VisibilityMask) | TypeAttributes.NotPublic;
-			}
+			if (settings.InternalVisibility) type.TypeAttributes = (type.TypeAttributes & ~TypeAttributes.VisibilityMask) | TypeAttributes.NotPublic;
 			if (!string.IsNullOrEmpty(settings.Inherits))
-			{
 				type.BaseTypes.Add(new CodeTypeReference(settings.Inherits));
-			}
 			else if (!settings.IncludePreprocessingHelpers)
-			{
 				type.BaseTypes.Add(TypeRef<TextTransformation>());
-			}
 			else
-			{
 				type.BaseTypes.Add(new CodeTypeReference(settings.Name + "Base"));
-			}
 			namespac.Types.Add(type);
 
 			//prep the transform method
-			var transformMeth = new CodeMemberMethod
-			{
+			var transformMeth = new CodeMemberMethod {
 				Name = "TransformText",
-				ReturnType = new CodeTypeReference(typeof(String)),
-				Attributes = MemberAttributes.Public,
+				ReturnType = new CodeTypeReference(typeof(string)),
+				Attributes = MemberAttributes.Public
 			};
 			if (!settings.IncludePreprocessingHelpers)
 				transformMeth.Attributes |= MemberAttributes.Override;
@@ -573,9 +476,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 
 			CodeExpression toStringHelper;
 			if (settings.IsPreprocessed)
-			{
 				toStringHelper = new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "ToStringHelper");
-			}
 			else
 			{
 				toStringHelper = new CodeTypeReferenceExpression(
@@ -599,10 +500,12 @@ namespace GameDevWare.TextTransform.Editor.Processor
 						f = FileUtil.AbsoluteToRelativePath(baseDirectory, f).Replace('\\', '/');
 					location = new CodeLinePragma(f, seg.StartLocation.Line);
 				}
+
 				switch (seg.Type)
 				{
 					case SegmentType.Block:
 						if (helperMode)
+
 							//TODO: are blocks permitted after helpers?
 							pt.LogError("Blocks are not permitted after helpers", seg.TagStartLocation);
 						st = new CodeSnippetStatement(seg.Text);
@@ -623,6 +526,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 					default:
 						throw new InvalidOperationException();
 				}
+
 				if (st != null)
 				{
 					if (helperMode)
@@ -641,7 +545,6 @@ namespace GameDevWare.TextTransform.Editor.Processor
 					{
 						st.LinePragma = location;
 						transformMeth.Statements.Add(st);
-						continue;
 					}
 				}
 			}
@@ -671,10 +574,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			}
 
 			//generate the Host property if needed
-			if (settings.HostSpecific && !settings.HostPropertyOnBase)
-			{
-				GenerateHostProperty(type, settings.HostType);
-			}
+			if (settings.HostSpecific && !settings.HostPropertyOnBase) GenerateHostProperty(type, settings.HostType);
 
 			GenerateInitializationMethod(type, settings);
 
@@ -685,23 +585,23 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				AddToStringHelper(baseClass, settings);
 				namespac.Types.Add(baseClass);
 			}
+
 			return ccu;
 		}
 
-		static CodeSnippetTypeMember CreateSnippetMember(string value, CodeLinePragma location = null)
+		private static CodeSnippetTypeMember CreateSnippetMember(string value, CodeLinePragma location = null)
 		{
 			//HACK: workaround for code generator not indenting first line of member snippet when inserting into class
 			const string indent = "\n        ";
 			if (!char.IsWhiteSpace(value[0]))
 				value = indent + value;
 
-			return new CodeSnippetTypeMember(value)
-			{
+			return new CodeSnippetTypeMember(value) {
 				LinePragma = location
 			};
 		}
 
-		static void GenerateHostProperty(CodeTypeDeclaration type, Type hostType)
+		private static void GenerateHostProperty(CodeTypeDeclaration type, Type hostType)
 		{
 			var hostTypeRef = new CodeTypeReference(hostType, CodeTypeReferenceOptions.GlobalReference);
 			var hostField = new CodeMemberField(hostTypeRef, "hostValue");
@@ -713,11 +613,10 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			type.Members.Add(hostProp);
 		}
 
-		static void GenerateInitializationMethod(CodeTypeDeclaration type, TextTemplateSettings settings)
+		private static void GenerateInitializationMethod(CodeTypeDeclaration type, TextTemplateSettings settings)
 		{
 			//initialization method
-			var initializeMeth = new CodeMemberMethod
-			{
+			var initializeMeth = new CodeMemberMethod {
 				Name = "Initialize",
 				ReturnType = new CodeTypeReference(typeof(void), CodeTypeReferenceOptions.GlobalReference),
 				Attributes = MemberAttributes.Public
@@ -737,7 +636,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 						hostProp,
 						"SetFileExtension",
 						new CodePrimitiveExpression(settings.Extension)
-						)));
+					)));
 				}
 
 				if (settings.Encoding != null)
@@ -750,8 +649,8 @@ namespace GameDevWare.TextTransform.Editor.Processor
 							"GetEncoding",
 							new CodePrimitiveExpression(settings.Encoding.CodePage),
 							new CodePrimitiveExpression(true)
-							)
-						)));
+						)
+					)));
 				}
 
 				if (statements.Count > 0)
@@ -761,9 +660,9 @@ namespace GameDevWare.TextTransform.Editor.Processor
 							hostProp,
 							CodeBinaryOperatorType.IdentityInequality,
 							new CodePrimitiveExpression(null)
-							),
+						),
 						statements.ToArray()
-						));
+					));
 				}
 			}
 
@@ -796,7 +695,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			type.Members.Add(initializeMeth);
 		}
 
-		static void GenerateProcessingHelpers(CodeTypeDeclaration type, TextTemplateSettings settings)
+		private static void GenerateProcessingHelpers(CodeTypeDeclaration type, TextTemplateSettings settings)
 		{
 			var thisRef = new CodeThisReferenceExpression();
 			var sbTypeRef = TypeRef<StringBuilder>();
@@ -821,13 +720,14 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			AddWriteHelpers(type);
 		}
 
-		static void AddPropertyGetterInitializationIfFieldIsNull(CodeMemberProperty property, CodeFieldReferenceExpression fieldRef, CodeTypeReference typeRef)
+		private static void AddPropertyGetterInitializationIfFieldIsNull
+			(CodeMemberProperty property, CodeFieldReferenceExpression fieldRef, CodeTypeReference typeRef)
 		{
 			var fieldInit = FieldInitializationIfNull(fieldRef, typeRef);
 			property.GetStatements.Insert(0, fieldInit);
 		}
 
-		static CodeConditionStatement FieldInitializationIfNull(CodeExpression fieldRef, CodeTypeReference typeRef)
+		private static CodeConditionStatement FieldInitializationIfNull(CodeExpression fieldRef, CodeTypeReference typeRef)
 		{
 			return new CodeConditionStatement(
 				new CodeBinaryOperatorExpression(fieldRef,
@@ -835,7 +735,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				new CodeAssignStatement(fieldRef, new CodeObjectCreateExpression(typeRef)));
 		}
 
-		static void AddErrorHelpers(CodeTypeDeclaration type)
+		private static void AddErrorHelpers(CodeTypeDeclaration type)
 		{
 			var cecTypeRef = TypeRef<CompilerErrorCollection>();
 			var thisRef = new CodeThisReferenceExpression();
@@ -853,20 +753,18 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			var errorsPropRef = new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "Errors");
 
 			var compilerErrorTypeRef = TypeRef<CompilerError>();
-			var errorMeth = new CodeMemberMethod
-			{
+			var errorMeth = new CodeMemberMethod {
 				Name = "Error",
-				Attributes = MemberAttributes.Public | MemberAttributes.Final,
+				Attributes = MemberAttributes.Public | MemberAttributes.Final
 			};
 			errorMeth.Parameters.Add(new CodeParameterDeclarationExpression(stringTypeRef, "message"));
 			errorMeth.Statements.Add(new CodeMethodInvokeExpression(errorsPropRef, "Add",
 				new CodeObjectCreateExpression(compilerErrorTypeRef, nullPrim, minusOnePrim, minusOnePrim, nullPrim,
 					new CodeArgumentReferenceExpression("message"))));
 
-			var warningMeth = new CodeMemberMethod
-			{
+			var warningMeth = new CodeMemberMethod {
 				Name = "Warning",
-				Attributes = MemberAttributes.Public | MemberAttributes.Final,
+				Attributes = MemberAttributes.Public | MemberAttributes.Final
 			};
 			warningMeth.Parameters.Add(new CodeParameterDeclarationExpression(stringTypeRef, "message"));
 			warningMeth.Statements.Add(new CodeVariableDeclarationStatement(compilerErrorTypeRef, "val",
@@ -883,7 +781,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			type.Members.Add(errorsProp);
 		}
 
-		static void AddIndentHelpers(CodeTypeDeclaration type)
+		private static void AddIndentHelpers(CodeTypeDeclaration type)
 		{
 			var stringTypeRef = TypeRef<string>();
 			var thisRef = new CodeThisReferenceExpression();
@@ -905,11 +803,10 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			currentIndentField.InitExpression = stringEmptyRef;
 			var currentIndentFieldRef = new CodeFieldReferenceExpression(thisRef, currentIndentField.Name);
 
-			var popIndentMeth = new CodeMemberMethod
-			{
+			var popIndentMeth = new CodeMemberMethod {
 				Name = "PopIndent",
 				ReturnType = stringTypeRef,
-				Attributes = MemberAttributes.Public | MemberAttributes.Final,
+				Attributes = MemberAttributes.Public | MemberAttributes.Final
 			};
 			popIndentMeth.Statements.Add(new CodeConditionStatement(
 				new CodeBinaryOperatorExpression(new CodePropertyReferenceExpression(indentsPropRef, "Count"),
@@ -926,10 +823,9 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				new CodeMethodInvokeExpression(currentIndentFieldRef, "Substring", zeroPrim, new CodeVariableReferenceExpression("lastPos"))));
 			popIndentMeth.Statements.Add(new CodeMethodReturnStatement(new CodeVariableReferenceExpression("last")));
 
-			var pushIndentMeth = new CodeMemberMethod
-			{
+			var pushIndentMeth = new CodeMemberMethod {
 				Name = "PushIndent",
-				Attributes = MemberAttributes.Public | MemberAttributes.Final,
+				Attributes = MemberAttributes.Public | MemberAttributes.Final
 			};
 			pushIndentMeth.Parameters.Add(new CodeParameterDeclarationExpression(stringTypeRef, "indent"));
 			pushIndentMeth.Statements.Add(new CodeMethodInvokeExpression(indentsPropRef, "Push",
@@ -937,10 +833,9 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			pushIndentMeth.Statements.Add(new CodeAssignStatement(currentIndentFieldRef,
 				new CodeBinaryOperatorExpression(currentIndentFieldRef, CodeBinaryOperatorType.Add, new CodeArgumentReferenceExpression("indent"))));
 
-			var clearIndentMeth = new CodeMemberMethod
-			{
+			var clearIndentMeth = new CodeMemberMethod {
 				Name = "ClearIndent",
-				Attributes = MemberAttributes.Public | MemberAttributes.Final,
+				Attributes = MemberAttributes.Public | MemberAttributes.Final
 			};
 			clearIndentMeth.Statements.Add(new CodeAssignStatement(currentIndentFieldRef, stringEmptyRef));
 			clearIndentMeth.Statements.Add(new CodeMethodInvokeExpression(indentsPropRef, "Clear"));
@@ -955,7 +850,7 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			type.Members.Add(indentsProp);
 		}
 
-		static void AddWriteHelpers(CodeTypeDeclaration type)
+		private static void AddWriteHelpers(CodeTypeDeclaration type)
 		{
 			var stringTypeRef = TypeRef<string>();
 			var thisRef = new CodeThisReferenceExpression();
@@ -971,36 +866,32 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			var formatParamRef = new CodeArgumentReferenceExpression("format");
 			var argsParamRef = new CodeArgumentReferenceExpression("args");
 
-			var writeMeth = new CodeMemberMethod
-			{
+			var writeMeth = new CodeMemberMethod {
 				Name = "Write",
-				Attributes = MemberAttributes.Public | MemberAttributes.Final,
+				Attributes = MemberAttributes.Public | MemberAttributes.Final
 			};
 			writeMeth.Parameters.Add(textToAppendParam);
 			writeMeth.Statements.Add(new CodeMethodInvokeExpression(genEnvPropRef, "Append", new CodeArgumentReferenceExpression("textToAppend")));
 
-			var writeArgsMeth = new CodeMemberMethod
-			{
+			var writeArgsMeth = new CodeMemberMethod {
 				Name = "Write",
-				Attributes = MemberAttributes.Public | MemberAttributes.Final,
+				Attributes = MemberAttributes.Public | MemberAttributes.Final
 			};
 			writeArgsMeth.Parameters.Add(formatParam);
 			writeArgsMeth.Parameters.Add(argsParam);
 			writeArgsMeth.Statements.Add(new CodeMethodInvokeExpression(genEnvPropRef, "AppendFormat", formatParamRef, argsParamRef));
 
-			var writeLineMeth = new CodeMemberMethod
-			{
+			var writeLineMeth = new CodeMemberMethod {
 				Name = "WriteLine",
-				Attributes = MemberAttributes.Public | MemberAttributes.Final,
+				Attributes = MemberAttributes.Public | MemberAttributes.Final
 			};
 			writeLineMeth.Parameters.Add(textToAppendParam);
 			writeLineMeth.Statements.Add(new CodeMethodInvokeExpression(genEnvPropRef, "Append", currentIndentFieldRef));
 			writeLineMeth.Statements.Add(new CodeMethodInvokeExpression(genEnvPropRef, "AppendLine", textToAppendParamRef));
 
-			var writeLineArgsMeth = new CodeMemberMethod
-			{
+			var writeLineArgsMeth = new CodeMemberMethod {
 				Name = "WriteLine",
-				Attributes = MemberAttributes.Public | MemberAttributes.Final,
+				Attributes = MemberAttributes.Public | MemberAttributes.Final
 			};
 			writeLineArgsMeth.Parameters.Add(formatParam);
 			writeLineArgsMeth.Parameters.Add(argsParam);
@@ -1014,17 +905,16 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			type.Members.Add(writeLineArgsMeth);
 		}
 
-		static void AddToStringHelper(CodeTypeDeclaration type, TextTemplateSettings settings)
+		private static void AddToStringHelper(CodeTypeDeclaration type, TextTemplateSettings settings)
 		{
-			var helperCls = new CodeTypeDeclaration("ToStringInstanceHelper")
-			{
+			var helperCls = new CodeTypeDeclaration("ToStringInstanceHelper") {
 				IsClass = true,
-				TypeAttributes = TypeAttributes.NestedPublic,
+				TypeAttributes = TypeAttributes.NestedPublic
 			};
 
 			var formatProviderField = PrivateField(TypeRef<IFormatProvider>(), "formatProvider");
 			formatProviderField.InitExpression = new CodePropertyReferenceExpression(
-				new CodeTypeReferenceExpression(TypeRef<System.Globalization.CultureInfo>()), "InvariantCulture");
+				new CodeTypeReferenceExpression(TypeRef<CultureInfo>()), "InvariantCulture");
 			var formatProviderFieldRef = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), formatProviderField.Name);
 
 			var formatProviderProp = GenerateGetterSetterProperty("FormatProvider", formatProviderField);
@@ -1033,11 +923,10 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			helperCls.Members.Add(formatProviderField);
 			helperCls.Members.Add(formatProviderProp);
 
-			var meth = new CodeMemberMethod
-			{
+			var meth = new CodeMemberMethod {
 				Name = "ToStringWithCulture",
 				Attributes = MemberAttributes.Public | MemberAttributes.Final,
-				ReturnType = TypeRef<string>(),
+				ReturnType = TypeRef<string>()
 			};
 			meth.Parameters.Add(new CodeParameterDeclarationExpression(TypeRef<object>(), "objectToConvert"));
 			var paramRef = new CodeArgumentReferenceExpression("objectToConvert");
@@ -1074,7 +963,6 @@ namespace GameDevWare.TextTransform.Editor.Processor
 
 			helperCls.Members.Add(meth);
 
-
 			var helperFieldName = settings.Provider.CreateValidIdentifier("_toStringHelper");
 			var helperField = PrivateField(new CodeTypeReference(helperCls.Name), helperFieldName);
 			helperField.InitExpression = new CodeObjectCreateExpression(helperField.Type);
@@ -1083,17 +971,14 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			type.Members.Add(helperCls);
 		}
 
-		#region CodeDom helpers
-
-		static CodeTypeReference TypeRef<T>()
+		private static CodeTypeReference TypeRef<T>()
 		{
 			return new CodeTypeReference(typeof(T), CodeTypeReferenceOptions.GlobalReference);
 		}
 
-		static CodeMemberProperty GenerateGetterSetterProperty(string propertyName, CodeMemberField field)
+		private static CodeMemberProperty GenerateGetterSetterProperty(string propertyName, CodeMemberField field)
 		{
-			var prop = new CodeMemberProperty
-			{
+			var prop = new CodeMemberProperty {
 				Name = propertyName,
 				Attributes = MemberAttributes.Public | MemberAttributes.Final,
 				Type = field.Type
@@ -1104,10 +989,9 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			return prop;
 		}
 
-		static CodeMemberProperty GenerateGetterProperty(string propertyName, CodeMemberField field)
+		private static CodeMemberProperty GenerateGetterProperty(string propertyName, CodeMemberField field)
 		{
-			var prop = new CodeMemberProperty
-			{
+			var prop = new CodeMemberProperty {
 				Name = propertyName,
 				Attributes = MemberAttributes.Public | MemberAttributes.Final,
 				HasSet = false,
@@ -1118,64 +1002,64 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			return prop;
 		}
 
-		static void AddSetter(CodeMemberProperty property, CodeFieldReferenceExpression fieldRef)
+		private static void AddSetter(CodeMemberProperty property, CodeFieldReferenceExpression fieldRef)
 		{
 			property.HasSet = true;
 			property.SetStatements.Add(new CodeAssignStatement(fieldRef, new CodePropertySetValueReferenceExpression()));
 		}
 
-		static void AddGetter(CodeMemberProperty property, CodeFieldReferenceExpression fieldRef)
+		private static void AddGetter(CodeMemberProperty property, CodeFieldReferenceExpression fieldRef)
 		{
 			property.HasGet = true;
 			property.GetStatements.Add(new CodeMethodReturnStatement(fieldRef));
 		}
 
-		static void MakeGetterLazy(CodeMemberProperty property, CodeFieldReferenceExpression fieldRef, CodeExpression initExpression)
+		private static void MakeGetterLazy(CodeMemberProperty property, CodeFieldReferenceExpression fieldRef, CodeExpression initExpression)
 		{
 			property.GetStatements.Insert(0, new CodeConditionStatement(
 				NotNull(fieldRef),
 				new CodeAssignStatement(fieldRef, initExpression))
-				);
+			);
 		}
 
-		static void MakeSimpleSetterIgnoreNull(CodeMemberProperty property)
+		private static void MakeSimpleSetterIgnoreNull(CodeMemberProperty property)
 		{
 			property.SetStatements[0] = new CodeConditionStatement(
 				NotNull(new CodePropertySetValueReferenceExpression()),
 				property.SetStatements[0]);
 		}
 
-		static CodeStatement NullCheck(CodeExpression expr, string exceptionMessage)
+		private static CodeStatement NullCheck(CodeExpression expr, string exceptionMessage)
 		{
 			return new CodeConditionStatement(
 				IsNull(expr),
 				new CodeThrowExceptionStatement(new CodeObjectCreateExpression(
 					new CodeTypeReference(typeof(ArgumentNullException), CodeTypeReferenceOptions.GlobalReference),
 					new CodePrimitiveExpression(exceptionMessage)))
-				);
+			);
 		}
 
-		static CodeBinaryOperatorExpression NotNull(CodeExpression reference)
+		private static CodeBinaryOperatorExpression NotNull(CodeExpression reference)
 		{
 			return new CodeBinaryOperatorExpression(reference, CodeBinaryOperatorType.IdentityInequality, new CodePrimitiveExpression(null));
 		}
 
-		static CodeBinaryOperatorExpression IsNull(CodeExpression reference)
+		private static CodeBinaryOperatorExpression IsNull(CodeExpression reference)
 		{
 			return new CodeBinaryOperatorExpression(reference, CodeBinaryOperatorType.ValueEquality, new CodePrimitiveExpression(null));
 		}
 
-		static CodeBinaryOperatorExpression IsFalse(CodeExpression expr)
+		private static CodeBinaryOperatorExpression IsFalse(CodeExpression expr)
 		{
 			return new CodeBinaryOperatorExpression(expr, CodeBinaryOperatorType.ValueEquality, new CodePrimitiveExpression(false));
 		}
 
-		static CodeBinaryOperatorExpression BooleanAnd(CodeExpression expr1, CodeExpression expr2)
+		private static CodeBinaryOperatorExpression BooleanAnd(CodeExpression expr1, CodeExpression expr2)
 		{
 			return new CodeBinaryOperatorExpression(expr1, CodeBinaryOperatorType.BooleanAnd, expr2);
 		}
 
-		static CodeStatement ArgNullCheck(CodeExpression value, params CodeExpression[] argNullExcArgs)
+		private static CodeStatement ArgNullCheck(CodeExpression value, params CodeExpression[] argNullExcArgs)
 		{
 			return new CodeConditionStatement(
 				new CodeBinaryOperatorExpression(value,
@@ -1183,15 +1067,12 @@ namespace GameDevWare.TextTransform.Editor.Processor
 				new CodeThrowExceptionStatement(new CodeObjectCreateExpression(typeof(ArgumentNullException), argNullExcArgs)));
 		}
 
-		static CodeMemberField PrivateField(CodeTypeReference typeRef, string name)
+		private static CodeMemberField PrivateField(CodeTypeReference typeRef, string name)
 		{
-			return new CodeMemberField(typeRef, name)
-			{
+			return new CodeMemberField(typeRef, name) {
 				Attributes = MemberAttributes.Private
 			};
 		}
-
-		#endregion
 
 		/// <summary>
 		///     An implementation of CodeDomProvider.GenerateCodeFromMember that works on Mono.
@@ -1199,7 +1080,9 @@ namespace GameDevWare.TextTransform.Editor.Processor
 		public static void GenerateCodeFromMembers(CodeDomProvider provider, CodeGeneratorOptions options, StringWriter sw, IEnumerable<CodeTypeMember> members)
 		{
 			foreach (var member in members)
+			{
 				provider.GenerateCodeFromMember(member, sw, options);
+			}
 		}
 
 		public static string GenerateIndentedClassCode(CodeDomProvider provider, params CodeTypeMember[] members)
@@ -1212,8 +1095,79 @@ namespace GameDevWare.TextTransform.Editor.Processor
 			var options = new CodeGeneratorOptions();
 			using (var sw = new StringWriter())
 			{
-				TemplatingEngine.GenerateCodeFromMembers(provider, options, sw, members);
-				return TemplatingEngine.IndentSnippetText(provider, sw.ToString(), "        ");
+				GenerateCodeFromMembers(provider, options, sw, members);
+				return IndentSnippetText(provider, sw.ToString(), "        ");
+			}
+		}
+		public string ProcessTemplate(string content, ITextTemplatingEngineHost host)
+		{
+			var tpl = this.CompileTemplate(content, host);
+			try
+			{
+				if (tpl != null)
+					return tpl.Process();
+
+				return null;
+			}
+			finally
+			{
+				if (tpl != null)
+					tpl.Dispose();
+			}
+		}
+
+		public string PreprocessTemplate
+		(
+			string content,
+			ITextTemplatingEngineHost host,
+			string className,
+			string classNamespace,
+			out string language,
+			out string[] references)
+		{
+			if (content == null)
+				throw new ArgumentNullException("content");
+			if (host == null)
+				throw new ArgumentNullException("host");
+			if (className == null)
+				throw new ArgumentNullException("className");
+			if (classNamespace == null)
+				throw new ArgumentNullException("classNamespace");
+
+			language = null;
+			references = null;
+
+			var pt = ParsedTemplate.FromText(content, host);
+			if (pt.Errors.HasErrors)
+			{
+				host.LogErrors(pt.Errors);
+				return null;
+			}
+
+			var settings = GetSettings(host, pt);
+			if (pt.Errors.HasErrors)
+			{
+				host.LogErrors(pt.Errors);
+				return null;
+			}
+
+			settings.Name = className;
+			settings.Namespace = classNamespace;
+			settings.IncludePreprocessingHelpers = string.IsNullOrEmpty(settings.Inherits);
+			settings.IsPreprocessed = true;
+			language = settings.Language;
+
+			var ccu = GenerateCompileUnit(host, content, pt, settings);
+			references = ProcessReferences(host, pt, settings).ToArray();
+
+			host.LogErrors(pt.Errors);
+			if (pt.Errors.HasErrors) return null;
+
+			var options = new CodeGeneratorOptions();
+			using (var sw = new StringWriter())
+			{
+				settings.Provider.GenerateCodeFromCompileUnit(ccu, sw, options);
+				return sw.ToString();
 			}
 		}
 	}

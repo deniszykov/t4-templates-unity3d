@@ -1,6 +1,5 @@
 ﻿{
-	"files":
-	[
+	"files": [
 		"DSL_Example.cs",
 		"DSL_Example.cs.meta",
 		"DSL_Example.dsl",

@@ -24,28 +24,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-
 namespace GameDevWare.TextTransform.Editor.Processor
 {
 	public class Engine : ITextTemplatingEngine
 	{
-		private readonly TemplatingEngine engine = new TemplatingEngine();
-
-		public Engine()
-		{
-		}
+		public const string CacheAssembliesOptionString = "CacheAssemblies";
+		private readonly TemplatingEngine engine = new();
 
 		public string ProcessTemplate(string content, ITextTemplatingEngineHost host)
 		{
 			return this.engine.ProcessTemplate(content, host);
 		}
 
-		public string PreprocessTemplate(string content, ITextTemplatingEngineHost host, string className,
-			string classNamespace, out string language, out string[] references)
+		public string PreprocessTemplate
+		(
+			string content,
+			ITextTemplatingEngineHost host,
+			string className,
+			string classNamespace,
+			out string language,
+			out string[] references)
 		{
 			return this.engine.PreprocessTemplate(content, host, className, classNamespace, out language, out references);
 		}
-
-		public const string CacheAssembliesOptionString = "CacheAssemblies";
 	}
 }

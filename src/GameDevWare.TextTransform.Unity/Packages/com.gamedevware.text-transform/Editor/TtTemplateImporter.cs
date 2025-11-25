@@ -6,6 +6,9 @@ namespace GameDevWare.TextTransform.Editor
 	public class TtTemplateImporter : TextTemplateImporter
 	{
 		/// <inheritdoc />
-		public override void OnImportAsset(AssetImportContext ctx) => T4TemplateImporter.ImportAsset(ctx);
+		public override void OnImportAsset(AssetImportContext ctx)
+		{
+			T4TemplateImporter.ImportAsset(ctx);
+		}
 	}
 }

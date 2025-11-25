@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Runtime.CompilerServices;
 using GameDevWare.TextTransform.Editor.Windows;
 using UnityEditor;
 using UnityEngine;
@@ -35,19 +36,13 @@ namespace GameDevWare.TextTransform.Editor
 		{
 			EditorApplication.update -= InitializeCallback;
 
-			System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TextTemplateImporterInspector).TypeHandle);
+			RuntimeHelpers.RunClassConstructor(typeof(TextTemplateImporterInspector).TypeHandle);
 
 			foreach (var templatePath in TextTemplateImporter.ListTemplatesInProject())
 			{
-				if (!TextTemplateImporter.TryLoad(templatePath, out var textTemplateImporter))
-				{
-					continue;
-				}
+				if (!TextTemplateImporter.TryLoad(templatePath, out var textTemplateImporter)) continue;
 
-				if ((textTemplateImporter.generationTriggers & GenerationTriggers.CodeCompilation) == 0)
-				{
-					continue;
-				}
+				if ((textTemplateImporter.generationTriggers & GenerationTriggers.CodeCompilation) == 0) continue;
 
 				if (TextTemplateToolSettings.Current.verbose)
 					Debug.Log($"Code compilation in project is triggered T4 template's generator at '{templatePath}'.");
