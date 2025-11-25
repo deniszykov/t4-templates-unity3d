@@ -70,7 +70,9 @@ namespace GameDevWare.TextTransform.Editor.Windows
 
 			switch (TextTemplateToolSettings.Current.templateCompiler)
 			{
+#pragma warning disable CS0618 // Type or member is obsolete
 				case TextTemplateToolSettings.TemplateCompiler.DotnetT4:
+#pragma warning restore CS0618 // Type or member is obsolete
 					GUILayout.Label("Dotnet Tool Path:", EditorStyles.boldLabel);
 					GUILayout.BeginHorizontal();
 					TextTemplateToolSettings.Current.dotnetToolPath = EditorGUILayout.TextField(TextTemplateToolSettings.Current.dotnetToolPath);

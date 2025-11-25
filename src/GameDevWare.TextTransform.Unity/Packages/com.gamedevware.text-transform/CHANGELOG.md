@@ -1,5 +1,9 @@
 # Release Notes
 
+## [2.1.4]
+
+- Made .t4 files considered as Text Template assets along with .tt files
+
 ## [2.1.3]
 
 - The `Asset Changed` generation trigger now always includes the template `.tt` file to track as an asset.
