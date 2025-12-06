@@ -58,4 +58,4 @@ You can run template generation from your code with **UnityTemplateGenerator.Run
 Please send any questions at support@gamedevware.com
 
 ## License
-[Asset Store Terms of Service and EULA](LICENSE.md)
+MIT
